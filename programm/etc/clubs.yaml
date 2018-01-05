@@ -1,0 +1,24 @@
+aka:
+    graphics_max: 55
+    id: 3
+    max: 40
+    name: IT Land Akadem
+    pro_comp_list: []
+dream:
+    graphics_max: 55
+    id: 2
+    max: 50
+    name: IT Land DreamTown
+    pro_comp_list: []
+les:
+    graphics_max: 55
+    id: 4
+    max: 35
+    name: IT Land Les
+    pro_comp_list: [15, 16, 17, 18, 19, 20]
+troya:
+    graphics_max: 55
+    id: 1
+    max: 50
+    name: IT Land Troya
+    pro_comp_list: []
