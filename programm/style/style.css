@@ -1,0 +1,331 @@
+
+QStatusBar {
+
+    font-family: Helvetica;
+    font-size: 8pt;
+    color: #037717;
+}
+
+
+
+QLineEdit {
+    border: 1px solid #ababab;
+    font-family: Helvetica;
+    font-size: 11pt;
+    color: #383838;
+}
+
+QTimeEdit {
+    border: 1px solid #ababab;
+    font-family: Helvetica;
+    font-size: 11pt;
+    color: #383838;
+}
+
+QDateTimeEdit {
+    border: 1px solid #ababab;
+    font-family: Helvetica;
+    font-size: 11pt;
+    color: #383838;
+}
+
+
+QPushButton#db_controll_app {
+    /*image: url(./resource/icons/export_to_xlsx.png);*/
+    border: 1px solid #3299ab;
+    border-radius: 4px;
+    font-family: Helvetica;
+    font-size: 11pt;
+    color: #29803b;
+    text-indent: 5px;
+    margin-left: 5px;
+}
+
+
+
+
+QPushButton#update_graph_btn {
+    border: 1px solid #3299ab;
+    border-radius: 4px;
+    font-family: Helvetica;
+    font-size: 12pt;
+    color: #29803b;
+}
+
+QPushButton#export_to_png {
+    border: 1px solid #3299ab;
+    border-radius: 4px;
+    font-family: Helvetica;
+    font-size: 12pt;
+    color: #29803b;
+    text-indent: 2px;
+}
+
+OutApp {
+    background-color: #ebebeb;
+}
+
+QLabel#graph_lb {
+    border: 1px solid #cecece;
+}
+
+QLabel#label_site {
+    color: #a9a9a9;
+    border-top: 1px solid #f7f7f7;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+}
+
+QLabel#label_version {
+    color: #7f7f7f;
+    border-top: 1px solid #f7f7f7;
+    border-right: none;
+    border-bottom: none;
+    border-left: none;
+}
+
+
+
+/*View {*/
+    /*border: none;*/
+/*}*/
+
+/*!*-------- TOOLS -------------------*!*/
+
+/*Group#group_modes {*/
+    /*margin-left: 2px;*/
+/*}*/
+
+/*Group#group_seq_game {*/
+    /*margin-top: 2px;*/
+/*}*/
+
+
+/*ToolPanel#game_tool {*/
+    /*background-color: #f7f7f7;*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: none;*/
+    /*border-left: 1px solid #d0d0d0;*/
+/*}*/
+
+/*ToolPanel#top_tool {*/
+    /*background-color: #f7f7f7;*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: 1px solid #d0d0d0;*/
+    /*border-left: none;*/
+/*}*/
+
+/*View#grid {*/
+    /*background-color: #d0d0d0;}*/
+
+/*Grid {*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: 1px solid #848484;*/
+    /*border-left: 1px solid #848484;*/
+/*}*/
+
+
+/*!*-------- BUTTONS -------------------*!*/
+
+/*ImageGridBtn {*/
+    /*border-top: 1px solid #848484;*/
+    /*border-right: 1px solid #848484;*/
+    /*border-bottom: none;*/
+    /*border-left: none;*/
+/*}*/
+
+/*Button {*/
+    /*border: 1px solid #ababab;*/
+    /*padding: 0;*/
+    /*border-radius: 4px;*/
+    /*background-color: #d1d1d1;*/
+    /*font-family: Helvetica;*/
+    /*font-size: 8pt;*/
+    /*color: grey;*/
+
+
+/*}*/
+
+/*Button:checked {*/
+    /*border: 1px solid #3bbe47;*/
+    /*background-color: #f8f8f8;*/
+    /*padding: 0;*/
+    /*border-radius: 4px;*/
+    /*font-family: Helvetica;*/
+    /*font-size: 8pt;*/
+    /*color: grey;*/
+
+
+/*}*/
+
+/*SetBtn#set_time {*/
+    /*image: url(../resource/icons/set_btn_in.png);*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: none;*/
+    /*border-left: none;*/
+
+/*}*/
+
+/*SetBtn#set_time:hover {*/
+    /*image: url(../resource/icons/set_btn_in_hover.png);*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: none;*/
+    /*border-left: none;*/
+
+
+/*}*/
+
+/*SetBtn#del_penalty {*/
+    /*image: url(../resource/icons/del_penalty.png);*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: none;*/
+    /*border-left: none;*/
+
+/*}*/
+
+/*SetBtn#del_penalty:hover {*/
+    /*image: url(../resource/icons/del_penalty_hover.png);*/
+    /*border-top: none;*/
+    /*border-right: none;*/
+    /*border-bottom: none;*/
+    /*border-left: none;}*/
+
+
+/*Button:disabled {*/
+    /*border: 1px solid #b9b9b9;*/
+    /*background-color: #bebebe;*/
+    /*padding: 0;*/
+    /*border-radius: 4px;*/
+    /*font-family: Helvetica;*/
+    /*font-size: 12pt;*/
+
+
+
+/*}*/
+
+
+/*Button#base_game {*/
+    /*image: url(../resource/icons/base_game.png);  }*/
+
+/*Button#base_game:checked {*/
+    /*image: url(../resource/icons/base_game.png);  }*/
+
+/*Button#grid {*/
+    /*image: url(../resource/icons/grid.png);  }*/
+
+/*Button#grid:checked {*/
+    /*image: url(../resource/icons/grid.png);  }*/
+
+/*Button#alt_1 {*/
+    /*image: url(../resource/icons/alt_1.png);  }*/
+
+/*Button#alt_1:checked {*/
+    /*image: url(../resource/icons/alt_1.png);  }*/
+
+/*Button#cycle {*/
+    /*image: url(../resource/icons/cycle.png);*/
+/*}*/
+
+/*Button#cycle:checked {*/
+    /*image: url(../resource/icons/check_cycle.png);  }*/
+
+
+/*Button#help {*/
+    /*image: url(../resource/icons/help.png);  }*/
+
+/*Button#help:checked {*/
+    /*image: url(../resource/icons/help.png);  }*/
+
+
+/*Button#test {*/
+    /*image: url(../resource/icons/test.png);  }*/
+
+/*Button#test:checked {*/
+    /*image: url(../resource/icons/test.png);  }*/
+
+
+/*Button#time {*/
+    /*image: url(../resource/icons/time.png);  }*/
+
+/*Button#time:checked {*/
+    /*image: url(../resource/icons/time.png);  }*/
+
+/*Button#penalty {*/
+    /*image: url(../resource/icons/penalty.png);  }*/
+
+/*Button#penalty:checked {*/
+    /*image: url(../resource/icons/penalty.png);  }*/
+
+/*Button#image_mode_btn {*/
+    /*image: url(../resource/icons/image_mode_btn.png);  }*/
+
+/*Button#image_mode_btn:checked {*/
+    /*image: url(../resource/icons/check_image_mode_btn.png);  }*/
+
+/*Button#image_mode_btn:disabled {*/
+    /*image: url(../resource/icons/dis_image_mode_btn.png);  }*/
+
+/*Button#text_mode_btn {*/
+    /*image: url(../resource/icons/text_mode_btn.png);  }*/
+
+/*Button#text_mode_btn:checked {*/
+    /*image: url(../resource/icons/check_text_mode.png);  }*/
+
+/*Button#restart {*/
+    /*image: url(../resource/icons/restart.png);  }*/
+
+/*Button#restart:pressed {*/
+    /*background-color: #f8f8f8;*/
+    /*image: url(../resource/icons/press_restart.png);  }*/
+/*!*-------------------------------------------------------*!*/
+/*Button#shuffle {*/
+    /*image: url(../resource/icons/shuffle.png);  }*/
+
+/*Button#shuffle:checked {*/
+    /*image: url(../resource/icons/check_shuffle.png);  }*/
+
+/*GameButton {*/
+    /*border: 1px solid #ababab;*/
+    /*padding: 0;*/
+    /*border-radius: 4px;*/
+    /*font-family: Helvetica;*/
+    /*font-size: 12pt;*/
+    /*color: grey;*/
+/*}*/
+
+/*GameButton:checked {*/
+    /*border: 1px solid #1dbd10;*/
+    /*padding: 0;*/
+    /*border-radius: 4px;*/
+    /*font-family: Helvetica;*/
+    /*font-size: 12pt;*/
+    /*color: #31313b;*/
+    /*background-color: #f4f4f4;*/
+/*}*/
+
+/*GameButton:disabled {*/
+    /*border: 1px solid #bfbfbf;*/
+    /*padding: 0;*/
+    /*border-radius: 4px;*/
+    /*font-family: Helvetica;*/
+    /*font-size: 12pt;*/
+    /*color: #bfbfbf;*/
+    /*background-color: #d2d2d2;*/
+/*}*/
+
+
+/*GroupBox {*/
+    /*border: none;*/
+/*}*/
+
+/*!*-------- GAME TOOL BUTTONS -------------------*!*/
+
+/*Button#R {*/
+      /*}*/
