@@ -18,14 +18,20 @@ class Club_Widget(QtWidgets.QFrame):
         self.name = name
         box = tools.Box(tools.Box.horizontal, parent=self)
         self.select_club_btn = tools.Button(name, name, True, True)
+        self.select_club_btn.setFixedWidth(100)
         self.set_club_btn = tools.Button(name, None, False, False)
-        box.add_widgets(self.select_club_btn, self.set_club_btn)
+
+        box.addWidget(self.select_club_btn)
+        box.addStretch(20)
+        box.addWidget(self.set_club_btn)
 
 
 
-class ClubsContainer(QtWidgets.QFrame):
-    def __init__(self, clubs_cfg: dict, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+class ClubsContainer(QtWidgets.QGroupBox):
+    def __init__(self, clubs_cfg: dict, title=None):
+        super().__init__()
+        if title is not None:
+            self.setTitle(title)
         self.clubs = {}
         self.box = tools.Box(tools.Box.vertical, parent=self)
         self.add_clubs(clubs_cfg)
@@ -34,6 +40,7 @@ class ClubsContainer(QtWidgets.QFrame):
         for cl in clubs.values():
             self.clubs[cl["name"]] = Club_Widget(cl["name"])
             self.box.addWidget(self.clubs[cl["name"]])
+        self.setLayout(self.box)
 
 
 

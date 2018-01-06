@@ -19,7 +19,7 @@ def club_widget():
 
 def clubs_container():
     app = QtWidgets.QApplication(sys.argv)
-    main = graph.ClubsContainer(clubs)
+    main = graph.ClubsContainer(clubs, "клубы")
     main.show()
     sys.exit(app.exec_())
 
@@ -27,6 +27,7 @@ if __name__ == '__main__':
     pass
     clubs_container()
     # club_widget()
+
 
 
 
