@@ -183,7 +183,7 @@
          <number>0</number>
         </property>
         <item>
-         <layout class="QVBoxLayout" name="clube_layout_2">
+         <layout class="QVBoxLayout" name="graphic_type_layout">
           <property name="spacing">
            <number>0</number>
           </property>
@@ -246,6 +246,11 @@
      <property name="lineWidth">
       <number>1</number>
      </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QGridLayout" name="view_box"/>
+      </item>
+     </layout>
     </widget>
    </item>
   </layout>

@@ -5,6 +5,7 @@ from jinja2 import Template
 
 from PyQt5 import QtWidgets, uic
 from programm.gui.lib import tools
+from programm.gui.plot import plot
 
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
@@ -79,6 +80,7 @@ class ClubsContainer(QtWidgets.QGroupBox):
         self.setLayout(self.box)
 
 
+
 class GraphicsWidget(QtWidgets.QWidget):
     def __init__(self, clubs, state_cfg, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -88,6 +90,13 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.setWindowTitle("Graphics")
         self.clubs_container = ClubsContainer(clubs, state_cfg, title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
+
+        self.view = self.form.graph_frame
+        m = plot.PlotCanvas(None, width=5, height=4)
+        self.form.view_box.addWidget(m)
+
+
+
 
 
 if __name__ == '__main__':
