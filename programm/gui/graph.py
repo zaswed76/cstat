@@ -18,8 +18,11 @@ class Club_Widget(QtWidgets.QFrame):
         self.name = name
         box = tools.Box(tools.Box.horizontal, parent=self)
         self.select_club_btn = tools.Button(name, name, True, True)
+        style = os.path.join(pth.CSS_DIR, "club_btn.css")
+        self.select_club_btn.setStyleSheet(open(style, "r").read())
         self.select_club_btn.setFixedWidth(100)
-        self.set_club_btn = tools.Button(name, None, False, False)
+        self.set_club_btn = tools.Button(name, "*", False, False)
+        self.set_club_btn.setFixedWidth(25)
 
         box.addWidget(self.select_club_btn)
         box.addStretch(20)
@@ -51,6 +54,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.clubs = clubs
         self.form = uic.loadUi(ui_pth, self)
         self.setWindowTitle("Graphics")
+        self.clubs_container = ClubsContainer(clubs)
+        self.form.clube_layout.addWidget(self.clubs_container)
 
 
 
@@ -62,6 +67,7 @@ if __name__ == '__main__':
     clubs = config.get_cfg(cfg_path)
 
     main = GraphicsWidget(clubs)
+    app.setStyleSheet(open(pth.CSS_STYLE, "r").read())
     main.show()
     sys.exit(app.exec_())
 

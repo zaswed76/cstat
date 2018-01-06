@@ -1,0 +1,20 @@
+
+QPushButton {
+    text-align: left;
+    border: 1px solid #0AC81D;
+    border-radius: 3px;
+    font-family: Helvetica;
+    font-size: 10pt;
+    color: #383838;
+
+}
+
+QPushButton:checked {
+    text-align: left;
+    border: 2px solid #0AC81D;
+    border-radius: 3px;
+    font-family: Helvetica;
+    font-size: 10pt;
+    color: #383838;
+
+}

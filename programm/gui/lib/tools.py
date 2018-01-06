@@ -43,9 +43,15 @@ class SetBtn(QtWidgets.QPushButton):
         self.setFixedSize(*size)
 
 class Button(QtWidgets.QPushButton):
-    def __init__(self, name, text, checkable=False, exclusive=False):
+    def __init__(self, name, text, checkable=False,
+                 exclusive=False, tag_color=None):
         super().__init__()
-        self.setStyleSheet("QPushButton { text-align: left; }")
+        self.tag_color = tag_color
+        self.setStyleSheet("""
+        QPushButton {
+         text-align: left;
+         }""")
+
         if text is not None:
             self.setText(text)
         self.setCheckable(checkable)

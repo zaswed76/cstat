@@ -2,6 +2,7 @@
 import os
 ROOT = os.path.join(os.path.dirname(__file__))
 CSS_STYLE = os.path.join(ROOT, "style/style.css")
+CSS_DIR = os.path.join(ROOT, "style")
 DATA_DIR = os.path.join(ROOT, "data")
 CONFIG_DIR = os.path.join(ROOT, "etc")
 DRIVERS_DIR = os.path.join(ROOT, "drivers")
