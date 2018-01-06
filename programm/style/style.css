@@ -71,10 +71,14 @@ QLabel#graph_lb {
 
 QLabel#label_site {
     color: #a9a9a9;
-    border-top: 1px solid #f7f7f7;
+    border-top-: 1px solid #f7f7f7;
     border-right: none;
     border-bottom: none;
     border-left: none;
+    border-top-left-radius: 3px ;
+    border-bottom-left-radius: 3px ;
+    border-top-right-radius: 0px ;
+    border-bottom-right-radius: 0px ;
 }
 
 QLabel#label_version {

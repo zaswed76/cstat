@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>649</width>
-    <height>298</height>
+    <height>502</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -128,7 +128,7 @@
       <widget class="QWidget" name="clube_container" native="true">
        <property name="minimumSize">
         <size>
-         <width>170</width>
+         <width>200</width>
          <height>0</height>
         </size>
        </property>
@@ -150,6 +150,40 @@
         </property>
         <item>
          <layout class="QVBoxLayout" name="clube_layout">
+          <property name="spacing">
+           <number>0</number>
+          </property>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QWidget" name="clube_container_2" native="true">
+       <property name="minimumSize">
+        <size>
+         <width>200</width>
+         <height>0</height>
+        </size>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_4">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+        <property name="leftMargin">
+         <number>0</number>
+        </property>
+        <property name="topMargin">
+         <number>0</number>
+        </property>
+        <property name="rightMargin">
+         <number>0</number>
+        </property>
+        <property name="bottomMargin">
+         <number>0</number>
+        </property>
+        <item>
+         <layout class="QVBoxLayout" name="clube_layout_2">
           <property name="spacing">
            <number>0</number>
           </property>
