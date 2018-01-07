@@ -1,4 +1,9 @@
 
+QCheckBox  {
+    font: 12pt "MS Shell Dlg 2";
+    color: #3299ab;
+}
+
 QGroupBox  {
     font: 12pt "MS Shell Dlg 2";
 }
@@ -7,12 +12,22 @@ QGroupBox  {
 QPushButton#Akadem_btn_set {
     image: url(:/resource/icons/32/club_btn_set.png);
     border: none;
-    /*border-radius: 5px;*/
-    /*min-width: 25px;*/
-    min-height: 25px;
-    /*font: 16pt "MS Shell Dlg 2";*/
 }
 
+QPushButton#Les_btn_set {
+    image: url(:/resource/icons/32/club_btn_set.png);
+    border: none;
+}
+
+QPushButton#Troya_btn_set {
+    image: url(:/resource/icons/32/club_btn_set.png);
+    border: none;
+}
+
+QPushButton#Dream_btn_set {
+    image: url(:/resource/icons/32/club_btn_set.png);
+    border: none;
+}
 
 
 

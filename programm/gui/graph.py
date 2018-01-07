@@ -44,7 +44,7 @@ class ClubsContainer(QtWidgets.QGroupBox):
         self.clubs = {}
         self.group = QtWidgets.QButtonGroup(self)
         self.box = tools.Box(tools.Box.vertical, parent=self,
-                             spacing=6, margin=(6, 0, 0, 0))
+                             spacing=6, margin=(6, 6, 0, 10))
         self.exclusive_club = QtWidgets.QCheckBox("exclusive")
         self.exclusive_club.setChecked(
             state_cfg["clubs_group_exclusive"])
