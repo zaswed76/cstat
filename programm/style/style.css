@@ -1,4 +1,24 @@
 
+QGroupBox  {
+    font: 12pt "MS Shell Dlg 2";
+}
+
+
+QPushButton#Akadem_btn_set {
+    image: url(:/resource/icons/32/club_btn_set.png);
+    border: none;
+    /*border-radius: 5px;*/
+    /*min-width: 25px;*/
+    min-height: 25px;
+    /*font: 16pt "MS Shell Dlg 2";*/
+}
+
+
+
+
+
+
+
 QStatusBar {
 
     font-family: Helvetica;
@@ -59,6 +79,7 @@ QPushButton#export_to_png {
     font-size: 12pt;
     color: #29803b;
     text-indent: 2px;
+    min-width: 55px;
 }
 
 OutApp {

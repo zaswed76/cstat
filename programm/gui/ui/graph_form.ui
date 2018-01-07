@@ -6,16 +6,34 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>649</width>
+    <width>1125</width>
     <height>502</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="10,27">
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="10,33">
+   <property name="spacing">
+    <number>0</number>
+   </property>
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
    <item>
     <layout class="QVBoxLayout" name="verticalLayout">
+     <property name="spacing">
+      <number>10</number>
+     </property>
      <item>
       <widget class="QGroupBox" name="groupBox_5">
        <property name="minimumSize">
@@ -26,12 +44,15 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>220</width>
          <height>60</height>
         </size>
        </property>
        <property name="layoutDirection">
         <enum>Qt::LeftToRight</enum>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="title">
         <string>начало</string>
@@ -47,13 +68,13 @@
          <rect>
           <x>12</x>
           <y>25</y>
-          <width>85</width>
+          <width>110</width>
           <height>20</height>
          </rect>
         </property>
         <property name="minimumSize">
          <size>
-          <width>50</width>
+          <width>100</width>
           <height>0</height>
          </size>
         </property>
@@ -92,9 +113,12 @@
        </property>
        <property name="maximumSize">
         <size>
-         <width>16777215</width>
+         <width>220</width>
          <height>60</height>
         </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
        </property>
        <property name="title">
         <string>конец</string>
@@ -107,9 +131,15 @@
          <rect>
           <x>12</x>
           <y>25</y>
-          <width>85</width>
+          <width>110</width>
           <height>20</height>
          </rect>
+        </property>
+        <property name="minimumSize">
+         <size>
+          <width>100</width>
+          <height>0</height>
+         </size>
         </property>
        </widget>
        <widget class="QTimeEdit" name="timeEdit_4">
@@ -130,6 +160,12 @@
         <size>
          <width>200</width>
          <height>0</height>
+        </size>
+       </property>
+       <property name="maximumSize">
+        <size>
+         <width>220</width>
+         <height>16777215</height>
         </size>
        </property>
        <layout class="QVBoxLayout" name="verticalLayout_3">
@@ -166,6 +202,15 @@
          <height>0</height>
         </size>
        </property>
+       <property name="maximumSize">
+        <size>
+         <width>220</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">background-color: rgb(231, 231, 231);</string>
+       </property>
        <layout class="QVBoxLayout" name="verticalLayout_4">
         <property name="spacing">
          <number>0</number>
@@ -194,6 +239,15 @@
      </item>
      <item>
       <widget class="QGroupBox" name="groupBox_8">
+       <property name="maximumSize">
+        <size>
+         <width>220</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+       </property>
        <property name="title">
         <string>интервал</string>
        </property>
@@ -246,9 +300,28 @@
      <property name="lineWidth">
       <number>1</number>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
+     <layout class="QHBoxLayout" name="view_box">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <layout class="QGridLayout" name="view_box"/>
+       <layout class="QHBoxLayout" name="horizontalLayout_2">
+        <property name="spacing">
+         <number>0</number>
+        </property>
+       </layout>
       </item>
      </layout>
     </widget>

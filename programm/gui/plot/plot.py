@@ -25,6 +25,7 @@ class PlotCanvas(FigureCanvas):
                 QSizePolicy.Expanding)
         FigureCanvas.updateGeometry(self)
 
+        self.plot()
 
 
     def plot(self):

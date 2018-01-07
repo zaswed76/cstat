@@ -1,9 +1,9 @@
+import os
 import sys
 
-import os
-from jinja2 import Template
-
 from PyQt5 import QtWidgets, uic
+from jinja2 import Template
+from programm import pth
 from programm.gui.lib import tools
 from programm.gui.plot import plot
 
@@ -17,16 +17,20 @@ class Club_Widget(QtWidgets.QFrame):
         super().__init__(*args, **kwargs)
         self.tag_name = tag_name
         self.name = name
-        box = tools.Box(tools.Box.horizontal, parent=self, spacing=1)
-        self.select_club_btn = tools.Button(name, tag_name,
+        box = tools.Box(tools.Box.horizontal, parent=self, spacing=5)
+        self.select_club_btn = tools.Button(tag_name, tag_name,
                                             True, True)
-        style = open(os.path.join(pth.CSS_DIR, "club_btn.qss"),
-                     "r").read()
-        template = Template(style).render(color=tag_color)
-        self.select_club_btn.setStyleSheet(template)
+
+        style = Template(
+            open(os.path.join(pth.CSS_DIR, "club_btn.qss"),
+                 "r").read()).render(color=tag_color)
+        self.select_club_btn.setStyleSheet(style)
         self.select_club_btn.setFixedWidth(100)
-        self.set_club_btn = tools.Button(name, "*", False, False)
-        self.set_club_btn.setFixedWidth(25)
+
+
+        self.set_club_btn = tools.Button(tag_name+"_btn_set", None, False, False)
+        print(self.set_club_btn.objectName())
+        self.set_club_btn.setFixedSize(25, 30)
 
         box.addWidget(self.select_club_btn)
         box.addWidget(self.set_club_btn)
@@ -40,9 +44,10 @@ class ClubsContainer(QtWidgets.QGroupBox):
         self.clubs = {}
         self.group = QtWidgets.QButtonGroup(self)
         self.box = tools.Box(tools.Box.vertical, parent=self,
-                             spacing=1)
+                             spacing=6, margin=(6, 0, 0, 0))
         self.exclusive_club = QtWidgets.QCheckBox("exclusive")
-        self.exclusive_club.setChecked(state_cfg["clubs_group_exclusive"])
+        self.exclusive_club.setChecked(
+            state_cfg["clubs_group_exclusive"])
         self.exclusive_club.stateChanged.connect(self.exclusive_state)
         self.box.addWidget(self.exclusive_club)
         self.add_clubs(clubs_cfg)
@@ -80,7 +85,6 @@ class ClubsContainer(QtWidgets.QGroupBox):
         self.setLayout(self.box)
 
 
-
 class GraphicsWidget(QtWidgets.QWidget):
     def __init__(self, clubs, state_cfg, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -88,15 +92,16 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.clubs = clubs
         self.form = uic.loadUi(ui_pth, self)
         self.setWindowTitle("Graphics")
-        self.clubs_container = ClubsContainer(clubs, state_cfg, title="клубы", )
+        self.clubs_container = ClubsContainer(clubs, state_cfg,
+                                              title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
 
         self.view = self.form.graph_frame
         m = plot.PlotCanvas(None, width=5, height=4)
         self.form.view_box.addWidget(m)
 
-
-
+    def check_club(self, c):
+        print(c, "check")
 
 
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-aka:
+Akadem:
     color: "#1E03C8"
     graphics_max: 55
     id: 3
@@ -6,7 +6,7 @@ aka:
     name: IT Land Akadem
     tag_name: Akadem
     pro_comp_list: []
-dream:
+Dream:
     color: "#C89C0C"
     graphics_max: 55
     id: 2
@@ -14,7 +14,7 @@ dream:
     name: IT Land DreamTown
     tag_name: Dream
     pro_comp_list: []
-les:
+Les:
     color: "#0AC81D"
     graphics_max: 55
     id: 4
@@ -22,7 +22,7 @@ les:
     name: IT Land Les
     tag_name: Les
     pro_comp_list: [15, 16, 17, 18, 19, 20]
-troya:
+Troya:
     color: "#C105C8"
     graphics_max: 55
     id: 1

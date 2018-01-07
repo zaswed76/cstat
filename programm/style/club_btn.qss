@@ -5,29 +5,34 @@ QPushButton {
     border-right: 1px solid {{color}};
     border-bottom: 1px solid {{color}};
     border-left: 1px solid {{color}};
-    border-top-left-radius: 3px ;
-    border-bottom-left-radius: 3px ;
+    border-top-left-radius: 5px ;
+    border-bottom-left-radius: 5px ;
     border-top-right-radius: 0px ;
     border-bottom-right-radius: 0px ;
     font-family: Helvetica;
     font-size: 10pt;
     color: #383838;
     padding-left: 3px;
+    font-family: Helvetica;
+    font-size: 12pt;
+    color: #383838;
+    min-width: 100px;
+    min-height: 25px;
 
 }
 
 QPushButton:checked {
     text-align: left;
     border-top: 2px solid {{color}};
-    border-right: 20px solid {{color}};
+    border-right: 25px solid {{color}};
     border-bottom: 2px solid {{color}};
     border-left: 2px solid {{color}};
-    border-top-left-radius: 3px ;
-    border-bottom-left-radius: 3px ;
+    border-top-left-radius: 5px ;
+    border-bottom-left-radius: 5px ;
     border-top-right-radius: 0px ;
     border-bottom-right-radius: 0px ;
     font-family: Helvetica;
-    font-size: 10pt;
+    font-size: 12pt;
     color: #383838;
 
 }
