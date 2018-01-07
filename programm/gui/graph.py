@@ -29,7 +29,7 @@ class Club_Widget(QtWidgets.QFrame):
 
 
         self.set_club_btn = tools.Button(tag_name+"_btn_set", None, False, False)
-        print(self.set_club_btn.objectName())
+
         self.set_club_btn.setFixedSize(25, 30)
 
         box.addWidget(self.select_club_btn)
@@ -41,47 +41,51 @@ class ClubsContainer(QtWidgets.QGroupBox):
         super().__init__()
         if title is not None:
             self.setTitle(title)
-        self.clubs = {}
-        self.group = QtWidgets.QButtonGroup(self)
+        self._clubs = {}
+        self._group = QtWidgets.QButtonGroup(self)
         self.box = tools.Box(tools.Box.vertical, parent=self,
                              spacing=6, margin=(6, 6, 0, 10))
         self.exclusive_club = QtWidgets.QCheckBox("exclusive")
         self.exclusive_club.setChecked(
             state_cfg["clubs_group_exclusive"])
-        self.exclusive_club.stateChanged.connect(self.exclusive_state)
+        self.exclusive_club.stateChanged.connect(self._exclusive_state)
         self.box.addWidget(self.exclusive_club)
-        self.add_clubs(clubs_cfg)
+        self._add_clubs(clubs_cfg)
 
-    def exclusive_state(self):
-        self.set_exclusive_club(self.exclusive_club.isChecked())
+    @property
+    def club_buttons(self):
+        return self._group.buttons()
 
-    def set_exclusive_club(self, state):
-        self.group.setExclusive(state)
-        check_btn = self.group.checkedButton()
+    def _exclusive_state(self):
+        self._set_exclusive_club(self.exclusive_club.isChecked())
+
+    def _set_exclusive_club(self, state):
+        self._group.setExclusive(state)
+        check_btn = self._group.checkedButton()
         if state:
-            for btn in self.group.buttons():
+            for btn in self._group.buttons():
                 btn.setChecked(False)
             if check_btn is not None:
                 check_btn.setChecked(True)
             else:
-                self.group.buttons()[0].setChecked(True)
+                self._group.buttons()[0].setChecked(True)
         else:
-            for btn in self.group.buttons():
+            for btn in self._group.buttons():
                 if not btn.isChecked():
                     btn.setChecked(False)
 
-    def add_clubs(self, clubs):
+    def _add_clubs(self, clubs):
         for cl in clubs.values():
-            self.clubs[cl["name"]] = Club_Widget(cl["name"],
-                                                 cl["tag_name"],
-                                                 tag_color=cl[
+            self._clubs[cl["name"]] = Club_Widget(cl["name"],
+                                                  cl["tag_name"],
+                                                  tag_color=cl[
                                                      "color"],
-                                                 )
-            self.group.addButton(
-                self.clubs[cl["name"]].select_club_btn)
+                                                  )
+            self._group.addButton(
+                self._clubs[cl["name"]].select_club_btn)
 
-            self.box.addWidget(self.clubs[cl["name"]])
-        self.set_exclusive_club(self.exclusive_club.isChecked())
+            self.box.addWidget(self._clubs[cl["name"]])
+        self._set_exclusive_club(self.exclusive_club.isChecked())
         self.setLayout(self.box)
 
 
@@ -96,13 +100,21 @@ class GraphicsWidget(QtWidgets.QWidget):
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
 
-        self.view = self.form.graph_frame
-        m = plot.PlotCanvas(None, width=5, height=4)
-        self.form.view_box.addWidget(m)
+        self._init_control()
 
-    def check_club(self, c):
-        print(c, "check")
 
+        # self.view = self.form.graph_frame
+        # m = plot.PlotCanvas(None, width=5, height=4)
+        # self.form.view_box.addWidget(m)
+
+    def _init_control(self):
+        for btn in self.clubs_container.club_buttons:
+            print(btn)
+            btn.toggled.connect(self._check_club)
+
+
+    def _check_club(self):
+        print([x for x in self.clubs_container.club_buttons if x.isChecked()])
 
 if __name__ == '__main__':
     from programm.libs import config

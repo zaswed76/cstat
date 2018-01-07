@@ -61,3 +61,6 @@ class Button(QtWidgets.QPushButton):
         self.setObjectName(tag_name)
         self.setAutoExclusive(exclusive)
 
+    def __repr__(self):
+        return "{}: {}".format(self.__class__.__name__, self.tag_name)
+
