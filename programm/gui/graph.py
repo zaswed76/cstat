@@ -1,3 +1,4 @@
+import datetime
 import os
 import sys
 
@@ -99,22 +100,53 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.clubs_container = ClubsContainer(clubs, state_cfg,
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
-
+        self.__init_date_widgets()
+        self.__init_diapason_slider()
         self._init_control()
+
+    def __init_date_widgets(self):
+        yesterday_dt = datetime.datetime.now() - datetime.timedelta(
+            days=1)
+        d_start = yesterday_dt.date()
+        t_start = datetime.datetime.strptime("09:00", "%H:%M").time()
+        self.form.dt_start_edit.setDate(d_start)
+        self.form.time_start_edit.setTime(t_start)
+
+        current_dt = datetime.datetime.now()
+        d_end = current_dt.date()
+        t_end = datetime.datetime.strptime("09:00", "%H:%M").time()
+        self.form.dt_end_edit.setDate(d_end)
+        self.form.time_end_edit.setTime(t_end)
+
+
 
 
         # self.view = self.form.graph_frame
         # m = plot.PlotCanvas(None, width=5, height=4)
         # self.form.view_box.addWidget(m)
 
+    def __init_diapason_slider(self):
+        slider = self.form.diapason_slider
+        slider.setRange(0, 3)
+        slider.setSingleStep(1)
+        slider.setPageStep(1)
+        slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
+
+
     def _init_control(self):
         for btn in self.clubs_container.club_buttons:
-            print(btn)
             btn.toggled.connect(self._check_club)
 
 
     def _check_club(self):
         print([x for x in self.clubs_container.club_buttons if x.isChecked()])
+
+    def update_plot(self):
+        print("update plot")
+        # получить данные контроллеров
+        # сделать запрос к базе
+        # обновить график
+
 
 if __name__ == '__main__':
     from programm.libs import config
