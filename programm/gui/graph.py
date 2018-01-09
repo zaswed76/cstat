@@ -35,8 +35,11 @@ class Club_Widget(QtWidgets.QFrame):
 
         self.set_club_btn.setFixedSize(25, 30)
 
+
+
         box.addWidget(self.select_club_btn)
         box.addWidget(self.set_club_btn)
+
 
 
 class ClubsContainer(QtWidgets.QGroupBox):
@@ -103,9 +106,23 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.clubs_container = ClubsContainer(clubs, state_cfg,
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
+        self.form.shoose_db.setText(self.get_last_bd_path())
         self.__init_date_widgets()
         self.__init_diapason_slider()
         self._init_control()
+
+    def choose_db_dialog(self):
+
+        options = QtWidgets.QFileDialog.Options()
+        options |= QtWidgets.QFileDialog.DontUseNativeDialog
+        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,
+                "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)",
+                                                            options=options)
+        if fileName:
+            text = os.path.basename(fileName)
+            self.form.shoose_db.setText(text)
+
+
 
     def __init_date_widgets(self):
         yesterday_dt = datetime.datetime.now() - datetime.timedelta(
@@ -121,6 +138,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.form.dt_end_edit.setDate(d_end)
         self.form.time_end_edit.setTime(t_end)
 
+
         self.update_plot()
 
         # self.view = self.form.graph_frame
@@ -135,14 +153,11 @@ class GraphicsWidget(QtWidgets.QWidget):
                                                           " 1 д"])
         self.slider.slider.valueChanged.connect(self.diapason_change)
         self.form.diapason_box.addWidget(self.slider)
-        # slider.setRange(0, 3)
-        # slider.setSingleStep(1)
-        # slider.setPageStep(1)
-        # slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
 
     def _init_control(self):
         for btn in self.clubs_container.club_buttons:
             btn.toggled.connect(self._check_club)
+        self.form.shoose_db.clicked.connect(self.choose_db_dialog)
 
     def _check_club(self):
         print([x for x in self.clubs_container.club_buttons if
@@ -183,23 +198,26 @@ class GraphicsWidget(QtWidgets.QWidget):
     def get_time_end(self) -> datetime.datetime:
         return self.form.time_end_edit.dateTime().toPyDateTime().time()
 
-    def get_active_clubs(self) ->list:
+    def get_active_clubs(self) -> list:
         return ["Les"]
 
     def get_graphic_type(self) -> str:
         return "bar"
 
-    def get_interval(self) ->str:
+    def get_interval(self) -> str:
         return "1 h"
 
-    def get_db_path(self) ->str:
+    def get_db_path(self) -> str:
         return ""
 
-    def get_sql_query(self, data) ->str:
+    def get_sql_query(self, data) -> str:
         return "sql_query"
 
-    def get_data(self, query) ->tuple:
+    def get_data(self, query) -> tuple:
         return ()
+
+    def get_last_bd_path(self):
+        return "11-01-2018-db.sql"
 
 
 if __name__ == '__main__':
