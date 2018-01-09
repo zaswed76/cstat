@@ -121,8 +121,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.form.dt_end_edit.setDate(d_end)
         self.form.time_end_edit.setTime(t_end)
 
-
-
+        self.update_plot()
 
         # self.view = self.form.graph_frame
         # m = plot.PlotCanvas(None, width=5, height=4)
@@ -130,10 +129,10 @@ class GraphicsWidget(QtWidgets.QWidget):
 
     def __init_diapason_slider(self):
         self.slider = sl.SliderDiapasonWidget(QtCore.Qt.Horizontal,
-                                         mark_names=["10 м",
-                                                     "30 м",
-                                                     " 1 ч",
-                                                     " 1 д"])
+                                              mark_names=["10 м",
+                                                          "30 м",
+                                                          " 1 ч",
+                                                          " 1 д"])
         self.slider.slider.valueChanged.connect(self.diapason_change)
         self.form.diapason_box.addWidget(self.slider)
         # slider.setRange(0, 3)
@@ -152,11 +151,55 @@ class GraphicsWidget(QtWidgets.QWidget):
     def diapason_change(self):
         print("3")
 
+    def get_controller_data(self):
+        d = {}
+        d["date_start"] = self.get_date_start()
+        d["date_end"] = self.get_date_end()
+        d["time_start"] = self.get_time_start()
+        d["time_end"] = self.get_time_end()
+        d["active_clubs"] = self.get_active_clubs()
+        d["interval"] = self.get_interval()
+        d["graphic_type"] = self.get_graphic_type()
+        d["db_path"] = self.get_db_path()
+        return d
+
     def update_plot(self):
-        print("update plot")
-        # получить данные контроллеров
-        # сделать запрос к базе
-        # обновить график
+        # данные с контроллеров
+        controller_data = self.get_controller_data()
+        # запрос
+        sql_query = self.get_sql_query(controller_data)
+        # данные
+        data = self.get_data(sql_query)
+
+    def get_date_start(self) -> datetime.datetime:
+        return self.form.dt_start_edit.dateTime().toPyDateTime().date()
+
+    def get_date_end(self) -> datetime.datetime:
+        return self.form.dt_end_edit.dateTime().toPyDateTime().date()
+
+    def get_time_start(self) -> datetime.datetime:
+        return self.form.time_start_edit.dateTime().toPyDateTime().time()
+
+    def get_time_end(self) -> datetime.datetime:
+        return self.form.time_end_edit.dateTime().toPyDateTime().time()
+
+    def get_active_clubs(self) ->list:
+        return ["Les"]
+
+    def get_graphic_type(self) -> str:
+        return "bar"
+
+    def get_interval(self) ->str:
+        return "1 h"
+
+    def get_db_path(self) ->str:
+        return ""
+
+    def get_sql_query(self, data) ->str:
+        return "sql_query"
+
+    def get_data(self, query) ->tuple:
+        return ()
 
 
 if __name__ == '__main__':
