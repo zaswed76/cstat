@@ -1,5 +1,6 @@
 <RCC>
   <qresource prefix="/">
     <file>resource/icons/32/club_btn_set.png</file>
+    <file>resource/icons/32/handle_diapason.png</file>
   </qresource>
 </RCC>

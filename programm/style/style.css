@@ -1,4 +1,25 @@
 
+ QSlider::handle:horizontal {
+     image: url(:/resource/icons/32/handle_diapason.png);
+     margin: 1px 0;
+     width: 18px;
+     padding-left: 2px;
+     padding-right: 5px;
+
+
+ }
+
+ QSlider::groove:horizontal {
+    border: 2px solid #07acff;
+    border-radius: 5px;
+    height: 18px;
+
+
+    }
+
+
+
+
 QCheckBox  {
     font: 12pt "MS Shell Dlg 2";
     color: #3299ab;

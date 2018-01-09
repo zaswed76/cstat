@@ -2,11 +2,13 @@ import datetime
 import os
 import sys
 
-from PyQt5 import QtWidgets, uic
+from PyQt5 import QtWidgets, uic, QtCore
+
 from jinja2 import Template
 from programm import pth
 from programm.gui.lib import tools
 from programm.gui.plot import plot
+from programm.gui import slider as sl
 
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
@@ -28,8 +30,8 @@ class Club_Widget(QtWidgets.QFrame):
         self.select_club_btn.setStyleSheet(style)
         self.select_club_btn.setFixedWidth(100)
 
-
-        self.set_club_btn = tools.Button(tag_name+"_btn_set", None, False, False)
+        self.set_club_btn = tools.Button(tag_name + "_btn_set", None,
+                                         False, False)
 
         self.set_club_btn.setFixedSize(25, 30)
 
@@ -49,7 +51,8 @@ class ClubsContainer(QtWidgets.QGroupBox):
         self.exclusive_club = QtWidgets.QCheckBox("exclusive")
         self.exclusive_club.setChecked(
             state_cfg["clubs_group_exclusive"])
-        self.exclusive_club.stateChanged.connect(self._exclusive_state)
+        self.exclusive_club.stateChanged.connect(
+            self._exclusive_state)
         self.box.addWidget(self.exclusive_club)
         self._add_clubs(clubs_cfg)
 
@@ -80,7 +83,7 @@ class ClubsContainer(QtWidgets.QGroupBox):
             self._clubs[cl["name"]] = Club_Widget(cl["name"],
                                                   cl["tag_name"],
                                                   tag_color=cl[
-                                                     "color"],
+                                                      "color"],
                                                   )
             self._group.addButton(
                 self._clubs[cl["name"]].select_club_btn)
@@ -126,20 +129,28 @@ class GraphicsWidget(QtWidgets.QWidget):
         # self.form.view_box.addWidget(m)
 
     def __init_diapason_slider(self):
-        slider = self.form.diapason_slider
-        slider.setRange(0, 3)
-        slider.setSingleStep(1)
-        slider.setPageStep(1)
-        slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
-
+        self.slider = sl.SliderDiapasonWidget(QtCore.Qt.Horizontal,
+                                         mark_names=["10 м",
+                                                     "30 м",
+                                                     " 1 ч",
+                                                     " 1 д"])
+        self.slider.slider.valueChanged.connect(self.diapason_change)
+        self.form.diapason_box.addWidget(self.slider)
+        # slider.setRange(0, 3)
+        # slider.setSingleStep(1)
+        # slider.setPageStep(1)
+        # slider.setTickPosition(QtWidgets.QSlider.TicksBelow)
 
     def _init_control(self):
         for btn in self.clubs_container.club_buttons:
             btn.toggled.connect(self._check_club)
 
-
     def _check_club(self):
-        print([x for x in self.clubs_container.club_buttons if x.isChecked()])
+        print([x for x in self.clubs_container.club_buttons if
+               x.isChecked()])
+
+    def diapason_change(self):
+        print("3")
 
     def update_plot(self):
         print("update plot")
