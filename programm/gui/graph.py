@@ -8,7 +8,10 @@ from jinja2 import Template
 from programm import pth
 from programm.gui.lib import tools
 from programm.gui.plot import plot
+import pandas as pd
+import arrow
 from programm.gui import slider as sl
+from programm.sql import sql_keeper
 
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
@@ -59,6 +62,7 @@ class ClubsContainer(QtWidgets.QGroupBox):
         self.box.addWidget(self.exclusive_club)
         self._add_clubs(clubs_cfg)
 
+
     @property
     def club_buttons(self):
         return self._group.buttons()
@@ -106,7 +110,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.clubs_container = ClubsContainer(clubs, state_cfg,
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
-        self.form.shoose_db.setText(self.get_last_bd_path())
+        self.__db_path = self.get_last_bd_path()
+        self.form.shoose_db.setText(os.path.basename(self.__db_path))
         self.__init_date_widgets()
         self.__init_diapason_slider()
         self._init_control()
@@ -121,6 +126,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         if fileName:
             text = os.path.basename(fileName)
             self.form.shoose_db.setText(text)
+            self.__db_path = fileName
+            self.update_plot()
 
 
 
@@ -160,8 +167,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.form.shoose_db.clicked.connect(self.choose_db_dialog)
 
     def _check_club(self):
-        print([x for x in self.clubs_container.club_buttons if
-               x.isChecked()])
+        self.update_plot()
 
     def diapason_change(self):
         print("3")
@@ -181,10 +187,10 @@ class GraphicsWidget(QtWidgets.QWidget):
     def update_plot(self):
         # данные с контроллеров
         controller_data = self.get_controller_data()
-        # запрос
-        sql_query = self.get_sql_query(controller_data)
-        # данные
-        data = self.get_data(sql_query)
+
+        data = self.get_data(controller_data, self.get_db_path())
+
+        print(data)
 
     def get_date_start(self) -> datetime.datetime:
         return self.form.dt_start_edit.dateTime().toPyDateTime().date()
@@ -208,16 +214,29 @@ class GraphicsWidget(QtWidgets.QWidget):
         return "1 h"
 
     def get_db_path(self) -> str:
-        return ""
+        return self.__db_path
 
     def get_sql_query(self, data) -> str:
-        return "sql_query"
+        return "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
 
-    def get_data(self, query) -> tuple:
-        return ()
+    def get_data(self, controller_data, db_path) -> tuple:
+        kp = sql_keeper.Keeper(db_path)
+
+        start = datetime.datetime.combine(controller_data["date_start"],
+                          controller_data["time_start"])
+        end = datetime.datetime.combine(controller_data["date_end"],
+                          controller_data["time_end"])
+        club = controller_data["active_clubs"]
+
+        params=(self.clubs[club[0]]["name"], start, end)
+        print(params)
+        df = kp.sample_range_date_time(*params)
+
+
+        return df
 
     def get_last_bd_path(self):
-        return "11-01-2018-db.sql"
+        return r"D:\0SYNC\python_projects\clube_stat_2\clube_stat\data\data.sql"
 
 
 if __name__ == '__main__':
