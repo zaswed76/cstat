@@ -15,4 +15,5 @@ class Keeper():
         self.open_connect()
         query = "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
         df = pd.read_sql_query(query, self.connect, params=(club, start, end))
-        return df
+        res = df[df["mminute"]==0]
+        return res

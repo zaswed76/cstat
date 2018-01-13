@@ -107,6 +107,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.clubs = clubs
         self.form = uic.loadUi(ui_pth, self)
         self.setWindowTitle("Graphics")
+        self.resize(1200, 400)
         self.clubs_container = ClubsContainer(clubs, state_cfg,
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
@@ -115,6 +116,12 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.__init_date_widgets()
         self.__init_diapason_slider()
         self._init_control()
+
+        self.view = self.form.graph_frame
+        self.plot_view = plot.PlotCanvas(None, width=5, height=4)
+        self.form.view_box.addWidget(self.plot_view)
+
+
 
     def choose_db_dialog(self):
 
@@ -135,22 +142,23 @@ class GraphicsWidget(QtWidgets.QWidget):
         yesterday_dt = datetime.datetime.now() - datetime.timedelta(
             days=1)
         d_start = yesterday_dt.date()
-        t_start = datetime.datetime.strptime("09:00", "%H:%M").time()
-        self.form.dt_start_edit.setDate(d_start)
+        t_start = datetime.datetime.strptime("14:00", "%H:%M").time()
+        # self.form.dt_start_edit.setDate(d_start)
+        self.form.dt_start_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_start_edit.setTime(t_start)
 
         current_dt = datetime.datetime.now()
         d_end = current_dt.date()
-        t_end = datetime.datetime.strptime("09:00", "%H:%M").time()
-        self.form.dt_end_edit.setDate(d_end)
+        t_end = datetime.datetime.strptime("20:01", "%H:%M").time()
+        # self.form.dt_end_edit.setDate(d_end)
+        self.form.dt_end_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_end_edit.setTime(t_end)
 
 
-        self.update_plot()
 
-        # self.view = self.form.graph_frame
-        # m = plot.PlotCanvas(None, width=5, height=4)
-        # self.form.view_box.addWidget(m)
+
+
+
 
     def __init_diapason_slider(self):
         self.slider = sl.SliderDiapasonWidget(QtCore.Qt.Horizontal,
@@ -190,7 +198,8 @@ class GraphicsWidget(QtWidgets.QWidget):
 
         data = self.get_data(controller_data, self.get_db_path())
 
-        print(data)
+
+        self.plot_view.plot(*data)
 
     def get_date_start(self) -> datetime.datetime:
         return self.form.dt_start_edit.dateTime().toPyDateTime().date()
@@ -205,7 +214,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         return self.form.time_end_edit.dateTime().toPyDateTime().time()
 
     def get_active_clubs(self) -> list:
-        return ["Les"]
+        return [x.tag_name for x in self.clubs_container.club_buttons if x.isChecked()]
 
     def get_graphic_type(self) -> str:
         return "bar"
@@ -228,12 +237,14 @@ class GraphicsWidget(QtWidgets.QWidget):
                           controller_data["time_end"])
         club = controller_data["active_clubs"]
 
-        params=(self.clubs[club[0]]["name"], start, end)
-        print(params)
+        n = club[0]
+
+        params=(self.clubs[n]["name"], start, end)
+
         df = kp.sample_range_date_time(*params)
-
-
-        return df
+        mhour = df["mhour"].tolist()
+        visitor = df["visitor"].tolist()
+        return (mhour, visitor)
 
     def get_last_bd_path(self):
         return r"D:\0SYNC\python_projects\clube_stat_2\clube_stat\data\data.sql"

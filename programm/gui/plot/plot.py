@@ -24,12 +24,15 @@ class PlotCanvas(FigureCanvas):
         FigureCanvas.updateGeometry(self)
 
 
-        self.plot()
 
-    def plot(self):
+
+    def plot(self, time, visitor, **kwargs):
         self.fig.clear()
-        data = [random.random() for i in range(25)]
-        ax = self.figure.add_subplot(111)
-        ax.plot(data, 'r-')
-        ax.set_title('PyQt Matplotlib Example')
+        self.ax = self.figure.add_subplot(111)
+
+        self.plots_ = self.ax.bar(time, visitor,
+                                       color=kwargs.get("color", "green"),
+                                       width=kwargs.get("width", 0.8),
+                                       alpha=kwargs.get("alpha", 1.0))
+
         self.draw()
