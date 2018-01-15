@@ -21,6 +21,7 @@ def main():
 
     prog = graph.GraphicsWidget(clubs, state_cfg)
     prog.show()
+
     sys.exit(app.exec_())
 
 

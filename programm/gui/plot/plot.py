@@ -8,31 +8,77 @@ from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
 
-import random
+import numpy as np
+import os
+from programm.log import log as lg
+from programm import pth
 
-class PlotCanvas(FigureCanvas):
-
-    def __init__(self, parent=None, width=5, height=5, dpi=110):
-        fig = Figure(figsize=(width, height), dpi=dpi)
-        super().__init__(fig)
-        self.fig = fig
-        self.setParent(parent)
-
-        FigureCanvas.setSizePolicy(self,
-                QSizePolicy.Expanding,
-                QSizePolicy.Expanding)
-        FigureCanvas.updateGeometry(self)
+import matplotlib
+matplotlib.use("TkAgg") # set the backend
 
 
+import pandas as pd
+
+import matplotlib
+
+log = lg.log(os.path.join(pth.LOG_DIR, "plot.log"))
+
+class Graphic:
+
+    def __init__(self):
+        self.plots = {}
+        self.index_name = 0
+
+    def set_legend(self, names, bg=None, color_matching=False, alpha=1.0):
+        plots = []
+        names = []
+        colors = []
+        for n, p in self.plots.items():
+            plots.append(p)
+            names.append(n)
+            colors.append(p.get_facecolor())
+        legend = plt.legend(names, shadow=False, fancybox=True)
+        frame = legend.get_frame()
+        frame.set_alpha(alpha)
+        frame.set_linewidth(0.5)
+        frame.set_edgecolor('black')
+        if bg is not None:
+            frame.set_facecolor("black")
+        if color_matching:
+            for color, text in zip(colors, legend.get_texts()):
+                text.set_color(color)
+
+
+    def show(self):
+        plt.show()
+
+    def set_y_limit(self, st, end):
+        log.debug("{}-{}".format(st, end))
 
 
     def plot(self, time, visitor, **kwargs):
-        self.fig.clear()
-        self.ax = self.figure.add_subplot(111)
+        try:
+            name = kwargs["name"]
+        except KeyError:
+            name = self.index_name
+            self.index_name += 1
+        freq_series = pd.Series.from_array(visitor)
+        self.plots[name] = freq_series.plot(kind='bar',
+                                   color=kwargs.get("color", "green"),
+                                   width=kwargs.get("width", 0.9))
+        self.plots[name].set_xticklabels(time)
+        self.plots[name].set_title(kwargs.get("title"))
+        self.plots[name].set_ylim(*kwargs.get("limit", (0, 60)))
 
-        self.plots_ = self.ax.bar(time, visitor,
-                                       color=kwargs.get("color", "green"),
-                                       width=kwargs.get("width", 0.8),
-                                       alpha=kwargs.get("alpha", 1.0))
+    def set_bg(self, color="lightgrey"):
+        list(self.plots.values())[-1].set_facecolor(color)
 
-        self.draw()
+    def close(self):
+        plt.clf()
+        plt.cla()
+        plt.close()
+
+    def save_from_file(self):
+        fig = matplotlib.pyplot.gcf()
+        fig.set_size_inches(11, 6)
+        fig.savefig(pth.PLOT_PATH, dpi=100)
