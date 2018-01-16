@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 
+import pandas
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 
 from jinja2 import Template
@@ -15,7 +16,8 @@ from programm.sql import sql_keeper
 
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
-
+from programm.log import log as lg
+log = lg.log(os.path.join(pth.LOG_DIR, "graph.log"))
 
 class Club_Widget(QtWidgets.QFrame):
     def __init__(self, name, tag_name, tag_color=None, *args,
@@ -101,11 +103,15 @@ class ClubsContainer(QtWidgets.QGroupBox):
 
 
 class GraphicsWidget(QtWidgets.QWidget):
-    def __init__(self, clubs, state_cfg, *args, **kwargs):
+    def __init__(self, name, clubs, state_cfg, name_config=None, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        print(name, "name")
+
+        self.name_config = name_config
         self.state_cfg = state_cfg
         self.clubs = clubs
         self.form = uic.loadUi(ui_pth, self)
+        self.setObjectName(name)
         self.setWindowTitle("Graphics")
         self.resize(1200, 622)
         self.clubs_container = ClubsContainer(clubs, state_cfg,
@@ -131,7 +137,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         if fileName:
             text = os.path.basename(fileName)
             self.form.shoose_db.setText(text)
-            self.__db_path = fileName
+            self.state_cfg["last_data_path"] = fileName
             self.update_plot()
 
 
@@ -192,20 +198,23 @@ class GraphicsWidget(QtWidgets.QWidget):
     def update_plot(self):
         controller_data = self.get_controller_data()
         data = self.get_data(controller_data, self.get_db_path())
-        club = controller_data['active_clubs'][0]
-        color = self.clubs[club]["color"]
-        time, load, schools = data
+        if data:
+            club = controller_data['active_clubs'][0]
+            color = self.clubs[club]["color"]
+            time, load, schools = data
 
-        if load:
-            self.plot_view.plot(time, load, color=color, y_limit=(0,50), width=0.8, name="visitors", title=club)
-            self.plot_view.plot(time, schools, color="#FCF355", y_limit=(0,50), width=0.7, name="school")
-            self.plot_view.set_bg("#F4F4F4")
-            self.plot_view.set_legend([club, "school"])
-            self.plot_view.save_from_file()
+            if load:
+                self.plot_view.plot(time, load, color=color, y_limit=(0,50), width=0.8, name="visitors", title=club)
+                self.plot_view.plot(time, schools, color="#FCF355", y_limit=(0,50), width=0.7, name="school")
+                self.plot_view.set_bg("#F4F4F4")
+                self.plot_view.set_legend([club, "school"])
+                self.plot_view.set_grid()
+                self.plot_view.save_from_file()
 
-            self.plot_view.close()
-            self.form.label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
-
+                self.plot_view.close()
+                self.form.label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+        else:
+            log.debug("not data")
 
 
     def get_date_start(self) -> datetime.datetime:
@@ -235,7 +244,7 @@ class GraphicsWidget(QtWidgets.QWidget):
     def get_sql_query(self, data) -> str:
         return "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
 
-    def get_data(self, controller_data, db_path) -> tuple:
+    def get_data(self, controller_data, db_path):
         kp = sql_keeper.Keeper(db_path)
 
         start = datetime.datetime.combine(controller_data["date_start"],
@@ -248,19 +257,24 @@ class GraphicsWidget(QtWidgets.QWidget):
 
         params=(self.clubs[n]["name"], start, end)
 
-        df = kp.sample_range_date_time(*params)
-        mhour = df["mhour"].tolist()
-        visitor = df["visitor"].tolist()
-        schools = df["school"].tolist()
-        return (mhour, visitor, schools)
+        try:
+            df = kp.sample_range_date_time(*params)
+        except pandas.io.sql.DatabaseError:
+            return None
+        else:
+            mhour = df["mhour"].tolist()
+            visitor = df["visitor"].tolist()
+            schools = df["school"].tolist()
+            return (mhour, visitor, schools)
+
 
     def get_last_bd_path(self):
-        return r"D:\0SYNC\python_projects\clube_stat_2\clube_stat\data\data.sql"
+        return self.state_cfg["last_data_path"]
 
 
     def closeEvent(self, QCloseEvent):
-        print(self.size())
-        self.plot_view.close()
+
+        print("close graph")
 
 if __name__ == '__main__':
     from programm.libs import config

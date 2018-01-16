@@ -1,10 +1,8 @@
 
 
-import pyqtgraph as pg
+import sqlite3 as sql
 
-## Switch to using white background and black foreground
-pg.setConfigOption('background', 'w')
-pg.setConfigOption('foreground', 'k')
+con = sql.connect(r"D:\0SYNC\python_projects\cstat\programm\gui\test\BarGraphItem.py")
+curs = con.cursor()
 
-## The following plot has inverted colors
-pg.plot([1,4,2,3,5])
+

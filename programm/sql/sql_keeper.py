@@ -6,6 +6,7 @@ class Keeper():
         self.path = path
 
     def open_connect(self):
+        print(self.path, "path")
         self.connect = sqlite3.connect(self.path)
 
     def open_cursor(self):

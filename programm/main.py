@@ -4,7 +4,7 @@ import os
 
 from PyQt5 import QtWidgets, QtCore
 
-from programm.gui import graph
+from programm.gui import graph, base
 from programm.libs import config
 from programm import pth
 
@@ -28,6 +28,8 @@ def qt_message_handler(mode, context, message):
 
 QtCore.qInstallMessageHandler(qt_message_handler)
 
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(open(pth.CSS_STYLE, "r").read())
@@ -35,9 +37,16 @@ def main():
     clubs = config.get_cfg(os.path.join(pth.CONFIG_DIR, "clubs.yaml"))
 
     state_cfg = config.get_cfg(
-        os.path.join(pth.CONFIG_DIR, "gui_stat.yaml"))
+        os.path.join(pth.CONFIG_DIR, "gui_graph.yaml"))
 
-    prog = graph.GraphicsWidget(clubs, state_cfg)
+    gr = graph.GraphicsWidget("graph", clubs, state_cfg, name_config="gui_graph.yaml")
+
+    stat = QtWidgets.QFrame()
+    stat.name_config = "gui_stat.yaml"
+    stat.state_cfg = {}
+    stat.setObjectName("stat")
+    stat.setStyleSheet("background-color: green")
+    prog = base.CStatMain(gr, stat)
     prog.show()
 
     sys.exit(app.exec_())

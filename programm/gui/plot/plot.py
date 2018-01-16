@@ -67,8 +67,11 @@ class Graphic:
                                    color=kwargs.get("color", "green"),
                                    width=kwargs.get("width", 0.9))
         self.plots[name].set_xticklabels(time)
-        self.plots[name].set_title(kwargs.get("title"))
+        title = kwargs.get("title")
+        if title is not None:
+            self.plots[name].set_title(title)
         self.plots[name].set_ylim(*kwargs.get("limit", (0, 60)))
+
 
     def set_bg(self, color="lightgrey"):
         list(self.plots.values())[-1].set_facecolor(color)
@@ -82,3 +85,6 @@ class Graphic:
         fig = matplotlib.pyplot.gcf()
         fig.set_size_inches(11, 6)
         fig.savefig(pth.PLOT_PATH, dpi=100)
+
+    def set_grid(self, *args):
+        plt.grid()
