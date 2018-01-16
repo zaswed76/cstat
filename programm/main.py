@@ -2,13 +2,31 @@ import sys
 
 import os
 
-from PyQt5 import QtWidgets
+from PyQt5 import QtWidgets, QtCore
 
 from programm.gui import graph
 from programm.libs import config
 from programm import pth
 
 from  programm import images_rc
+
+def qt_message_handler(mode, context, message):
+    if mode == QtCore.QtInfoMsg:
+        mode = 'INFO'
+    elif mode == QtCore.QtWarningMsg:
+        mode = 'WARNING'
+    elif mode == QtCore.QtCriticalMsg:
+        mode = 'CRITICAL'
+    elif mode == QtCore.QtFatalMsg:
+        mode = 'FATAL'
+    else:
+        mode = 'DEBUG'
+    print('qt_message_handler: line: %d, func: %s(), file: %s' % (
+        context.line, context.function, context.file))
+    print('  %s: %s\n' % (mode, message))
+
+
+QtCore.qInstallMessageHandler(qt_message_handler)
 
 def main():
     app = QtWidgets.QApplication(sys.argv)

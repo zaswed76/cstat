@@ -196,17 +196,15 @@ class GraphicsWidget(QtWidgets.QWidget):
         color = self.clubs[club]["color"]
         time, load, schools = data
 
+        if load:
+            self.plot_view.plot(time, load, color=color, y_limit=(0,50), width=0.8, name="visitors", title=club)
+            self.plot_view.plot(time, schools, color="#FCF355", y_limit=(0,50), width=0.7, name="school")
+            self.plot_view.set_bg("#F4F4F4")
+            self.plot_view.set_legend([club, "school"])
+            self.plot_view.save_from_file()
 
-        load2 = [13, 14, 18]
-
-        self.plot_view.plot(time, load, color=color, y_limit=(0,50), width=0.8, name="visitors", title=club)
-        self.plot_view.plot(time, schools, color="#FCF355", y_limit=(0,50), width=0.7, name="school")
-        self.plot_view.set_bg("#F4F4F4")
-        self.plot_view.set_legend([club, "school"])
-        self.plot_view.save_from_file()
-
-        self.plot_view.close()
-        self.form.label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+            self.plot_view.close()
+            self.form.label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
 
 
 
