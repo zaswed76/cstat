@@ -147,15 +147,15 @@ class GraphicsWidget(QtWidgets.QWidget):
             days=1)
         d_start = yesterday_dt.date()
         t_start = datetime.datetime.strptime("14:00", "%H:%M").time()
-        # self.form.dt_start_edit.setDate(d_start)
-        self.form.dt_start_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
+        self.form.dt_start_edit.setDate(d_start)
+        # self.form.dt_start_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_start_edit.setTime(t_start)
 
         current_dt = datetime.datetime.now()
         d_end = current_dt.date()
         t_end = datetime.datetime.strptime("16:01", "%H:%M").time()
-        # self.form.dt_end_edit.setDate(d_end)
-        self.form.dt_end_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
+        self.form.dt_end_edit.setDate(d_end)
+        # self.form.dt_end_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_end_edit.setTime(t_end)
 
         self.plot_view = plot.Graphic()
@@ -212,7 +212,8 @@ class GraphicsWidget(QtWidgets.QWidget):
                 self.plot_view.save_from_file()
 
                 self.plot_view.close()
-                self.form.label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+                # self.form.top_label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+                self.form.bottom_label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
         else:
             log.debug("not data")
 

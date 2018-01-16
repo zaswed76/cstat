@@ -71,7 +71,8 @@ class Graphic:
         if title is not None:
             self.plots[name].set_title(title)
         self.plots[name].set_ylim(*kwargs.get("limit", (0, 60)))
-
+        self.plots[name].text(1, 60, 'boxed italics text in data coords', style='italic',
+        bbox={'facecolor':'red', 'alpha':0.5, 'pad':10})
 
     def set_bg(self, color="lightgrey"):
         list(self.plots.values())[-1].set_facecolor(color)
@@ -88,3 +89,6 @@ class Graphic:
 
     def set_grid(self, *args):
         plt.grid()
+
+
+
