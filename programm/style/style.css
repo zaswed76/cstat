@@ -51,8 +51,19 @@ QPushButton#Dream_btn_set {
 }
 
 
+InfoLabel {
+    font-family: Helvetica;
+    font-size: 12pt;
+    color: #2f2f2f;
+    background-color: #dcdcdc;
+}
 
 
+InfoBox {
+    margin-top: 7px;
+    border: 1px solid #9a9a9a;
+    border-radius: 4px;
+}
 
 
 QStatusBar {

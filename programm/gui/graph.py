@@ -16,7 +16,9 @@ from programm.sql import sql_keeper
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
 from programm.log import log as lg
+
 log = lg.log(os.path.join(pth.LOG_DIR, "graph.log"))
+
 
 class Club_Widget(QtWidgets.QFrame):
     def __init__(self, name, tag_name, tag_color=None, *args,
@@ -39,11 +41,8 @@ class Club_Widget(QtWidgets.QFrame):
 
         self.set_club_btn.setFixedSize(25, 30)
 
-
-
         box.addWidget(self.select_club_btn)
         box.addWidget(self.set_club_btn)
-
 
 
 class ClubsContainer(QtWidgets.QGroupBox):
@@ -62,7 +61,6 @@ class ClubsContainer(QtWidgets.QGroupBox):
             self._exclusive_state)
         self.box.addWidget(self.exclusive_club)
         self._add_clubs(clubs_cfg)
-
 
     @property
     def club_buttons(self):
@@ -102,7 +100,8 @@ class ClubsContainer(QtWidgets.QGroupBox):
 
 
 class GraphicsWidget(QtWidgets.QWidget):
-    def __init__(self, name, clubs, state_cfg, name_config=None, *args, **kwargs):
+    def __init__(self, name, clubs, state_cfg, name_config=None,
+                 *args, **kwargs):
         super().__init__(*args, **kwargs)
         print(name, "name")
 
@@ -117,24 +116,24 @@ class GraphicsWidget(QtWidgets.QWidget):
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
         self.__db_path = self.get_last_bd_path()
-        self.form.shoose_db.setText(self._get_label_path_text(self.__db_path))
+        self.form.shoose_db.setText(
+            self._get_label_path_text(self.__db_path))
         self.__init_date_widgets()
         self.__init_diapason_slider()
         self._init_control()
-
-
-
-
 
     def choose_db_dialog(self):
 
         options = QtWidgets.QFileDialog.Options()
         options |= QtWidgets.QFileDialog.DontUseNativeDialog
         fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,
-                "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)",
+                                                            "QFileDialog.getOpenFileName()",
+                                                            "",
+                                                            "All Files (*);;Python Files (*.py)",
                                                             options=options)
         if fileName:
-            self.form.shoose_db.setText(self._get_label_path_text(fileName))
+            self.form.shoose_db.setText(
+                self._get_label_path_text(fileName))
             self.state_cfg["last_data_path"] = fileName
 
     def _get_label_path_text(self, path):
@@ -142,7 +141,6 @@ class GraphicsWidget(QtWidgets.QWidget):
         a = os.path.join(*pp[:2])
         b = pp[-1]
         return "{} ... {}".format(a, b)
-
 
     def __init_date_widgets(self):
         yesterday_dt = datetime.datetime.now() - datetime.timedelta(
@@ -184,7 +182,6 @@ class GraphicsWidget(QtWidgets.QWidget):
 
     def _init_control(self):
         for btn in self.clubs_container.club_buttons:
-
             btn.clicked.connect(self._check_club)
         self.form.shoose_db.clicked.connect(self.choose_db_dialog)
 
@@ -216,12 +213,16 @@ class GraphicsWidget(QtWidgets.QWidget):
             color = self.clubs[club]["color"]
             time, load, schools, all_data = data_step
             av = self._get_average_people(load)
-            average_people = self._get_average_people(all_data["visitor"])
-            print("по час - {} # подр - {}".format(av, average_people))
+
+
 
             if load:
-                self.plot_view.plot(time, load, color=color, y_limit=(0,50), width=0.8, name="visitors", title=club)
-                self.plot_view.plot(time, schools, color="#FCF355", y_limit=(0,50), width=0.7, name="school")
+                self.plot_view.plot(time, load, color=color,
+                                    y_limit=(0, 50), width=0.8,
+                                    name="visitors", title=club)
+                self.plot_view.plot(time, schools, color="#FCF355",
+                                    y_limit=(0, 50), width=0.7,
+                                    name="school")
                 self.plot_view.set_bg("#DDDDDD")
                 self.plot_view.set_legend([club, "school"])
                 self.plot_view.set_grid()
@@ -229,7 +230,19 @@ class GraphicsWidget(QtWidgets.QWidget):
 
                 self.plot_view.close()
                 self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
-                self.bl_lb.set_info_label()
+                self.info_lb = self.bl_lb.create_info_label()
+                average_people = self._get_average_people(
+                all_data["visitor"])
+                self.info_lb.add_text(
+                    "человек в среднем - {}".format(average_people))
+                average_load = self._get_average_load(
+                    average_people,
+                    self.clubs[club]["max"])
+                self.info_lb.add_text(
+                    "заполненность клуба - {}%".format(average_load))
+                # self.info_lb.add_text("школьникв в среднем - 5")
+                # self.info_lb.add_text("заполненность клуба - 16%")
+
 
 
 
@@ -238,10 +251,14 @@ class GraphicsWidget(QtWidgets.QWidget):
         else:
             log.debug("not data")
 
-    def _get_average_people(self, visitor):
+    def _get_average_people(self, visitor, r=0):
         lenght = len(visitor)
         s = sum(visitor)
-        return round(s/lenght, 1)
+        return round(s / lenght)
+
+    def _get_average_load(self, avis, max, r=0):
+        r = (avis/max)*100
+        return round(r, 1)
 
     def get_date_start(self) -> datetime.datetime:
         return self.form.dt_start_edit.dateTime().toPyDateTime().date()
@@ -256,7 +273,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         return self.form.time_end_edit.dateTime().toPyDateTime().time()
 
     def get_active_clubs(self) -> list:
-        return [x.tag_name for x in self.clubs_container.club_buttons if x.isChecked()]
+        return [x.tag_name for x in self.clubs_container.club_buttons
+                if x.isChecked()]
 
     def get_graphic_type(self) -> str:
         return "bar"
@@ -273,15 +291,16 @@ class GraphicsWidget(QtWidgets.QWidget):
     def get_data(self, controller_data, db_path):
         kp = sql_keeper.Keeper(db_path)
 
-        start = datetime.datetime.combine(controller_data["date_start"],
-                          controller_data["time_start"])
+        start = datetime.datetime.combine(
+            controller_data["date_start"],
+            controller_data["time_start"])
         end = datetime.datetime.combine(controller_data["date_end"],
-                          controller_data["time_end"])
+                                        controller_data["time_end"])
         club = controller_data["active_clubs"]
 
         n = club[0]
 
-        params=(self.clubs[n]["name"], start, end)
+        params = (self.clubs[n]["name"], start, end)
 
         try:
             d = kp.sample_range_date_time(*params)
@@ -295,27 +314,45 @@ class GraphicsWidget(QtWidgets.QWidget):
             schools = step_data["school"].tolist()
             return (mhour, visitor, schools, all_data)
 
-
     def get_last_bd_path(self):
         return self.state_cfg["last_data_path"]
-
 
     def closeEvent(self, QCloseEvent):
 
         print("close graph")
+
 
 class GraphicLabel(QtWidgets.QLabel):
     def __init__(self, name, *__args):
         super().__init__(*__args)
         self.setObjectName(name)
 
-    def set_info_label(self):
-        self.btn = QtWidgets.QFrame(self)
+    def create_info_label(self):
+        self.btn = InfoBox(self)
         self.btn.setStyleSheet("background-color: lightgrey")
         self.btn.setFixedSize(300, 68)
-        self.btn.move(106, 0)
+        self.btn.move(106, -10)
         self.btn.show()
+        return self.btn
 
+
+class InfoBox(QtWidgets.QFrame):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.grid = QtWidgets.QVBoxLayout(self)
+        sizePolicy = QtWidgets.QSizePolicy(
+            QtWidgets.QSizePolicy.Expanding,
+            QtWidgets.QSizePolicy.Expanding)
+        self.setSizePolicy(sizePolicy)
+
+    def add_text(self, text):
+        lb = InfoLabel(text)
+        lb.setScaledContents(True)
+        self.grid.addWidget(lb)
+
+class InfoLabel(QtWidgets.QLabel):
+    def __init__(self, *__args):
+        super().__init__(*__args)
 
 
 if __name__ == '__main__':
