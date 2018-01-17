@@ -159,8 +159,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.form.time_end_edit.setTime(t_end)
 
         self.plot_view = plot.Graphic()
-        self.graphic_frame = self.form.graphic_frame
-        self.grid = self.form.graph_grid
+
+        self.grid = self.form.graph_grid_
 
         self.tl_lb = GraphicLabel("top_left_glabel")
         self.tr_lb = GraphicLabel("top_right_glabel")

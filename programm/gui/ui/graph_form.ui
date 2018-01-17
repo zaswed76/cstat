@@ -6,323 +6,322 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>806</width>
-    <height>480</height>
+    <width>737</width>
+    <height>408</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
-  <layout class="QHBoxLayout" name="horizontalLayout" stretch="1,30">
+  <layout class="QHBoxLayout" name="horizontalLayout" stretch="0,30">
    <item>
-    <layout class="QVBoxLayout" name="verticalLayout">
-     <property name="spacing">
-      <number>10</number>
+    <widget class="QFrame" name="controller_frame">
+     <property name="styleSheet">
+      <string notr="true"/>
      </property>
-     <item>
-      <widget class="QGroupBox" name="groupBox_5">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>300</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="layoutDirection">
-        <enum>Qt::LeftToRight</enum>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="title">
-        <string>начало</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-       <property name="flat">
-        <bool>false</bool>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_4">
+     <property name="frameShape">
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow">
+      <enum>QFrame::Plain</enum>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2">
+      <item>
+       <layout class="QVBoxLayout" name="verticalLayout">
+        <property name="spacing">
+         <number>10</number>
+        </property>
         <item>
-         <widget class="QDateEdit" name="dt_start_edit">
-          <property name="minimumSize">
-           <size>
-            <width>110</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>110</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="minimumDate">
-           <date>
-            <year>1752</year>
-            <month>9</month>
-            <day>14</day>
-           </date>
-          </property>
-          <property name="currentSection">
-           <enum>QDateTimeEdit::DaySection</enum>
-          </property>
-          <property name="calendarPopup">
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTimeEdit" name="time_start_edit">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="minimumSize">
-           <size>
-            <width>70</width>
-            <height>25</height>
-           </size>
-          </property>
-          <property name="maximumSize">
-           <size>
-            <width>70</width>
-            <height>25</height>
-           </size>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_6">
-       <property name="minimumSize">
-        <size>
-         <width>100</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>300</width>
-         <height>60</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="title">
-        <string>конец</string>
-       </property>
-       <property name="alignment">
-        <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_5">
-        <item>
-         <widget class="QDateEdit" name="dt_end_edit">
+         <widget class="QGroupBox" name="groupBox_5">
           <property name="minimumSize">
            <size>
             <width>100</width>
-            <height>25</height>
+            <height>60</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>110</width>
+            <width>300</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="layoutDirection">
+           <enum>Qt::LeftToRight</enum>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
+          <property name="title">
+           <string>начало</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <item>
+            <widget class="QDateEdit" name="dt_start_edit">
+             <property name="minimumSize">
+              <size>
+               <width>110</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>110</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="minimumDate">
+              <date>
+               <year>1752</year>
+               <month>9</month>
+               <day>14</day>
+              </date>
+             </property>
+             <property name="currentSection">
+              <enum>QDateTimeEdit::DaySection</enum>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTimeEdit" name="time_start_edit">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Expanding" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_6">
+          <property name="minimumSize">
+           <size>
+            <width>100</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>300</width>
+            <height>60</height>
+           </size>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
+          <property name="title">
+           <string>конец</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_5">
+           <item>
+            <widget class="QDateEdit" name="dt_end_edit">
+             <property name="minimumSize">
+              <size>
+               <width>100</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>110</width>
+               <height>16777215</height>
+              </size>
+             </property>
+             <property name="calendarPopup">
+              <bool>true</bool>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QTimeEdit" name="time_end_edit">
+             <property name="minimumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+             <property name="maximumSize">
+              <size>
+               <width>70</width>
+               <height>25</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QWidget" name="clube_container" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>200</width>
+            <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>220</width>
             <height>16777215</height>
            </size>
           </property>
-          <property name="calendarPopup">
-           <bool>true</bool>
-          </property>
+          <layout class="QVBoxLayout" name="verticalLayout_3">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="clube_layout">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+            </layout>
+           </item>
+          </layout>
          </widget>
         </item>
         <item>
-         <widget class="QTimeEdit" name="time_end_edit">
+         <widget class="QWidget" name="clube_container_2" native="true">
           <property name="minimumSize">
            <size>
-            <width>70</width>
-            <height>25</height>
+            <width>200</width>
+            <height>0</height>
            </size>
           </property>
           <property name="maximumSize">
            <size>
-            <width>70</width>
-            <height>25</height>
+            <width>220</width>
+            <height>16777215</height>
            </size>
           </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="clube_container" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>220</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_3">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <layout class="QVBoxLayout" name="clube_layout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QWidget" name="clube_container_2" native="true">
-       <property name="minimumSize">
-        <size>
-         <width>200</width>
-         <height>0</height>
-        </size>
-       </property>
-       <property name="maximumSize">
-        <size>
-         <width>220</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">background-color: rgb(231, 231, 231);</string>
-       </property>
-       <layout class="QVBoxLayout" name="verticalLayout_4">
-        <property name="spacing">
-         <number>0</number>
-        </property>
-        <property name="leftMargin">
-         <number>0</number>
-        </property>
-        <property name="topMargin">
-         <number>0</number>
-        </property>
-        <property name="rightMargin">
-         <number>0</number>
-        </property>
-        <property name="bottomMargin">
-         <number>0</number>
-        </property>
-        <item>
-         <layout class="QVBoxLayout" name="graphic_type_layout">
-          <property name="spacing">
-           <number>0</number>
-          </property>
-         </layout>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_8">
-       <property name="maximumSize">
-        <size>
-         <width>220</width>
-         <height>16777215</height>
-        </size>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="title">
-        <string>интервал</string>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_3">
-        <item>
-         <layout class="QVBoxLayout" name="diapason_box"/>
-        </item>
-       </layout>
-      </widget>
-     </item>
-     <item>
-      <widget class="QGroupBox" name="groupBox_2">
-       <property name="styleSheet">
-        <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-       </property>
-       <property name="title">
-        <string>выбрать базу данных</string>
-       </property>
-       <layout class="QHBoxLayout" name="horizontalLayout_7">
-        <item>
-         <widget class="QPushButton" name="shoose_db">
           <property name="styleSheet">
-           <string notr="true">font: italic 10pt &quot;Consolas&quot;;</string>
+           <string notr="true">background-color: rgb(231, 231, 231);</string>
           </property>
-          <property name="text">
-           <string/>
+          <layout class="QVBoxLayout" name="verticalLayout_4">
+           <property name="spacing">
+            <number>0</number>
+           </property>
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <layout class="QVBoxLayout" name="graphic_type_layout">
+             <property name="spacing">
+              <number>0</number>
+             </property>
+            </layout>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_8">
+          <property name="maximumSize">
+           <size>
+            <width>220</width>
+            <height>16777215</height>
+           </size>
           </property>
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
+          <property name="title">
+           <string>интервал</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_3">
+           <item>
+            <layout class="QVBoxLayout" name="diapason_box"/>
+           </item>
+          </layout>
+         </widget>
+        </item>
+        <item>
+         <widget class="QGroupBox" name="groupBox_2">
+          <property name="styleSheet">
+           <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+          </property>
+          <property name="title">
+           <string>выбрать базу данных</string>
+          </property>
+          <layout class="QHBoxLayout" name="horizontalLayout_7">
+           <item>
+            <widget class="QPushButton" name="shoose_db">
+             <property name="styleSheet">
+              <string notr="true">font: italic 10pt &quot;Consolas&quot;;</string>
+             </property>
+             <property name="text">
+              <string/>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
-      </widget>
-     </item>
-    </layout>
+      </item>
+     </layout>
+    </widget>
    </item>
    <item>
-    <widget class="QFrame" name="graphic_frame">
+    <widget class="QFrame" name="graph_frame">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
      <property name="frameShadow">
       <enum>QFrame::Raised</enum>
      </property>
-     <layout class="QVBoxLayout" name="verticalLayout_2">
-      <property name="spacing">
-       <number>0</number>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>0</number>
-      </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <layout class="QGridLayout" name="graph_grid">
-        <property name="spacing">
-         <number>1</number>
-        </property>
-       </layout>
+       <layout class="QGridLayout" name="graph_grid_"/>
       </item>
      </layout>
     </widget>

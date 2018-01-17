@@ -66,6 +66,10 @@ InfoBox {
 }
 
 
+Frame {
+    border: 1px solid #9a9a9a;
+}
+
 QStatusBar {
 
     font-family: Helvetica;
