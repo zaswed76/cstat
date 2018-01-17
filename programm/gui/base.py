@@ -10,8 +10,14 @@ root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/main_form.ui")
 
 class CStatMain(QtWidgets.QMainWindow):
-    def __init__(self, *stack_widgets):
+    def __init__(self, *stack_widgets, config=None, name_config=None):
         super().__init__()
+        self.name_config = name_config
+        if config is not None:
+            self.cfg = config
+        else: self.cfg = {}
+
+
         self.stack_widgets = {}
 
         self.form = uic.loadUi(ui_pth, self)
@@ -26,7 +32,7 @@ class CStatMain(QtWidgets.QMainWindow):
 
             self.stack_widgets[w.objectName()] = w
             self.stack.addWidget(w)
-        print(self.stack_widgets)
+        self.resize(*self.cfg.get("size", (800, 600)))
 
 
 
@@ -41,6 +47,9 @@ class CStatMain(QtWidgets.QMainWindow):
 
 
     def closeEvent(self, QCloseEvent):
+        wind_size = [self.size().width(), self.size().height()]
+        self.cfg["size"] = wind_size
+        config.save_cfg(os.path.join(pth.CONFIG_DIR, self.name_config), self.cfg)
         for w in self.stack_widgets.values():
             config.save_cfg(os.path.join(pth.CONFIG_DIR, w.name_config), w.state_cfg)
 

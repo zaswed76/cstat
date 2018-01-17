@@ -71,8 +71,7 @@ class Graphic:
         if title is not None:
             self.plots[name].set_title(title)
         self.plots[name].set_ylim(*kwargs.get("limit", (0, 60)))
-        self.plots[name].text(1, 60, 'boxed italics text in data coords', style='italic',
-        bbox={'facecolor':'red', 'alpha':0.5, 'pad':10})
+
 
     def set_bg(self, color="lightgrey"):
         list(self.plots.values())[-1].set_facecolor(color)
@@ -84,8 +83,8 @@ class Graphic:
 
     def save_from_file(self):
         fig = matplotlib.pyplot.gcf()
-        fig.set_size_inches(11, 6)
-        fig.savefig(pth.PLOT_PATH, dpi=100)
+        fig.set_size_inches(9, 6)
+        fig.savefig(pth.PLOT_PATH, dpi=96)
 
     def set_grid(self, *args):
         plt.grid()

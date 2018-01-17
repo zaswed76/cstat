@@ -46,7 +46,9 @@ def main():
     stat.state_cfg = {}
     stat.setObjectName("stat")
     stat.setStyleSheet("background-color: green")
-    prog = base.CStatMain(gr, stat)
+    base_config = config.get_cfg(
+        os.path.join(pth.CONFIG_DIR, "base.yaml"))
+    prog = base.CStatMain(gr, stat, config=base_config, name_config="base.yaml")
     prog.show()
 
     sys.exit(app.exec_())

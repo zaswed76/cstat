@@ -294,7 +294,7 @@
     </layout>
    </item>
    <item>
-    <widget class="QFrame" name="frame">
+    <widget class="QFrame" name="graphic_frame">
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>
@@ -302,19 +302,27 @@
       <enum>QFrame::Raised</enum>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_2">
+      <property name="spacing">
+       <number>0</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
-       <widget class="QLabel" name="top_label">
-        <property name="text">
-         <string/>
+       <layout class="QGridLayout" name="graph_grid">
+        <property name="spacing">
+         <number>1</number>
         </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QLabel" name="bottom_label">
-        <property name="text">
-         <string/>
-        </property>
-       </widget>
+       </layout>
       </item>
      </layout>
     </widget>

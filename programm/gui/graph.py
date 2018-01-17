@@ -9,8 +9,7 @@ from jinja2 import Template
 from programm import pth
 from programm.gui.lib import tools
 from programm.gui.plot import graph, plot
-import pandas as pd
-import arrow
+from pathlib import Path, PurePath
 from programm.gui import slider as sl
 from programm.sql import sql_keeper
 
@@ -118,7 +117,7 @@ class GraphicsWidget(QtWidgets.QWidget):
                                               title="клубы", )
         self.form.clube_layout.addWidget(self.clubs_container)
         self.__db_path = self.get_last_bd_path()
-        self.form.shoose_db.setText(os.path.basename(self.__db_path))
+        self.form.shoose_db.setText(self._get_label_path_text(self.__db_path))
         self.__init_date_widgets()
         self.__init_diapason_slider()
         self._init_control()
@@ -135,31 +134,44 @@ class GraphicsWidget(QtWidgets.QWidget):
                 "QFileDialog.getOpenFileName()", "", "All Files (*);;Python Files (*.py)",
                                                             options=options)
         if fileName:
-            text = os.path.basename(fileName)
-            self.form.shoose_db.setText(text)
+            self.form.shoose_db.setText(self._get_label_path_text(fileName))
             self.state_cfg["last_data_path"] = fileName
-            self.update_plot()
 
+    def _get_label_path_text(self, path):
+        pp = PurePath(path).parts
+        a = os.path.join(*pp[:2])
+        b = pp[-1]
+        return "{} ... {}".format(a, b)
 
 
     def __init_date_widgets(self):
         yesterday_dt = datetime.datetime.now() - datetime.timedelta(
             days=1)
         d_start = yesterday_dt.date()
-        t_start = datetime.datetime.strptime("14:00", "%H:%M").time()
+        t_start = datetime.datetime.strptime("9:00", "%H:%M").time()
         self.form.dt_start_edit.setDate(d_start)
         # self.form.dt_start_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_start_edit.setTime(t_start)
 
         current_dt = datetime.datetime.now()
         d_end = current_dt.date()
-        t_end = datetime.datetime.strptime("16:01", "%H:%M").time()
+        t_end = datetime.datetime.strptime("9:01", "%H:%M").time()
         self.form.dt_end_edit.setDate(d_end)
         # self.form.dt_end_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_end_edit.setTime(t_end)
 
         self.plot_view = plot.Graphic()
+        self.graphic_frame = self.form.graphic_frame
+        self.grid = self.form.graph_grid
 
+        self.tl_lb = GraphicLabel("top_left_glabel")
+        self.tr_lb = GraphicLabel("top_right_glabel")
+        self.bl_lb = GraphicLabel("bot_left_glabel")
+        self.br_lb = GraphicLabel("bot_right_glabel")
+        self.grid.addWidget(self.tl_lb, 0, 0)
+        self.grid.addWidget(self.tr_lb, 0, 1)
+        self.grid.addWidget(self.bl_lb, 1, 0)
+        self.grid.addWidget(self.br_lb, 1, 1)
 
     def __init_diapason_slider(self):
         self.slider = sl.SliderDiapasonWidget(QtCore.Qt.Horizontal,
@@ -197,26 +209,39 @@ class GraphicsWidget(QtWidgets.QWidget):
 
     def update_plot(self):
         controller_data = self.get_controller_data()
-        data = self.get_data(controller_data, self.get_db_path())
-        if data:
+        path = self.get_last_bd_path()
+        data_step = self.get_data(controller_data, path)
+        if data_step:
             club = controller_data['active_clubs'][0]
             color = self.clubs[club]["color"]
-            time, load, schools = data
+            time, load, schools, all_data = data_step
+            av = self._get_average_people(load)
+            average_people = self._get_average_people(all_data["visitor"])
+            print("по час - {} # подр - {}".format(av, average_people))
 
             if load:
                 self.plot_view.plot(time, load, color=color, y_limit=(0,50), width=0.8, name="visitors", title=club)
                 self.plot_view.plot(time, schools, color="#FCF355", y_limit=(0,50), width=0.7, name="school")
-                self.plot_view.set_bg("#F4F4F4")
+                self.plot_view.set_bg("#DDDDDD")
                 self.plot_view.set_legend([club, "school"])
                 self.plot_view.set_grid()
                 self.plot_view.save_from_file()
 
                 self.plot_view.close()
-                # self.form.top_label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
-                self.form.bottom_label.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+                self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+                self.bl_lb.set_info_label()
+
+
+
+
+
         else:
             log.debug("not data")
 
+    def _get_average_people(self, visitor):
+        lenght = len(visitor)
+        s = sum(visitor)
+        return round(s/lenght, 1)
 
     def get_date_start(self) -> datetime.datetime:
         return self.form.dt_start_edit.dateTime().toPyDateTime().date()
@@ -259,14 +284,16 @@ class GraphicsWidget(QtWidgets.QWidget):
         params=(self.clubs[n]["name"], start, end)
 
         try:
-            df = kp.sample_range_date_time(*params)
+            d = kp.sample_range_date_time(*params)
+            step_data = d["step_data"]
+            all_data = d["all_data"]
         except pandas.io.sql.DatabaseError:
             return None
         else:
-            mhour = df["mhour"].tolist()
-            visitor = df["visitor"].tolist()
-            schools = df["school"].tolist()
-            return (mhour, visitor, schools)
+            mhour = step_data["mhour"].tolist()
+            visitor = step_data["visitor"].tolist()
+            schools = step_data["school"].tolist()
+            return (mhour, visitor, schools, all_data)
 
 
     def get_last_bd_path(self):
@@ -276,6 +303,20 @@ class GraphicsWidget(QtWidgets.QWidget):
     def closeEvent(self, QCloseEvent):
 
         print("close graph")
+
+class GraphicLabel(QtWidgets.QLabel):
+    def __init__(self, name, *__args):
+        super().__init__(*__args)
+        self.setObjectName(name)
+
+    def set_info_label(self):
+        self.btn = QtWidgets.QFrame(self)
+        self.btn.setStyleSheet("background-color: lightgrey")
+        self.btn.setFixedSize(300, 68)
+        self.btn.move(106, 0)
+        self.btn.show()
+
+
 
 if __name__ == '__main__':
     from programm.libs import config
