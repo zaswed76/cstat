@@ -225,6 +225,7 @@ class GraphicsWidget(QtWidgets.QWidget):
                                     name="school")
                 self.plot_view.set_bg("#DDDDDD")
                 self.plot_view.set_legend([club, "school"])
+                self.plot_view.add_pc_max(self.clubs[club]["max"], len(time))
                 self.plot_view.set_grid()
                 self.plot_view.save_from_file()
 
@@ -331,7 +332,7 @@ class GraphicLabel(QtWidgets.QLabel):
         self.btn = InfoBox(self)
         self.btn.setStyleSheet("background-color: lightgrey")
         self.btn.setFixedSize(300, 68)
-        self.btn.move(106, -10)
+        self.btn.move(106, -1)
         self.btn.show()
         return self.btn
 
