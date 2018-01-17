@@ -78,9 +78,10 @@ class Graphic:
 
         if pc_max is not None:
             plt.plot([0, length - 1],
-                                  [pc_max, pc_max],
-                                  color="#E988A9", linewidth=0.8)
-            plt.annotate('pc max', xy=(length/2, pc_max+1), color="#1B97B9")
+                     [pc_max, pc_max],
+                     color="#E988A9", linewidth=0.8)
+            plt.annotate('pc max', xy=(length / 2, pc_max + 1),
+                         color="#1B97B9")
 
     def set_bg(self, color="lightgrey"):
         list(self.plots.values())[-1].set_facecolor(color)
@@ -93,13 +94,12 @@ class Graphic:
     def save_from_file(self):
         fig = matplotlib.pyplot.gcf()
         fig.set_size_inches(9, 6)
-        margins = {  #     vvv margin in inches
-        "left"   :     0.07,
-        "bottom" :     0.12,
-        "right"  : 0.98,
-        "top"    : 0.94
-}
-        print(margins)
+        margins = {
+            "left": 0.07,
+            "bottom": 0.12,
+            "right": 0.98,
+            "top": 0.94
+        }
         fig.subplots_adjust(**margins)
         fig.savefig(pth.PLOT_PATH, dpi=96)
 
