@@ -241,16 +241,18 @@ class GraphicsWidget(QtWidgets.QWidget):
                     self.clubs[club]["max"])
                 self.info_lb.add_text(
                     "заполненность клуба - {}%".format(average_load))
+
+                self.shoot()
                 # self.info_lb.add_text("школьникв в среднем - 5")
                 # self.info_lb.add_text("заполненность клуба - 16%")
-
-
-
-
-
-
         else:
             log.debug("not data")
+
+
+    def shoot(self):
+        p = self.bl_lb.grab()
+        p.save(pth.PLOT_PATH, 'png')
+
 
     def _get_average_people(self, visitor, r=0):
         lenght = len(visitor)
