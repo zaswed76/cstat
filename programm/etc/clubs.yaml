@@ -6,14 +6,17 @@ Akadem:
     name: IT Land Akadem
     tag_name: Akadem
     pro_comp_list: []
+    school_time: ['13:30','22:00']
+
 Dream:
     color: "#C89C0C"
     graphics_max: 60
     id: 2
-    max: 50
+    max: 60
     name: IT Land DreamTown
     tag_name: Dream
     pro_comp_list: []
+    school_time: ['13:30','22:00']
 Les:
     color: "#0AC81D"
     graphics_max: 55
@@ -22,6 +25,7 @@ Les:
     name: IT Land Les
     tag_name: Les
     pro_comp_list: [15, 16, 17, 18, 19, 20]
+    school_time: ['13:30','22:00']
 Troya:
     color: "#C105C8"
     graphics_max: 55
@@ -30,3 +34,4 @@ Troya:
     name: IT Land Troya
     tag_name: Troya
     pro_comp_list: []
+    school_time: ['13:30','22:00']

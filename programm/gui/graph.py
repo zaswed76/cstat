@@ -1,16 +1,17 @@
 import datetime
 import os
+import sqlite3
 import sys
+from pathlib import PurePath
 
 import pandas
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
-
 from jinja2 import Template
+
 from programm import pth
-from programm.gui.lib import tools
-from programm.gui.plot import graph, plot
-from pathlib import Path, PurePath
 from programm.gui import slider as sl
+from programm.gui.lib import tools
+from programm.gui.plot import plot
 from programm.sql import sql_keeper
 
 root = os.path.join(os.path.dirname(__file__))
@@ -208,11 +209,25 @@ class GraphicsWidget(QtWidgets.QWidget):
         controller_data = self.get_controller_data()
         path = self.get_last_bd_path()
         data_step = self.get_data(controller_data, path)
+        data_table = self.get_data_table_club(controller_data, path)
+        print(data_table)
+
         if data_step:
             club = controller_data['active_clubs'][0]
+
+
+
             color = self.clubs[club]["color"]
             time, load, schools, all_data = data_step
-            av = self._get_average_people(load)
+
+            school_time = self.clubs[club]["school_time"]
+            # школьное время
+            st, end = self._get_date_school(controller_data["date_start"], school_time)
+
+            data_school = self.get_data_school_time(st, end, all_data)
+            av_sc = self._get_average_school(data_school["visitor"], data_school["school"])
+
+            # av = self._get_average_people(load)
 
 
 
@@ -225,42 +240,57 @@ class GraphicsWidget(QtWidgets.QWidget):
                                     name="school")
                 self.plot_view.set_bg("#DDDDDD")
                 self.plot_view.set_legend([club, "school"])
-                self.plot_view.add_pc_max(self.clubs[club]["max"], len(time))
+                self.plot_view.add_pc_max(self.clubs[club]["max"],
+                                          len(time))
                 self.plot_view.set_grid()
+
+                average_people = self._get_average_people(
+                    all_data["visitor"])
+
+                average_load = self._get_average_load(
+                    average_people,
+                    self.clubs[club]["max"])
+                text = """человек в среднем - {}
+заполненность клуба - {}%
+процент школьников - {}%""".format(average_people, average_load, av_sc)
+                self.plot_view.set_text(text)
                 self.plot_view.save_from_file()
 
                 self.plot_view.close()
                 self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
-                self.info_lb = self.bl_lb.create_info_label()
-                average_people = self._get_average_people(
-                all_data["visitor"])
-                self.info_lb.add_text(
-                    "человек в среднем - {}".format(average_people))
-                average_load = self._get_average_load(
-                    average_people,
-                    self.clubs[club]["max"])
-                self.info_lb.add_text(
-                    "заполненность клуба - {}%".format(average_load))
+
+                # self.info_lb.add_text(
+                #     "человек в среднем - {}".format(average_people))
+
+                # self.info_lb.add_text(
+                #     "заполненность клуба - {}%".format(average_load))
 
                 self.shoot()
                 # self.info_lb.add_text("школьникв в среднем - 5")
                 # self.info_lb.add_text("заполненность клуба - 16%")
+
+
         else:
             log.debug("not data")
-
 
     def shoot(self):
         p = self.bl_lb.grab()
         p.save(pth.PLOT_PATH, 'png')
-
 
     def _get_average_people(self, visitor, r=0):
         lenght = len(visitor)
         s = sum(visitor)
         return round(s / lenght)
 
+    def _get_average_school(self, visitor, school, r=0):
+        lenght = len(visitor)
+        vs = sum(visitor)
+        ss = sum(school)
+        r = (ss*100)/vs
+        return round(r, 1)
+
     def _get_average_load(self, avis, max, r=0):
-        r = (avis/max)*100
+        r = (avis / max) * 100
         return round(r, 1)
 
     def get_date_start(self) -> datetime.datetime:
@@ -291,6 +321,47 @@ class GraphicsWidget(QtWidgets.QWidget):
     def get_sql_query(self, data) -> str:
         return "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
 
+    def get_data_school_time(self, st, end, d):
+        # print(d[d["school"] > 0])
+        return d[(d["data_time"] > st) & (d["data_time"] < end)]
+
+    def _get_date_school(self, date, time):
+        st = time[0].split(":")
+        end = time[1].split(":")
+        school_time_st = datetime.datetime.strptime(
+            '{}:{}'.format(*st), '%H:%M').time()
+        school_time_end = datetime.datetime.strptime(
+            '{}:{}'.format(*end), '%H:%M').time()
+
+        date_st = datetime.datetime.combine(date, school_time_st).strftime("%Y-%m-%d %H:%M:%S")
+        date_end = datetime.datetime.combine(date, school_time_end).strftime("%Y-%m-%d %H:%M:%S")
+        return date_st, date_end
+
+    def get_data_table_club(self, controller_data, db_path):
+        kp = sql_keeper.Keeper(db_path)
+
+        start = datetime.datetime.combine(
+            controller_data["date_start"],
+            controller_data["time_start"])
+        end = datetime.datetime.combine(controller_data["date_end"],
+                                        controller_data["time_end"])
+        club = controller_data["active_clubs"]
+
+        n = club[0]
+
+        params = (self.clubs[n]["name"], start, end)
+
+        try:
+            d = kp.sample_range_date_time_table(*params)
+            all_data = d["all_data"]
+        except pandas.io.sql.DatabaseError:
+            return None
+        except sqlite3.OperationalError:
+            return None
+        else:
+            return all_data
+
+
     def get_data(self, controller_data, db_path):
         kp = sql_keeper.Keeper(db_path)
 
@@ -306,10 +377,12 @@ class GraphicsWidget(QtWidgets.QWidget):
         params = (self.clubs[n]["name"], start, end)
 
         try:
-            d = kp.sample_range_date_time(*params)
+            d = kp.sample_range_date_time(*params, step=1)
             step_data = d["step_data"]
             all_data = d["all_data"]
         except pandas.io.sql.DatabaseError:
+            return None
+        except sqlite3.OperationalError:
             return None
         else:
             mhour = step_data["mhour"].tolist()
@@ -352,6 +425,7 @@ class InfoBox(QtWidgets.QFrame):
         lb = InfoLabel(text)
         lb.setScaledContents(True)
         self.grid.addWidget(lb)
+
 
 class InfoLabel(QtWidgets.QLabel):
     def __init__(self, *__args):

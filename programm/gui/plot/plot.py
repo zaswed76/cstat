@@ -57,6 +57,7 @@ class Graphic:
         log.debug("{}-{}".format(st, end))
 
     def plot(self, time, visitor, **kwargs):
+        self.y_limit = kwargs.get("limit", (0, 60))
         try:
             name = kwargs["name"]
         except KeyError:
@@ -72,7 +73,16 @@ class Graphic:
         title = kwargs.get("title")
         if title is not None:
             self.plots[name].set_title(title)
-        self.plots[name].set_ylim(*kwargs.get("limit", (0, 60)))
+        self.plots[name].set_ylim(*self.y_limit)
+
+
+
+    def set_text(self, text):
+        ymin, ymax = self.y_limit
+        plt.text(1, ymax, text, style='italic',
+        bbox={'facecolor':'lightgrey', 'alpha':0.5, 'pad':10, 'boxstyle':'round,pad=1'})
+
+
 
     def add_pc_max(self, pc_max, length):
 
@@ -98,7 +108,7 @@ class Graphic:
             "left": 0.07,
             "bottom": 0.12,
             "right": 0.98,
-            "top": 0.94
+            "top": 0.90
         }
         fig.subplots_adjust(**margins)
         fig.savefig(pth.PLOT_PATH, dpi=96)
