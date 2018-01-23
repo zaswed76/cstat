@@ -79,19 +79,19 @@ class Graphic:
 
     def set_text(self, text):
         ymin, ymax = self.y_limit
-        plt.text(1, ymax, text, style='italic',
+        plt.text(0, ymax-10, text, style='italic',
         bbox={'facecolor':'lightgrey', 'alpha':0.5, 'pad':10, 'boxstyle':'round,pad=1'})
 
 
 
-    def add_pc_max(self, pc_max, length):
+    def add_horizontal_line(self, height, length, color="r", text=""):
 
-        if pc_max is not None:
+        if height:
             plt.plot([0, length - 1],
-                     [pc_max, pc_max],
-                     color="#E988A9", linewidth=0.8)
-            plt.annotate('pc max', xy=(length / 2, pc_max + 1),
-                         color="#1B97B9")
+                     [height, height],
+                     color=color, linewidth=0.8)
+            plt.annotate(text, xy=(length / 2, height + 1),
+                         color=color)
 
     def set_bg(self, color="lightgrey"):
         list(self.plots.values())[-1].set_facecolor(color)

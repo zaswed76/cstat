@@ -6,7 +6,7 @@ class Keeper():
         self.path = path
 
     def open_connect(self):
-        print(self.path, "path")
+        # print(self.path, "path")
         self.connect = sqlite3.connect(self.path)
 
     def open_cursor(self):
@@ -27,6 +27,7 @@ class Keeper():
         query = "SELECT * FROM club_tab WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
         df = pd.read_sql_query(query, self.connect, params=(club, start, end))
         if step:
+            print(9999999999999999999999)
             res = df[df["mminute"]==0]
         else:
             res = df

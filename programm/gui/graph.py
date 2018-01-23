@@ -3,6 +3,7 @@ import os
 import sqlite3
 import sys
 from pathlib import PurePath
+from collections import Counter
 
 import pandas
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
@@ -146,15 +147,16 @@ class GraphicsWidget(QtWidgets.QWidget):
     def __init_date_widgets(self):
         yesterday_dt = datetime.datetime.now() - datetime.timedelta(
             days=1)
-        d_start = yesterday_dt.date()
-        t_start = datetime.datetime.strptime("9:00", "%H:%M").time()
+        current_dt = datetime.datetime.now()
+        # d_start = yesterday_dt.date()
+        d_start = current_dt.date()
+        t_start = datetime.datetime.strptime("15:00", "%H:%M").time()
         self.form.dt_start_edit.setDate(d_start)
         # self.form.dt_start_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_start_edit.setTime(t_start)
 
-        current_dt = datetime.datetime.now()
         d_end = current_dt.date()
-        t_end = datetime.datetime.strptime("9:01", "%H:%M").time()
+        t_end = datetime.datetime.strptime("15:01", "%H:%M").time()
         self.form.dt_end_edit.setDate(d_end)
         # self.form.dt_end_edit.setDate(datetime.datetime.strptime("2017-12-27", "%Y-%m-%d").date())
         self.form.time_end_edit.setTime(t_end)
@@ -208,41 +210,83 @@ class GraphicsWidget(QtWidgets.QWidget):
     def update_plot(self):
         controller_data = self.get_controller_data()
         path = self.get_last_bd_path()
+        club = controller_data['active_clubs'][0]
         data_step = self.get_data(controller_data, path)
         data_table = self.get_data_table_club(controller_data, path)
-        print(data_table)
+        pro_zone = self.clubs[club]["pro_comp_list"]
+        pzl = [str(x) for x in pro_zone]
+        print(data_table, "333")
+        pro_data = data_table[data_table["ncomp"].isin(pzl)]
+
+        include_active_classes = self.clubs[club][
+            "include_active_classes"]
+
+        active_pro_zone = pro_data[
+            pro_data["class"].isin(include_active_classes)]
+
+        pro_time, pro_vis = self.get_pro_data_step(active_pro_zone)
+
+        print(active_pro_zone)
+        # записей
+        count_notes = len(active_pro_zone["data_time"].unique())
+        active = active_pro_zone.count()[0]
+        all_pro = len(pro_zone)
+        print(active , all_pro , count_notes)
+        if active:
+            print(active, all_pro, count_notes)
+            pro_proc = round((active / (all_pro * count_notes)) * 100, 1)
+        else:
+            pro_proc = 0
 
         if data_step:
-            club = controller_data['active_clubs'][0]
-
-
 
             color = self.clubs[club]["color"]
             time, load, schools, all_data = data_step
 
             school_time = self.clubs[club]["school_time"]
             # школьное время
-            st, end = self._get_date_school(controller_data["date_start"], school_time)
+            st, end = self._get_date_school(
+                controller_data["date_start"], school_time)
 
             data_school = self.get_data_school_time(st, end, all_data)
-            av_sc = self._get_average_school(data_school["visitor"], data_school["school"])
-
-            # av = self._get_average_people(load)
-
-
+            av_sc = self._get_average_school(data_school["visitor"],
+                                             data_school["school"])
 
             if load:
                 self.plot_view.plot(time, load, color=color,
                                     y_limit=(0, 50), width=0.8,
                                     name="visitors", title=club)
+
                 self.plot_view.plot(time, schools, color="#FCF355",
                                     y_limit=(0, 50), width=0.7,
                                     name="school")
+
+
+                rsvis = [0] * len(time)
+
+                for n, t in enumerate(time):
+                    if t in pro_time:
+                        i = pro_time.index(t)
+                        rsvis[n] = pro_vis[i]
+
+                self.plot_view.plot(time, rsvis, color="#E50283",
+                                    y_limit=(0, 50), width=0.2,
+                                    name="pro")
+
                 self.plot_view.set_bg("#DDDDDD")
                 self.plot_view.set_legend([club, "school"])
-                self.plot_view.add_pc_max(self.clubs[club]["max"],
-                                          len(time))
-                self.plot_view.set_grid()
+                self.plot_view.add_horizontal_line(
+                    self.clubs[club]["max"],
+                    len(time),
+                    color="#05DCF3",
+                    text="pc max")
+
+                self.plot_view.add_horizontal_line(
+                    len(self.clubs[club]["pro_comp_list"]),
+                    len(time),
+                    color="#F30793",
+                    text="pro max")
+                # self.plot_view.set_grid()
 
                 average_people = self._get_average_people(
                     all_data["visitor"])
@@ -252,26 +296,30 @@ class GraphicsWidget(QtWidgets.QWidget):
                     self.clubs[club]["max"])
                 text = """человек в среднем - {}
 заполненность клуба - {}%
-процент школьников - {}%""".format(average_people, average_load, av_sc)
+процент школьников - {}%
+процент использования про зоны - {}%""".format(average_people,
+                                              average_load,
+                                              av_sc, pro_proc)
                 self.plot_view.set_text(text)
                 self.plot_view.save_from_file()
 
                 self.plot_view.close()
                 self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
-
-                # self.info_lb.add_text(
-                #     "человек в среднем - {}".format(average_people))
-
-                # self.info_lb.add_text(
-                #     "заполненность клуба - {}%".format(average_load))
-
                 self.shoot()
-                # self.info_lb.add_text("школьникв в среднем - 5")
-                # self.info_lb.add_text("заполненность клуба - 16%")
-
-
         else:
             log.debug("not data")
+
+    def _counter_to_list(self, counter):
+        times = list(counter.keys())
+        visitors = list(counter.values())
+        return times, visitors
+
+    def get_pro_data_step(self, pro_data):
+        act_h = pro_data[pro_data["mminute"] == 0]
+        cnt = Counter(act_h["mhour"].tolist())
+        times, visitors = self._counter_to_list(cnt)
+
+        return times, visitors
 
     def shoot(self):
         p = self.bl_lb.grab()
@@ -283,10 +331,12 @@ class GraphicsWidget(QtWidgets.QWidget):
         return round(s / lenght)
 
     def _get_average_school(self, visitor, school, r=0):
-        lenght = len(visitor)
         vs = sum(visitor)
         ss = sum(school)
-        r = (ss*100)/vs
+        if vs:
+            r = (ss * 100) / vs
+        else:
+            r = 0
         return round(r, 1)
 
     def _get_average_load(self, avis, max, r=0):
@@ -322,7 +372,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         return "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
 
     def get_data_school_time(self, st, end, d):
-        # print(d[d["school"] > 0])
+        # print(d, 99999)
         return d[(d["data_time"] > st) & (d["data_time"] < end)]
 
     def _get_date_school(self, date, time):
@@ -333,8 +383,12 @@ class GraphicsWidget(QtWidgets.QWidget):
         school_time_end = datetime.datetime.strptime(
             '{}:{}'.format(*end), '%H:%M').time()
 
-        date_st = datetime.datetime.combine(date, school_time_st).strftime("%Y-%m-%d %H:%M:%S")
-        date_end = datetime.datetime.combine(date, school_time_end).strftime("%Y-%m-%d %H:%M:%S")
+        date_st = datetime.datetime.combine(date,
+                                            school_time_st).strftime(
+            "%Y-%m-%d %H:%M:%S")
+        date_end = datetime.datetime.combine(date,
+                                             school_time_end).strftime(
+            "%Y-%m-%d %H:%M:%S")
         return date_st, date_end
 
     def get_data_table_club(self, controller_data, db_path):
@@ -360,7 +414,6 @@ class GraphicsWidget(QtWidgets.QWidget):
             return None
         else:
             return all_data
-
 
     def get_data(self, controller_data, db_path):
         kp = sql_keeper.Keeper(db_path)
