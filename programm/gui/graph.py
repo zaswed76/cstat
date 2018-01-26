@@ -11,7 +11,7 @@ from jinja2 import Template
 
 from programm import pth
 from programm.gui import slider as sl
-from programm.gui.lib import tools
+from programm.gui.lib import tools, service
 from programm.gui.plot import plot
 from programm.sql import sql_keeper
 
@@ -105,10 +105,12 @@ class GraphicsWidget(QtWidgets.QWidget):
     def __init__(self, name, clubs, state_cfg, name_config=None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
-        print(name, "name")
+
+        self.current_club_show = None
 
         self.name_config = name_config
         self.state_cfg = state_cfg
+
         self.clubs = clubs
 
         self.form = uic.loadUi(ui_pth, self)
@@ -126,18 +128,12 @@ class GraphicsWidget(QtWidgets.QWidget):
         self._init_control()
 
     def choose_db_dialog(self):
-
-        options = QtWidgets.QFileDialog.Options()
-        options |= QtWidgets.QFileDialog.DontUseNativeDialog
-        fileName, _ = QtWidgets.QFileDialog.getOpenFileName(self,
-                                                            "QFileDialog.getOpenFileName()",
-                                                            "",
-                                                            "All Files (*);;Python Files (*.py)",
-                                                            options=options)
-        if fileName:
+        file_name = service.choose_db_dialog(self.state_cfg["last_data_dir"])
+        if file_name:
             self.form.shoose_db.setText(
-                self._get_label_path_text(fileName))
-            self.state_cfg["last_data_path"] = fileName
+                self._get_label_path_text(file_name))
+            self.state_cfg["last_data_path"] = file_name
+            self.state_cfg["last_data_dir"] = os.path.dirname(file_name)
 
     def _get_label_path_text(self, path):
         pp = PurePath(path).parts
@@ -212,8 +208,9 @@ class GraphicsWidget(QtWidgets.QWidget):
         controller_data = self.get_controller_data()
         path = self.get_last_bd_path()
         club_name = controller_data['active_clubs'][0]
+        self.current_club_show = club_name
         current_club_cfg = self.clubs[club_name]
-        print(club_name, 555)
+
         data_step = self.get_data(controller_data, path)
         data_table = self.get_data_table_club(controller_data, path)
         pro_zone = current_club_cfg["pro_comp_list"]
@@ -236,7 +233,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         # print(active , all_pro , count_notes)
         if active:
             # print(active, all_pro, count_notes)
-            pro_proc = round((active / (all_pro * count_notes)) * 100, 1)
+            pro_proc = round((active / (all_pro * count_notes)) * 100,
+                             1)
         else:
             pro_proc = 0
 
@@ -262,7 +260,6 @@ class GraphicsWidget(QtWidgets.QWidget):
                 self.plot_view.plot(time, schools, color="#FCF355",
                                     y_limit=(0, 50), width=0.7,
                                     name="school")
-
 
                 rsvis = [0] * len(time)
 
@@ -300,15 +297,16 @@ class GraphicsWidget(QtWidgets.QWidget):
 заполненность клуба - {}%
 процент школьников - {}%
 процент использования про зоны - {}%""".format(average_people,
-                                              average_load,
-                                              av_sc, pro_proc)
+                                               average_load,
+                                               av_sc, pro_proc)
                 self.plot_view.set_text(text)
-                self.plot_view.save_from_file()
+                self.save_from_file()
 
                 self.plot_view.close()
                 self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
-                self.shoot()
+
         else:
+            self.current_club_show = None
             log.debug("not data")
 
     def _counter_to_list(self, counter):
@@ -323,9 +321,9 @@ class GraphicsWidget(QtWidgets.QWidget):
 
         return times, visitors
 
-    def shoot(self):
-        p = self.bl_lb.grab()
-        p.save(pth.PLOT_PATH, 'png')
+    def save_from_file(self, path=""):
+        self.plot_view.save_from_file(path)
+
 
     def _get_average_people(self, visitor, r=0):
         lenght = len(visitor)

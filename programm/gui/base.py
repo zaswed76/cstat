@@ -1,11 +1,12 @@
 
 
 import sys
-
+import shutil
 import os
 from PyQt5 import QtWidgets, uic
 from programm.libs import config
 from programm import pth
+from programm.gui.lib import service
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/main_form.ui")
 
@@ -25,11 +26,10 @@ class CStatMain(QtWidgets.QMainWindow):
         self.tool = self.form.toolBar
         self.stack = QtWidgets.QStackedLayout(self.form.central_Frame)
         self.tool.actionTriggered.connect(self.tool_actions)
-        self.actions_names = ["stat", "graph"]
+        self.actions_names = ["stat", "graph", "save"]
         self._set_actions_tool()
 
         for w in stack_widgets:
-
             self.stack_widgets[w.objectName()] = w
             self.stack.addWidget(w)
         self.resize(*self.cfg.get("size", (800, 600)))
@@ -43,8 +43,22 @@ class CStatMain(QtWidgets.QMainWindow):
             self.tool.addAction(act)
 
     def tool_actions(self, act):
-        self.stack.setCurrentWidget(self.stack_widgets[act.objectName()])
+        meth_name = act.objectName()
+        getattr(self, meth_name)(meth_name=meth_name)
 
+
+
+    def save(self, **kwargs):
+        current_stack = self.stack.currentWidget()
+        path = os.path.join(pth.DESKTOP, current_stack.current_club_show + ".png")
+        shutil.copy2(pth.PLOT_PATH, path)
+
+    def graph(self, meth_name=None):
+        self.stack.setCurrentWidget(self.stack_widgets[meth_name])
+
+
+    def stat(self, meth_name=None):
+        self.stack.setCurrentWidget(self.stack_widgets[meth_name])
 
     def closeEvent(self, QCloseEvent):
         wind_size = [self.size().width(), self.size().height()]

@@ -101,7 +101,7 @@ class Graphic:
         plt.cla()
         plt.close()
 
-    def save_from_file(self):
+    def save_from_file(self, path=""):
         fig = matplotlib.pyplot.gcf()
         fig.set_size_inches(9, 6)
         margins = {
@@ -111,7 +111,9 @@ class Graphic:
             "top": 0.90
         }
         fig.subplots_adjust(**margins)
-        fig.savefig(pth.PLOT_PATH, dpi=96)
+        if path: p = path
+        else: p = pth.PLOT_PATH
+        fig.savefig(p, dpi=96)
 
     def set_grid(self, *args):
         plt.grid()

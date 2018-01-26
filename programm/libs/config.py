@@ -7,7 +7,7 @@ def get_cfg(path):
 
 def save_cfg(path, data):
     with open(path, 'w') as outfile:
-        yaml.dump(data, outfile, indent=4, width=0)
+        yaml.dump(data, outfile, indent=4, width=0, default_flow_style=False)
 
 if __name__ == '__main__':
     import os
