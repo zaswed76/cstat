@@ -110,6 +110,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.name_config = name_config
         self.state_cfg = state_cfg
         self.clubs = clubs
+
         self.form = uic.loadUi(ui_pth, self)
         self.setObjectName(name)
         self.setWindowTitle("Graphics")
@@ -210,15 +211,16 @@ class GraphicsWidget(QtWidgets.QWidget):
     def update_plot(self):
         controller_data = self.get_controller_data()
         path = self.get_last_bd_path()
-        club = controller_data['active_clubs'][0]
+        club_name = controller_data['active_clubs'][0]
+        current_club_cfg = self.clubs[club_name]
+        print(club_name, 555)
         data_step = self.get_data(controller_data, path)
         data_table = self.get_data_table_club(controller_data, path)
-        pro_zone = self.clubs[club]["pro_comp_list"]
+        pro_zone = current_club_cfg["pro_comp_list"]
         pzl = [str(x) for x in pro_zone]
-        print(data_table, "333")
         pro_data = data_table[data_table["ncomp"].isin(pzl)]
 
-        include_active_classes = self.clubs[club][
+        include_active_classes = current_club_cfg[
             "include_active_classes"]
 
         active_pro_zone = pro_data[
@@ -226,24 +228,24 @@ class GraphicsWidget(QtWidgets.QWidget):
 
         pro_time, pro_vis = self.get_pro_data_step(active_pro_zone)
 
-        print(active_pro_zone)
+        # print(active_pro_zone)
         # записей
         count_notes = len(active_pro_zone["data_time"].unique())
         active = active_pro_zone.count()[0]
         all_pro = len(pro_zone)
-        print(active , all_pro , count_notes)
+        # print(active , all_pro , count_notes)
         if active:
-            print(active, all_pro, count_notes)
+            # print(active, all_pro, count_notes)
             pro_proc = round((active / (all_pro * count_notes)) * 100, 1)
         else:
             pro_proc = 0
 
         if data_step:
 
-            color = self.clubs[club]["color"]
+            color = current_club_cfg["color"]
             time, load, schools, all_data = data_step
 
-            school_time = self.clubs[club]["school_time"]
+            school_time = current_club_cfg["school_time"]
             # школьное время
             st, end = self._get_date_school(
                 controller_data["date_start"], school_time)
@@ -255,7 +257,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             if load:
                 self.plot_view.plot(time, load, color=color,
                                     y_limit=(0, 50), width=0.8,
-                                    name="visitors", title=club)
+                                    name="visitors", title=club_name)
 
                 self.plot_view.plot(time, schools, color="#FCF355",
                                     y_limit=(0, 50), width=0.7,
@@ -274,15 +276,15 @@ class GraphicsWidget(QtWidgets.QWidget):
                                     name="pro")
 
                 self.plot_view.set_bg("#DDDDDD")
-                self.plot_view.set_legend([club, "school"])
+                self.plot_view.set_legend([club_name, "school"])
                 self.plot_view.add_horizontal_line(
-                    self.clubs[club]["max"],
+                    current_club_cfg["max"],
                     len(time),
                     color="#05DCF3",
                     text="pc max")
 
                 self.plot_view.add_horizontal_line(
-                    len(self.clubs[club]["pro_comp_list"]),
+                    len(current_club_cfg["pro_comp_list"]),
                     len(time),
                     color="#F30793",
                     text="pro max")
@@ -293,7 +295,7 @@ class GraphicsWidget(QtWidgets.QWidget):
 
                 average_load = self._get_average_load(
                     average_people,
-                    self.clubs[club]["max"])
+                    current_club_cfg["max"])
                 text = """человек в среднем - {}
 заполненность клуба - {}%
 процент школьников - {}%
