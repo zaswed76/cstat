@@ -205,13 +205,18 @@ class GraphicsWidget(QtWidgets.QWidget):
         return d
 
     def _get_data_every_time(self, data: pd.DataFrame) -> pd.DataFrame:
-        res = pd.DataFrame(columns=data.columns)
-        # print(res)
-        # print(data.columns)
+        m_col = ['taken', 'free',
+       'guest', 'resident', 'admin', 'workers', 'school', 'visitor']
+        list_res = []
         hour_lst = data["mhour"].unique()
+        club = data["club"][0]
+        date = data["dt"][0]
         for h in hour_lst:
-            ser = data[data["mhour"].between(h, h)].mean()
-            res.loc[h] = ser
+            lst = [date, pd.NaT, h, 0, club, pd.NaT]
+            ser = data[data["mhour"].between(h, h)]
+            lst.extend(ser[m_col].mean())
+            list_res.append(lst)
+        res = pd.DataFrame(list_res, columns=data.columns)
         return res
 
     def _get_visitor_every_time(self, data, name_column):
@@ -220,17 +225,44 @@ class GraphicsWidget(QtWidgets.QWidget):
             vis[t] = d[name_column]
         return vis
 
-
+    def show_plot(self, view, path=""):
+        view.save_from_file(path)
+        view.close()
+        self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
 
     def update_plot(self):
         controller_data = self.get_controller_data()
         bd_path = self.get_last_bd_path()
         club_name = controller_data['active_clubs'][0]
         self.current_club_show = club_name
-        current_club_cfg = self.clubs[club_name]
         stat_data = self.get_data(controller_data, bd_path)
-        every_hour_data = self._get_data_every_time(stat_data)
-        print(every_hour_data)
+        if not stat_data.empty:
+
+            current_club_cfg = self.clubs[club_name]
+            every_hour_data = self._get_data_every_time(stat_data)
+            h_hours = every_hour_data["mhour"]
+            h_visitor = [int(round(x)) for x in every_hour_data["visitor"]]
+            h_school = [int(round(x)) for x in every_hour_data["school"]]
+
+            self.plot_view.plot(h_hours,
+                                h_visitor,
+                                color=current_club_cfg["color"],
+                                y_limit=(0, current_club_cfg["graphics_max"]),
+                                width=current_club_cfg["width"],
+                                name="visitors", title=club_name)
+
+            self.plot_view.plot(h_hours,
+                                h_school,
+                                color=current_club_cfg["school_color"],
+                                y_limit=(0, current_club_cfg["graphics_max"]),
+                                width=current_club_cfg["width"]-0.1,
+                                name="school")
+
+
+
+            self.show_plot(self.plot_view)
+
+
         # visitor_every = self._get_visitor_every_time(every_hour_data, "visitor")
         # school_every = self._get_visitor_every_time(every_hour_data, "school")
         # print(visitor_every)
@@ -286,9 +318,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         #                             y_limit=(0, 50), width=0.8,
         #                             name="visitors", title=club_name)
 
-#                 self.plot_view.plot(time, schools, color="#FCF355",
-#                                     y_limit=(0, 50), width=0.7,
-#                                     name="school")
+
 #
 #                 rsvis = [0] * len(time)
 #
@@ -330,10 +360,7 @@ class GraphicsWidget(QtWidgets.QWidget):
 #                                                average_load,
 #                                                av_sc, pro_proc)
 #                 self.plot_view.set_text(text)
-#                 self.save_from_file()
-#
-#                 self.plot_view.close()
-#                 self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
+
 #
 #         else:
 #
@@ -352,8 +379,6 @@ class GraphicsWidget(QtWidgets.QWidget):
 
         return times, visitors
 
-    def save_from_file(self, path=""):
-        self.plot_view.save_from_file(path)
 
 
     def _get_average_people(self, visitor, r=0):

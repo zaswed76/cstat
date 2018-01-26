@@ -57,7 +57,7 @@ class Graphic:
         log.debug("{}-{}".format(st, end))
 
     def plot(self, time, visitor, **kwargs):
-        self.y_limit = kwargs.get("limit", (0, 60))
+        self.y_limit = kwargs.get("y_limit", (0, 60))
         try:
             name = kwargs["name"]
         except KeyError:
