@@ -1,0 +1,192 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0046)http://adminold.itland.enes.tech/index.php/map -->
+<html xmlns="http://www.w3.org/1999/xhtml"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta http-equiv="Cache-Control" content="max-age=259200, must-revalidate">
+        
+   	 	<meta name="description" content="">
+        <link rel="shortcut icon" href="http://adminold.itland.enes.tech/favicon.ico">
+        <meta name="keywords" content="">
+        <title>Карта клуба</title>
+
+		<!--STYLESHEETS-->
+        <link href="./Карта клуба_files/style.css" rel="stylesheet" type="text/css">
+        <link href="./Карта клуба_files/jquery-ui-1.8.11.custom.css" rel="stylesheet" type="text/css">
+        
+		        <!--END OF STYLESHEETS-->
+        
+        <!--SCRIPTS-->
+        <script type="text/javascript" src="./Карта клуба_files/jquery-1.5.2.min.js.Без названия"></script>
+        <script type="text/javascript" src="./Карта клуба_files/jquery-ui-1.8.11.custom.min.js.Без названия"></script>
+        <script type="text/javascript" src="./Карта клуба_files/jquery.ui.datepicker-ru.js.Без названия"></script>
+        
+        
+        <script src="./Карта клуба_files/jquery.easing.1.3.js.Без названия" type="text/javascript"></script>
+        <script src="./Карта клуба_files/jquery.tooltip.js.Без названия" type="text/javascript"></script>     
+        <script src="./Карта клуба_files/fd_script.js.Без названия" type="text/javascript"></script>   
+        <script src="./Карта клуба_files/jquery.scrollTo-min.js.Без названия" type="text/javascript"></script>   
+        <script src="./Карта клуба_files/tinymce.min.js.Без названия" type="text/javascript"></script>
+        			                  <script type="text/javascript" src="./Карта клуба_files/fd_map.js.Без названия"></script>
+               				<!--END OF SCRIPTS-->
+                <!--TINY MCE-->
+        <script type="text/javascript">
+			tinyMCE.init({
+					// General options
+					mode : "textareas",
+                    selector: 'textarea:not(.no-tinymce)',
+					theme : "modern",
+					plugins : "table, media, link, lists, image, code",
+                    menubar: false,  // removes the menubar
+                    toolbar: 'formatselect fontsizeselect | bold italic underline | alignleft aligncenter alignright alignjustify  | numlist bullist | table | link image media | code',
+                    file_browser_callback_types: 'image',
+                    images_upload_url: '/index.php/main/upload_image',
+					// Skin options
+					skin : "lightgray",
+					// Example content CSS (should be your site CSS)
+					content_css : "css/example.css",
+                    branding: false,
+                    convert_urls : false,
+                    fontsize_formats: "8pt 10pt 11pt 12pt 14pt 16pt 18pt 24pt 30pt 36pt 48pt 60pt",
+				});
+				var base_url = "http://adminold.itland.enes.tech/index.php/";
+		</script>
+        <!--END OF TINY MCE-->
+            </head>
+	<body>
+   <button id="to_the_top"></button>
+<a name="pagetop"></a>
+<div class="wrap">
+			<div class="head">
+				<div class="head_txt">
+					<div class="sign">
+                    							<span>Здравствуйте, <font style="color: #009cff;">zaswed</font></span>
+						<span><a href="http://adminold.itland.enes.tech/index.php/main/get_new_admin_url" class="redirect_new_admin">new admin</a> <a href="http://adminold.itland.enes.tech/index.php/main/quit" class="log_out">Выйти</a></span>
+					</div>
+					<h1>Интерфейс управления сетью компьютерных клубов</h1>
+					<!--<h3>%TITLE HERE%</h3>-->
+				</div>
+			</div>
+		</div><div class="wrap">
+	<div class="main">
+		<div class="main_lft">
+            
+               			<a class="m_item">
+				<strong class="i_users">Пользователи</strong>
+			</a>
+            <div class="item_shad"></div>
+            <ul class="subitems">
+            	                	                                	                	<li class="">
+                    	<a href="http://adminold.itland.enes.tech/index.php/session_log">История сеансов</a>                    </li>
+                                                    	                	<li class="">
+                    	<a href="http://adminold.itland.enes.tech/index.php/restore">Восстановление пароля</a>                    </li>
+                                                    	                                	                                	                	<li class="">
+                    	<a href="http://adminold.itland.enes.tech/index.php/check_history">История чека</a>                    </li>
+                                                </ul>	
+               			<a class="m_item">
+				<strong class="i_cont">Контент</strong>
+			</a>
+            <div class="item_shad"></div>
+            <ul class="subitems">
+            	                	                	<li class="">
+                    	<a href="http://adminold.itland.enes.tech/index.php/map">Карта клуба</a>                    </li>
+                                                    	                                	                                	                                	                                	                                	                                	                                	                                	                                	                	<li class="">
+                    	<a href="http://adminold.itland.enes.tech/index.php/users/school">Школьные аккаунты</a>                    </li>
+                                                </ul>	
+               			<a class="m_item">
+				<strong class="i_pers">Персонал</strong>
+			</a>
+            <div class="item_shad"></div>
+            <ul class="subitems">
+            	                	                                	                            </ul>	
+               			<a class="m_item">
+				<strong class="i_stat">Статистика</strong>
+			</a>
+            <div class="item_shad"></div>
+            <ul class="subitems">
+            	                	                            </ul>	
+            		</div><!-- ФОРМА ДОБАВЛЕНИЯ ПК-->
+
+    <div id="allowtechuser"></div>
+<div class="move_sign">Пожалуйста, выберите новое расположение для ПК <button class="but_1 fd_cancel_move_pc">Отмена</button></div>
+<div class="main_rgt">
+    <div class="map_lft">
+        <table id="map"><tbody><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111238" data-id="111238" data-ip="172.16.11.49" data-mac="00:16:17:f0:11:67" data-unauth="" data-is_reserved="False" class="comp bg_off ">49</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111239" data-id="111239" data-ip="172.16.11.50" data-mac="00:24:21:a0:d7:7a" data-unauth="" data-is_reserved="False" class="comp bg_off ">50</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111355" data-id="111355" data-ip="172.16.11.41" data-mac="00:24:21:a0:d7:8d" data-unauth="" data-is_reserved="False" class="comp bg_off ">41</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111224" data-id="111224" data-ip="172.16.11.42" data-mac="6c:62:6d:c8:f1:cf" data-unauth="" data-is_reserved="False" class="comp bg_off ">42</span></td><td></td></tr><tr><td></td><td></td><td></td><td class="active"></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111227" data-id="111227" data-ip="172.16.11.44" data-mac="00:24:21:a0:d7:92" data-unauth="" data-is_reserved="False" class="comp bg_off ">44</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111225" data-id="111225" data-ip="172.16.11.43" data-mac="00:16:17:f0:11:66" data-unauth="" data-is_reserved="False" class="comp bg_off ">43</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111249" data-id="111249" data-ip="172.16.11.27" data-mac="48:5b:39:a6:61:99" data-unauth="" data-is_reserved="False" class="comp bg_off ">27</span></td><td><span title="" id="pc111248" data-id="111248" data-ip="172.16.11.28" data-mac="48:5b:39:a6:63:33" data-unauth="" data-is_reserved="False" class="comp bg_off ">28</span></td><td><span title="" id="pc111247" data-id="111247" data-ip="172.16.11.29" data-mac="48:5b:39:a6:62:37" data-unauth="" data-is_reserved="False" class="comp bg_off ">29</span></td><td><span title="" id="pc111246" data-id="111246" data-ip="172.16.11.30" data-mac="48:5b:39:a6:5b:ec" data-unauth="" data-is_reserved="False" class="comp bg_off ">30</span></td><td><span title="" id="pc111245" data-id="111245" data-ip="172.16.11.31" data-mac="48:5b:39:a6:62:9e" data-unauth="" data-is_reserved="False" class="comp bg_off ">31</span></td><td><span title="" id="pc111243" data-id="111243" data-ip="172.16.11.32" data-mac="48:5b:39:a6:62:47" data-unauth="" data-is_reserved="False" class="comp bg_off ">32</span></td><td></td><td><span title="" id="pc111229" data-id="111229" data-ip="172.16.11.45" data-mac="00:16:17:f0:11:69" data-unauth="" data-is_reserved="False" class="comp bg_off ">45</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111231" data-id="111231" data-ip="172.16.11.46" data-mac="00:16:17:f0:11:65" data-unauth="" data-is_reserved="False" class="comp bg_off ">46</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td><span title="" id="pc111261" data-id="111261" data-ip="172.16.11.26" data-mac="48:5b:39:a6:62:1c" data-unauth="" data-is_reserved="False" class="comp bg_off ">26</span></td><td><span title="&lt;strong&gt;VirusKrolika&lt;/strong&gt;&lt;br&gt;Уровень: 35 &lt;br&gt;Скидка: 17.50% &lt;br&gt; Осталось времени: 6 days 23:54:00&lt;br&gt;2018-01-26T11:34:22 &lt;br&gt;(абонемент) " id="pc111259" data-id="111259" data-ip="172.16.11.25" data-mac="48:5b:39:a6:62:16" data-unauth="" data-is_reserved="False" class="comp bg_resid ">25</span></td><td><span title="" id="pc111258" data-id="111258" data-ip="172.16.11.24" data-mac="48:5b:39:a6:5e:2a" data-unauth="" data-is_reserved="False" class="comp bg_off ">24</span></td><td><span title="&lt;strong&gt;super/les&lt;/strong&gt;&lt;br/&gt;Уровень: 0 &lt;br/&gt;Скидка: 100.00% &lt;br/&gt; Осталось времени: Неограничено&lt;br/&gt;2018-01-26T08:20:50" id="pc111357" data-id="111357" data-ip="172.16.11.23" data-mac="48:5b:39:a6:62:2d" data-unauth="" data-is_reserved="False" class="comp bg_resid b_time">23</span></td><td class=""><span title="&lt;strong&gt;nosa&lt;/strong&gt;&lt;br&gt;Уровень: 51 &lt;br&gt;Скидка: 25.50% &lt;br&gt; Осталось времени: 00:15:00&lt;br&gt;2018-01-26T11:37:01" id="pc111255" data-id="111255" data-ip="172.16.11.22" data-mac="1c:6f:65:43:4c:2e" data-unauth="" data-is_reserved="False" class="comp bg_resid">22</span></td><td><span title="&lt;strong&gt;buldojek&lt;/strong&gt;&lt;br&gt;Уровень: 49 &lt;br&gt;Скидка: 24.50% &lt;br&gt; Осталось времени: 2 days 04:03:00&lt;br&gt;2018-01-26T10:06:13 &lt;br&gt;(абонемент) " id="pc111241" data-id="111241" data-ip="172.16.11.21" data-mac="48:5b:39:a6:62:a9" data-unauth="" data-is_reserved="False" class="comp bg_resid ">21</span></td><td></td><td><span title="" id="pc111237" data-id="111237" data-ip="172.16.11.48" data-mac="00:24:21:a0:d9:54" data-unauth="" data-is_reserved="False" class="comp bg_off ">48</span></td><td></td></tr><tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class=""><span title="&lt;strong&gt;dimentar&lt;/strong&gt;&lt;br&gt;Уровень: 0 &lt;br&gt;Скидка: 100.00% &lt;br&gt; Осталось времени: Неограничено&lt;br&gt;2018-01-26T11:39:46" id="pc111254" data-id="111254" data-ip="172.16.11.15" data-mac="9c:5c:8e:97:6b:16" data-unauth="" data-is_reserved="False" class="comp bg_abon b_time">15</span></td><td><span title="" id="pc111253" data-id="111253" data-ip="172.16.11.16" data-mac="9c:5c:8e:97:6d:e0" data-unauth="" data-is_reserved="False" class="comp bg_off">16</span></td><td><span title="" id="pc111252" data-id="111252" data-ip="172.16.11.17" data-mac="9c:5c:8e:97:6e:85" data-unauth="" data-is_reserved="False" class="comp bg_off">17</span></td><td><span title="" id="pc111251" data-id="111251" data-ip="172.16.11.18" data-mac="9c:5c:8e:90:f4:1a" data-unauth="" data-is_reserved="False" class="comp bg_off">18</span></td><td><span title="" id="pc111250" data-id="111250" data-ip="172.16.11.19" data-mac="9c:5c:8e:96:33:93" data-unauth="" data-is_reserved="False" class="comp bg_off">19</span></td><td><span title="" id="pc111240" data-id="111240" data-ip="172.16.11.20" data-mac="9c:5c:8e:90:f6:1c" data-unauth="" data-is_reserved="False" class="comp bg_off">20</span></td><td></td><td><span title="" id="pc111234" data-id="111234" data-ip="172.16.11.47" data-mac="00:16:17:ee:e4:b0" data-unauth="" data-is_reserved="False" class="comp bg_off ">47</span></td><td></td></tr><tr><td></td><td><span title="" id="pc111383" data-id="111383" data-ip="172.16.11.9" data-mac="1c:6f:65:43:4c:06" data-unauth="" data-is_reserved="False" class="comp bg_off ">9</span></td><td><span title="" id="pc111215" data-id="111215" data-ip="172.16.11.10" data-mac="10:78:d2:d5:cf:03" data-unauth="" data-is_reserved="False" class="comp bg_off ">10</span></td><td><span title="" id="pc111226" data-id="111226" data-ip="172.16.11.11" data-mac="48:5b:39:a6:5e:09" data-unauth="" data-is_reserved="False" class="comp bg_off ">11</span></td><td><span title="" id="pc111228" data-id="111228" data-ip="172.16.11.12" data-mac="48:5b:39:a6:63:2c" data-unauth="" data-is_reserved="False" class="comp bg_off ">12</span></td><td><span title="" id="pc111230" data-id="111230" data-ip="172.16.11.13" data-mac="48:5b:39:a6:62:7e" data-unauth="" data-is_reserved="False" class="comp bg_off ">13</span></td><td><span title="" id="pc111232" data-id="111232" data-ip="172.16.11.14" data-mac="48:5b:39:a6:62:4a" data-unauth="" data-is_reserved="False" class="comp bg_off ">14</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td><span title="" id="pc111209" data-id="111209" data-ip="172.16.11.8" data-mac="48:5b:39:a6:5b:eb" data-unauth="" data-is_reserved="False" class="comp bg_off ">8</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td><span title="&lt;strong&gt;016916247856&lt;/strong&gt;&lt;br/&gt;Уровень: 0 &lt;br/&gt; Осталось времени: 00:08:00&lt;br/&gt;2018-01-26T11:06:04" id="pc111356" data-id="111356" data-ip="172.16.11.7" data-mac="1c:6f:65:43:49:85" data-unauth="" data-is_reserved="False" class="comp bg_guest ">7</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr><tr><td></td><td><span title="" id="pc111208" data-id="111208" data-ip="172.16.11.6" data-mac="48:5b:39:a6:63:3c" data-unauth="" data-is_reserved="False" class="comp bg_off ">6</span></td><td><span title="" id="pc111217" data-id="111217" data-ip="172.16.11.5" data-mac="48:5b:39:a6:5c:bc" data-unauth="" data-is_reserved="False" class="comp bg_off ">5</span></td><td><span title="" id="pc111219" data-id="111219" data-ip="172.16.11.4" data-mac="48:5b:39:a6:5d:8a" data-unauth="" data-is_reserved="False" class="comp bg_off ">4</span></td><td><span title="" id="pc111233" data-id="111233" data-ip="172.16.11.3" data-mac="48:5b:39:a6:63:5a" data-unauth="" data-is_reserved="False" class="comp bg_off ">3</span></td><td><span title="" id="pc111235" data-id="111235" data-ip="172.16.11.2" data-mac="48:5b:39:a6:5d:d3" data-unauth="" data-is_reserved="False" class="comp bg_off ">2</span></td><td><span title="" id="pc111236" data-id="111236" data-ip="172.16.11.1" data-mac="48:5b:39:a6:5e:62" data-unauth="" data-is_reserved="False" class="comp bg_off ">1</span></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table>
+        <div id="legend"></div>
+    </div>
+
+    <div class="map_rgt">
+        <div class="map_rgt_pad">
+
+        	<div id="club_selector">
+                <label for="club_id">Выберите клуб</label>
+                <select name="club_id" id="club_id">
+                                                        <option value="2">
+                        IT Land DreamTown                    </option>
+                                                        <option selected="selected" value="1">
+                        IT Land Troya                    </option>
+                                                        <option value="4">
+                        IT Land Les                    </option>
+                                                        <option value="3">
+                        IT Land Akadem                    </option>
+                                </select>
+            </div>
+        
+            <strong>Статистика</strong>
+            <div id="stats"><table width="100%">
+
+    <tbody><tr>
+    	<td>Стоимость часа:</td><td class="val" id="price">13.00</td>
+    </tr>
+    
+    <tr>
+    	<td>Загрузка:</td><td class="val" id="load">14.3%</td>
+    </tr>
+    
+    <tr><td>&nbsp;</td></tr>
+    
+    <tr>
+    	<td>Заняты:</td><td class="val" id="taken">6</td>
+    </tr>
+    
+    <tr>
+    	<td>Свободны:</td><td class="val" id="free">36</td>
+    </tr>
+    
+    <tr>
+    	<td>Гость:</td><td class="val" id="guest">1</td>
+    </tr>
+    
+    <tr>
+    	<td>Житель:</td><td class="val" id="resident">4</td>
+    </tr>
+    
+    <tr>
+    	<td>Администратор:</td><td class="val" id="admin">0</td>
+    </tr>
+    
+    <tr>
+    	<td>Сотрудники:</td><td class="val" id="workers">1</td>
+    </tr>
+    
+    <tr>
+    	<td>Школьники:</td><td class="val" id="school">0</td>
+    </tr>
+
+</tbody></table></div>	
+        
+            <div id="auto_shut" style="margin-top: 10px;"><strong style="color: #090;">Автовыключение включено</strong></div>
+            <form method="post" action="http://adminold.itland.enes.tech/index.php/map">
+            	<input type="hidden" name="club_id" id="club_id_input" value="4">
+                <input type="hidden" name="auto_shut_val" id="auto_val" value="0">
+            	<button type="submit" id="auto_shut_button" class="but_1">Отключить</button>
+            </form>
+            <br>
+             <button class="select_all but_1"><span style="width: 150px;">Выбрать все</span></button>
+        </div>
+       
+    </div>
+</div>
+</div>
+<div class="wrap">
+<div class="bot"></div>
+</div>
+</div><div id="tooltip" style="display: none;"><h3></h3><div class="body"></div><div class="url"></div></div></body></html>
