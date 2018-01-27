@@ -23,11 +23,12 @@ class Keeper():
     def open_cursor(self):
         self.cursor = self.connect.cursor()
 
-    def sample_range_date_time(self, club, start, end, step=1):
+    def sample_range_date_time(self, table_name, club, start, end, step=1):
         self.open_connect()
-        query = "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
-        df = pd.read_sql_query(query, self.connect, params=(club, start, end))
-        return df
+        query = """SELECT * FROM {_table_name} WHERE (club = ?)
+        AND (data_time BETWEEN ? AND ?)""".format(_table_name=table_name)
+        return pd.read_sql_query(query, self.connect, params=(club, start, end))
+        
 
 
 
@@ -35,10 +36,4 @@ class Keeper():
     def sample_range_date_time_table(self, club, start, end, step=0):
         self.open_connect()
         query = "SELECT * FROM club_tab WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
-        df = pd.read_sql_query(query, self.connect, params=(club, start, end))
-        if step:
-            print(9999999999999999999999)
-            res = df[df["mminute"]==0]
-        else:
-            res = df
-        return {"step_data": res, "all_data": df}
+        return pd.read_sql_query(query, self.connect, params=(club, start, end))

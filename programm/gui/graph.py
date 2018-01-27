@@ -232,37 +232,41 @@ class GraphicsWidget(QtWidgets.QWidget):
 
     def update_plot(self):
         controller_data = self.get_controller_data()
+
         bd_path = self.get_last_bd_path()
         club_name = controller_data['active_clubs'][0]
         self.current_club_show = club_name
-        stat_data = self.get_data(controller_data, bd_path)
+        current_club_cfg = self.clubs[club_name]
+        stat_data = self.get_data("club", controller_data, bd_path)
         if not stat_data.empty:
 
-            data_table = self.get_data_table_club(controller_data, bd_path)
+            data_table = self.get_data("club_tab", controller_data, bd_path)
+            pro_comp_list = current_club_cfg["pro_comp_list"]
+            print(data_table)
 
-            current_club_cfg = self.clubs[club_name]
-            every_hour_data = self._get_data_every_time(stat_data)
-            h_hours = every_hour_data["mhour"]
-            h_visitor = [int(round(x)) for x in every_hour_data["visitor"]]
-            h_school = [int(round(x)) for x in every_hour_data["school"]]
-
-            self.plot_view.plot(h_hours,
-                                h_visitor,
-                                color=current_club_cfg["color"],
-                                y_limit=(0, current_club_cfg["graphics_max"]),
-                                width=current_club_cfg["width"],
-                                name="visitors", title=club_name)
-
-            self.plot_view.plot(h_hours,
-                                h_school,
-                                color=current_club_cfg["school_color"],
-                                y_limit=(0, current_club_cfg["graphics_max"]),
-                                width=current_club_cfg["width"]-0.1,
-                                name="school")
-
-
-
-            self.show_plot(self.plot_view)
+            # current_club_cfg = self.clubs[club_name]
+            # every_hour_data = self._get_data_every_time(stat_data)
+            # h_hours = every_hour_data["mhour"]
+            # h_visitor = [int(round(x)) for x in every_hour_data["visitor"]]
+            # h_school = [int(round(x)) for x in every_hour_data["school"]]
+            #
+            # self.plot_view.plot(h_hours,
+            #                     h_visitor,
+            #                     color=current_club_cfg["color"],
+            #                     y_limit=(0, current_club_cfg["graphics_max"]),
+            #                     width=current_club_cfg["width"],
+            #                     name="visitors", title=club_name)
+            #
+            # self.plot_view.plot(h_hours,
+            #                     h_school,
+            #                     color=current_club_cfg["school_color"],
+            #                     y_limit=(0, current_club_cfg["graphics_max"]),
+            #                     width=current_club_cfg["width"]-0.1,
+            #                     name="school")
+            #
+            #
+            #
+            # self.show_plot(self.plot_view)
 
 
         # visitor_every = self._get_visitor_every_time(every_hour_data, "visitor")
@@ -473,7 +477,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         else:
             return all_data
 
-    def get_data(self, controller_data: dict, db_path: str) -> pd.DataFrame:
+    def get_data(self, table_name, controller_data: dict, db_path: str) -> pd.DataFrame:
         kp = keeper.Keeper(db_path)
         start = datetime.datetime.combine(
             controller_data["date_start"],
@@ -482,7 +486,7 @@ class GraphicsWidget(QtWidgets.QWidget):
                                         controller_data["time_end"])
         club = controller_data["active_clubs"]
         n = club[0]
-        params = (self.clubs[n]["name"], start, end)
+        params = (table_name, self.clubs[n]["name"], start, end)
         try:
             data = kp.sample_range_date_time(*params, step=1)
         except pd.io.sql.DatabaseError:
