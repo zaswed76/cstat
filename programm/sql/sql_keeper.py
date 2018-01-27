@@ -17,13 +17,13 @@ class Keeper():
 
 
     def open_connect(self):
-        # print(self.path, "path")
+
         self.connect = sqlite3.connect(self.path)
 
     def open_cursor(self):
         self.cursor = self.connect.cursor()
 
-    def sample_range_date_time(self, table_name, club, start, end, step=1):
+    def sample_range_date_time(self, table_name, club, start, end):
         self.open_connect()
         query = """SELECT * FROM {_table_name} WHERE (club = ?)
         AND (data_time BETWEEN ? AND ?)""".format(_table_name=table_name)

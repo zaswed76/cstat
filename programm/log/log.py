@@ -13,10 +13,10 @@ def log(log_file):
     handler.setLevel(logging.DEBUG)
     log.addHandler(handler)
 
-    handler = logging.FileHandler(log_file, 'a')
-    handler.setLevel(logging.WARNING)
-    handler.setFormatter(formatter)
-    log.addHandler(handler)
+    # handler = logging.FileHandler(log_file, 'a')
+    # handler.setLevel(logging.WARNING)
+    # handler.setFormatter(formatter)
+    # log.addHandler(handler)
     return log
 
 if __name__ == '__main__':
