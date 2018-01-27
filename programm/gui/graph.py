@@ -238,6 +238,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         stat_data = self.get_data(controller_data, bd_path)
         if not stat_data.empty:
 
+            data_table = self.get_data_table_club(controller_data, bd_path)
+
             current_club_cfg = self.clubs[club_name]
             every_hour_data = self._get_data_every_time(stat_data)
             h_hours = every_hour_data["mhour"]
