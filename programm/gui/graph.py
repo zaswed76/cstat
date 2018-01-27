@@ -323,7 +323,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             # active_pro_zone = pro_data[
             #     pro_data["class"].isin(include_active_classes)]
             # #
-            pro_time, pro_vis = self.get_pro_data_step(active_pro_zone)
+            # pro_time, pro_vis = self.get_pro_data_step(active_pro_zone)
             #
             # # print(active_pro_zone)
             # # записей
