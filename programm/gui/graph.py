@@ -334,6 +334,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             # if active:
             #     # print(active, all_pro, count_notes)
             #     pro_proc = round((active / (all_pro * count_notes)) * 100,
+
             #                      1)
             # else:
             #     pro_proc = 0
