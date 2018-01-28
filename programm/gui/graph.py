@@ -275,6 +275,7 @@ class GraphicsWidget(QtWidgets.QWidget):
 
 
 
+
             # print(active_pro_data)
 
             # every_hour_data = self._get_data_every_time(stat_data)
