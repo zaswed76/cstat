@@ -337,6 +337,7 @@ class GraphicsWidget(QtWidgets.QWidget):
 
             #                      1)
 
+
             # else:
             #     pro_proc = 0
 
