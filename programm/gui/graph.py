@@ -247,6 +247,11 @@ class GraphicsWidget(QtWidgets.QWidget):
                         controller_data=controller_data,
                         db_path=bd_path)
         stat_data = dproc.get_data(**data_stat_arg)
+
+
+        count_measurements_hour = dproc.measurements_hour(stat_data)
+
+
         if stat_data is None:
             log.warning("файл не является базой данных")
             return
@@ -254,6 +259,12 @@ class GraphicsWidget(QtWidgets.QWidget):
             log.warning("нет данных")
             return
         else:
+            every_hour_data = self._get_data_every_time(stat_data)
+
+            h_hours = every_hour_data["mhour"]
+            h_visitor = [int(round(x)) for x in every_hour_data["visitor"]]
+            h_school = [int(round(x)) for x in every_hour_data["school"]]
+
 
             pro_comp_list = map(str,
                                 current_club_cfg["pro_comp_list"])
@@ -263,44 +274,70 @@ class GraphicsWidget(QtWidgets.QWidget):
                             db_path=bd_path)
             data_table = dproc.get_data(**data_table_arg)
 
+            # пк указанные в списке pro_comp_list
             pro_data = data_table[
                 data_table["ncomp"].isin(pro_comp_list)]
 
             include_active_classes = current_club_cfg[
                 "include_active_classes"]
 
+            # пк класс которых значится как активные
+            # активные классы указны в списке include_active_classes
             active_pro_data = pro_data[
                 pro_data["class"].isin(include_active_classes)]
-            pro_average = dproc.average_hourly_values(active_pro_data, ["visitor", "school"])
+            # pd.DataFrame columns=["mhour","mean"] mean:float(0, ..)
+            # средние показатели в посетителях покаждому часу
+            pro_mean = dproc.mean_hourly_data(h_hours,
+                                              count_measurements_hour,
+                                              active_pro_data)
+            h_pro = [int(round(x)) for x in pro_mean["mean"]]
+
 
 
 
 
             # print(active_pro_data)
 
-            # every_hour_data = self._get_data_every_time(stat_data)
-            # print(every_hour_data)
-            # h_hours = every_hour_data["mhour"]
-            # h_visitor = [int(round(x)) for x in every_hour_data["visitor"]]
-            # h_school = [int(round(x)) for x in every_hour_data["school"]]
 
-            # self.plot_view.plot(h_hours,
-            #                     h_visitor,
-            #                     color=current_club_cfg["color"],
-            #                     y_limit=(0, current_club_cfg["graphics_max"]),
-            #                     width=current_club_cfg["width"],
-            #                     name="visitors", title=club_name)
-            #
-            # self.plot_view.plot(h_hours,
-            #                     h_school,
-            #                     color=current_club_cfg["school_color"],
-            #                     y_limit=(0, current_club_cfg["graphics_max"]),
-            #                     width=current_club_cfg["width"]-0.1,
-            #                     name="school")
-            #
-            #
-            #
-            # self.show_plot(self.plot_view)
+
+            self.plot_view.plot(h_hours,
+                                h_visitor,
+                                color=current_club_cfg["color"],
+                                y_limit=(0, current_club_cfg["graphics_max"]),
+                                width=current_club_cfg["width"],
+                                name="visitors", title=club_name)
+
+            self.plot_view.plot(h_hours,
+                                h_school,
+                                color=current_club_cfg["school_color"],
+                                y_limit=(0, current_club_cfg["graphics_max"]),
+                                width=current_club_cfg["width"]-0.1,
+                                name="school")
+
+
+
+            self.plot_view.plot(h_hours,
+                                h_pro,
+                                color=current_club_cfg["pro_color"],
+                                y_limit=(0, current_club_cfg["graphics_max"]),
+                                width=0.2,
+                                name="pro")
+
+            self.plot_view.add_horizontal_line(
+                current_club_cfg["max"],
+                len(h_pro),
+                color=current_club_cfg["max_pc_color"],
+                text="pc max")
+
+            self.plot_view.add_horizontal_line(
+                len(current_club_cfg["pro_comp_list"]),
+                len(h_hours),
+                color=current_club_cfg["pro_color"],
+                text="pro max")
+
+
+            # self.plot_view.set_grid()
+            self.show_plot(self.plot_view)
 
 
             # visitor_every = self._get_visitor_every_time(every_hour_data, "visitor")
@@ -383,11 +420,11 @@ class GraphicsWidget(QtWidgets.QWidget):
         #                     color=current_club_cfg["max_pc_color"],
         #                     text="pc max")
         #
-        #                 self.plot_view.add_horizontal_line(
-        #                     len(current_club_cfg["pro_comp_list"]),
-        #                     len(time),
-        #                     color=current_club_cfg["pro_color"],
-        #                     text="pro max")
+                        # self.plot_view.add_horizontal_line(
+                        #     len(current_club_cfg["pro_comp_list"]),
+                        #     len(time),
+                        #     color=current_club_cfg["pro_color"],
+                        #     text="pro max")
         #                 # self.plot_view.set_grid()
         #
         #                 average_people = self._get_average_people(

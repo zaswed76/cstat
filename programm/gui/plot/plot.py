@@ -74,6 +74,7 @@ class Graphic:
         if title is not None:
             self.plots[name].set_title(title)
         self.plots[name].set_ylim(*self.y_limit)
+        self.plots[name].yaxis.grid(which="major", color='#BEBEBE', linestyle='dashdot', linewidth=0.5)
 
 
 
@@ -90,7 +91,7 @@ class Graphic:
             plt.plot([0, length - 1],
                      [height, height],
                      color=color, linewidth=0.8)
-            plt.annotate(text, xy=(length / 2, height + 1),
+            plt.annotate(text, xy=(0, height + 1),
                          color=color)
 
     def set_bg(self, color="lightgrey"):
@@ -115,5 +116,5 @@ class Graphic:
         else: p = pth.PLOT_PATH
         fig.savefig(p, dpi=96)
 
-    def set_grid(self, *args):
-        plt.grid()
+    # def set_grid(self, *args):
+    #     plt.yaxis.grid()(True, which='both')
