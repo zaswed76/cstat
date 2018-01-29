@@ -1,5 +1,5 @@
 Akadem:
-    color: "#1E03C8"
+    color: "#2D518B"
     pro_color: "#F30793"
     school_color: "#FCF355"
     max_pc_color: "#02BFFE"
@@ -29,7 +29,7 @@ Dream:
     width: 0.8
 
 Les:
-    color: "#0AC81D"
+    color: "#238822"
     pro_color: "#F30793"
     school_color: "#FCF355"
     max_pc_color: "#02BFFE"

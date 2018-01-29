@@ -72,18 +72,20 @@ class Graphic:
         self.plots[name].set_xticklabels(time)
         title = kwargs.get("title")
         if title is not None:
-            self.plots[name].set_title(title)
+            self.plots[name].set_title(title, loc='right')
         self.plots[name].set_ylim(*self.y_limit)
-        self.plots[name].yaxis.grid(which="major", color='#BEBEBE', linestyle='dashdot', linewidth=0.5)
+        if kwargs.get("grid"):
 
-
+            self.plots[name].yaxis.grid(which="major",
+                                        color='#BEBEBE',
+                                        linestyle='dashdot',
+                                        linewidth=0.5)
 
     def set_text(self, text):
         ymin, ymax = self.y_limit
-        plt.text(0, ymax-10, text, style='italic',
-        bbox={'facecolor':'lightgrey', 'alpha':0.5, 'pad':10, 'boxstyle':'round,pad=1'})
-
-
+        plt.text(0, ymax+1, text, style='italic',
+                 bbox={'facecolor': 'lightgrey', 'alpha': 0.1,
+                       'pad': 5, 'boxstyle': 'round,pad=1'})
 
     def add_horizontal_line(self, height, length, color="r", text=""):
 
@@ -104,17 +106,19 @@ class Graphic:
 
     def save_from_file(self, path=""):
         fig = matplotlib.pyplot.gcf()
-        fig.set_size_inches(9, 6)
+        fig.set_size_inches(8, 5)
         margins = {
             "left": 0.07,
-            "bottom": 0.12,
+            "bottom": 0.09,
             "right": 0.98,
             "top": 0.90
         }
         fig.subplots_adjust(**margins)
-        if path: p = path
-        else: p = pth.PLOT_PATH
+        if path:
+            p = path
+        else:
+            p = pth.PLOT_PATH
         fig.savefig(p, dpi=96)
 
-    # def set_grid(self, *args):
-    #     plt.yaxis.grid()(True, which='both')
+        # def set_grid(self, *args):
+        #     plt.yaxis.grid()(True, which='both')

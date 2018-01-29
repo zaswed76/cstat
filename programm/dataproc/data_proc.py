@@ -71,3 +71,12 @@ def measurements_hour(data):
     # mh.sort()
     # TODO SDFG
     return 12
+
+def get_mean_people(visitor, r=0):
+    lenght = len(visitor)
+    s = sum(visitor)
+    return round(s / lenght)
+
+def get_mean_load(avis, max, r=0):
+    r = (avis / max) * 100
+    return round(r, 1)

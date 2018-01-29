@@ -68,6 +68,7 @@ class CStatMain(QtWidgets.QMainWindow):
             config.save_cfg(os.path.join(pth.CONFIG_DIR, w.name_config), w.state_cfg)
 
 
+
 if __name__ == '__main__':
     app = QtWidgets.QApplication(sys.argv)
     # app.setStyleSheet(open('./etc/{0}.qss'.format('style'), "r").read())
