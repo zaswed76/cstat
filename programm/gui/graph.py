@@ -338,12 +338,13 @@ class GraphicsWidget(QtWidgets.QWidget):
                 text="pro max")
 
             text = """
-человек в среднем - {}             заполненность клуба - {}%
+человек в среднем - {}          заполненность клуба - {}%
 процент школьников - {}%      использование про зоны - {}%""".format(
                 mean_people,
                 mean_load,
                 "", "")
             self.plot_view.set_text(text)
+            # self.plot_view.set_legend(["visitors", "school", "pro"])
 
             self.show_plot(self.plot_view)
 
