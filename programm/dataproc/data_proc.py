@@ -65,7 +65,7 @@ def measurements_hour(data):
     """
 
     :param data:
-    :return: int
+    :return: int колличество замеров в час
     """
     # mh = data[data["mhour"]>9]["mminute"].unique()
     # mh.sort()
@@ -141,3 +141,18 @@ def get_percentage_ratio(data, column_1, column_2,
 
 def percentile(number1, number2):
     return (number2/number1) * 100
+
+def time_occupied(data, column, max, measurements, ndigits=1):
+    """
+
+    :param data:
+    :param column:
+    :param max:
+    :param measurements:
+    :param ndigits:
+    сколько процентов времени от measurements значения column == max
+    :return: float
+    """
+    number1 = data[data[column] == max][column].size
+    log.debug(number1)
+    return round(percentile(measurements, number1), ndigits)

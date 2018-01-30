@@ -285,10 +285,24 @@ class GraphicsWidget(QtWidgets.QWidget):
                 pro_data["class"].isin(include_active_classes)]
             # pd.DataFrame columns=["mhour","mean"] mean:float(0, ..)
             # средние показатели в посетителях покаждому часу
-            pro_mean = dproc.mean_hourly_data(h_hours,
-                                              count_measurements_hour,
-                                              active_pro_data)
-            h_pro = [int(round(x)) for x in pro_mean["mean"]]
+            pro_mean_data = dproc.mean_hourly_data(h_hours,
+                                                   count_measurements_hour,
+                                                   active_pro_data)
+
+            pro_mean = pro_mean_data["mean"].sum() / pro_mean_data[
+                "mean"].size
+
+
+
+            percentage_ratio_pro = round(dproc.percentile(
+                len(current_club_cfg["pro_comp_list"]), pro_mean), 1)
+
+            occupied_pro_max = dproc.time_occupied(pro_mean_data,
+                                      "mean",
+                                      len(current_club_cfg["pro_comp_list"]),
+                                      h_hours.size)
+
+            h_pro = [int(round(x)) for x in pro_mean_data["mean"]]
 
             mean_visitor = dproc.get_mean_people(stat_data["visitor"])
 
@@ -297,12 +311,11 @@ class GraphicsWidget(QtWidgets.QWidget):
 
             data_school_time = dproc.data_period_time(
                 controller_data["date_start"],
-                current_club_cfg["school_time"], stat_data, "data_time")
+                current_club_cfg["school_time"], stat_data,
+                "data_time")
 
-
-
-            percentage_ratio_school = dproc.get_percentage_ratio(data_school_time, "visitor", "school")
-
+            percentage_ratio_school = dproc.get_percentage_ratio(
+                data_school_time, "visitor", "school")
 
             self.plot_view.plot(h_hours,
                                 h_visitor,
@@ -349,11 +362,11 @@ class GraphicsWidget(QtWidgets.QWidget):
                 text="pro max")
 
             text = """
-человек в среднем - {}          заполненность клуба - {}%
-процент школьников - {}%      использование про зоны - {}%""".format(
+человек в среднем - {}          заполненность клуба - {}%  
+процент школьников - {}%      использование про зоны - {}%  про зона занята на 100% - {}%""".format(
                 mean_visitor,
                 mean_load,
-                percentage_ratio_school, "")
+                percentage_ratio_school, percentage_ratio_pro, occupied_pro_max)
             self.plot_view.set_text(text)
 
             self.show_plot(self.plot_view)
