@@ -290,10 +290,19 @@ class GraphicsWidget(QtWidgets.QWidget):
                                               active_pro_data)
             h_pro = [int(round(x)) for x in pro_mean["mean"]]
 
-            mean_people = dproc.get_mean_people(stat_data["visitor"])
+            mean_visitor = dproc.get_mean_people(stat_data["visitor"])
 
-            mean_load = dproc.get_mean_load(mean_people,
+            mean_load = dproc.get_mean_load(mean_visitor,
                                             current_club_cfg["max"])
+
+            data_school_time = dproc.data_period_time(
+                controller_data["date_start"],
+                current_club_cfg["school_time"], stat_data, "data_time")
+
+
+
+            percentage_ratio_school = dproc.get_percentage_ratio(data_school_time, "visitor", "school")
+
 
             self.plot_view.plot(h_hours,
                                 h_visitor,
@@ -325,6 +334,8 @@ class GraphicsWidget(QtWidgets.QWidget):
                                 grid=True
                                 )
 
+            self.plot_view.set_legend(["visitors", "school", "pro"])
+
             self.plot_view.add_horizontal_line(
                 current_club_cfg["max"],
                 len(h_pro),
@@ -340,11 +351,10 @@ class GraphicsWidget(QtWidgets.QWidget):
             text = """
 человек в среднем - {}          заполненность клуба - {}%
 процент школьников - {}%      использование про зоны - {}%""".format(
-                mean_people,
+                mean_visitor,
                 mean_load,
-                "", "")
+                percentage_ratio_school, "")
             self.plot_view.set_text(text)
-            # self.plot_view.set_legend(["visitors", "school", "pro"])
 
             self.show_plot(self.plot_view)
 
@@ -504,7 +514,6 @@ class GraphicsWidget(QtWidgets.QWidget):
         return "SELECT * FROM club WHERE (club = ?) AND (data_time BETWEEN ? AND ?)"
 
     def get_data_school_time(self, st, end, d):
-        # print(d, 99999)
         return d[(d["data_time"] > st) & (d["data_time"] < end)]
 
     def _get_date_school(self, date, time):

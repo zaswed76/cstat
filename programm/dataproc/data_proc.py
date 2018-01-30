@@ -2,8 +2,9 @@ import datetime
 import os
 import sqlite3
 from collections import Counter
+
 import pandas as pd
-import numpy as np
+
 from programm import pth
 from programm.log import log as lg
 from programm.sql import sql_keeper as keeper
@@ -40,6 +41,7 @@ def get_data(table_name=None, controller_data=None,
         res = data
     return res
 
+
 def mean_hourly_data(h_hours, count_measurements_hour, data):
     """
 
@@ -52,11 +54,9 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
     res = {}
     for h in h_hours:
         one_hour_data = data[data["mhour"].between(h, h)]
-        print(one_hour_data[["mhour", "mminute", "ncomp"]])
-        print("-------------")
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
-        mean = sum(counter.values())/count_measurements_hour
+        mean = sum(counter.values()) / count_measurements_hour
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])
 
@@ -72,11 +72,72 @@ def measurements_hour(data):
     # TODO SDFG
     return 12
 
+
 def get_mean_people(visitor, r=0):
     lenght = len(visitor)
     s = sum(visitor)
     return round(s / lenght)
 
+
 def get_mean_load(avis, max, r=0):
     r = (avis / max) * 100
     return round(r, 1)
+
+
+def data_period_time(date, period_time, d, period_column):
+    """
+
+    :param date: date < datetime
+    :param period_time: list < str ['13:30','22:00']
+    :param d: pd.DataFrame
+    :param period_column: column of pd.DataFrame < str
+    :return:
+    """
+    st, end = get_datetime_format(date, period_time)
+    return d[(d[period_column] > st) & (d[period_column] < end)]
+
+
+def get_datetime_format(date, time):
+    """
+
+    :param date: date < datetime
+    :param time: list < str ['13:30','22:00']
+    :return: (datetime, datetime)
+    """
+    st = time[0].split(":")
+    end = time[1].split(":")
+    time_st = datetime.datetime.strptime(
+        '{}:{}'.format(*st), '%H:%M').time()
+    time_end = datetime.datetime.strptime(
+        '{}:{}'.format(*end), '%H:%M').time()
+    date_st = datetime.datetime.combine(date,
+                                        time_st).strftime(
+        "%Y-%m-%d %H:%M:%S")
+    date_end = datetime.datetime.combine(date,
+                                         time_end).strftime(
+        "%Y-%m-%d %H:%M:%S")
+    return date_st, date_end
+
+
+def get_percentage_ratio(data, column_1, column_2,
+                         ndigits=1):
+    """
+    вычисляет процентное отношение 2-й колонки к 1-й
+    значение колонок должно былть числовыми значениями
+    :param data: pd.DataFrame
+    :param column_1: str имя первой колонки
+    :param column_2: str имя колонки
+    :param ndigits: колличество знаков после запятой
+    :return: float
+    """
+    greater = data[column_1].sum()
+    lower = data[column_2].sum()
+    if greater:
+        r = percentile(greater, lower)
+    else:
+        r = 0
+    return round(r, ndigits)
+
+
+def percentile(number1, number2):
+    return (number2/number1) * 100

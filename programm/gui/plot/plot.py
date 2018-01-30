@@ -30,25 +30,9 @@ class Graphic:
         self.plots = {}
         self.index_name = 0
 
-    def set_legend(self, names, bg=None, color_matching=False,
-                   alpha=1.0):
-        plots = []
-        names = []
-        colors = []
-        for n, p in self.plots.items():
-            plots.append(p)
-            names.append(n)
-            colors.append(p.get_facecolor())
-        legend = plt.legend(names, shadow=False, fancybox=True)
-        frame = legend.get_frame()
-        frame.set_alpha(alpha)
-        frame.set_linewidth(0.5)
-        frame.set_edgecolor('black')
-        if bg is not None:
-            frame.set_facecolor("black")
-        if color_matching:
-            for color, text in zip(colors, legend.get_texts()):
-                text.set_color(color)
+    def set_legend(self, names):
+        plt.legend(names)
+
 
     def show(self):
         plt.show()
