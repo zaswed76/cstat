@@ -372,6 +372,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             self.show_plot(self.plot_view)
 
 
+
             # visitor_every = self._get_visitor_every_time(every_hour_data, "visitor")
             # school_every = self._get_visitor_every_time(every_hour_data, "school")
             # print(visitor_every)
