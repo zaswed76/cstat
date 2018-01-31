@@ -60,11 +60,12 @@ class Graphic:
 
 
                                                              0.9))
-        font = {'family': 'helvetica',
+        font = {'family': 'DejaVu Sans',
         'color':  '#022E38',
         'weight': 'normal',
         'size': 8,
         }
+
         ylabels=range(self.y_limit[0], self.y_limit[1]+1, 10)
         self.plots[name].set_xticklabels(time, fontdict=font)
         self.plots[name].set_yticklabels(ylabels , fontdict=font)

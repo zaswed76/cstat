@@ -42,6 +42,32 @@ def get_data(table_name=None, controller_data=None,
     return res
 
 
+def get_data_every_time(data: pd.DataFrame) -> pd.DataFrame:
+    # todo переписать
+
+    """
+    берёт данные по каждому часу , вычисляет среднее арифм.
+    в колонках - m_col,
+    и возвращает pd.DataFrame с той же структурой колонок
+    и колличетсвом сттрок равным hour_lst
+    :param data:
+    :return:
+    """
+    m_col = ['taken', 'free',
+             'guest', 'resident', 'admin', 'workers', 'school',
+             'visitor']
+    list_res = []
+    hour_lst = data["mhour"].unique()
+    club = data["club"][0]
+    date = data["dt"][0]
+    for h in hour_lst:
+        lst = [date, pd.NaT, h, 0, club, pd.NaT]
+        ser = data[data["mhour"].between(h, h)]
+        lst.extend(ser[m_col].mean())
+        list_res.append(lst)
+    res = pd.DataFrame(list_res, columns=data.columns)
+    return res
+
 def mean_hourly_data(h_hours, count_measurements_hour, data):
     """
 
@@ -52,14 +78,11 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
     """
 
     res = {}
-    print(h_hours)
     for h in h_hours:
-
         one_hour_data = data[data["mhour"].between(h, h)]
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
         mean = sum(counter.values()) / count_measurements_hour
-        print(h, "---")
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])
 
