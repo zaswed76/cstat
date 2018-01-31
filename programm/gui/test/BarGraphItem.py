@@ -1,12 +1,18 @@
 
-import pandas as pd
+import sys
+from PyQt5 import QtWidgets
 
-fr = pd.DataFrame(columns=["a", "b", "c"])
-ser = [2, 3]
-ser2 = [5, 6]
-fr.loc[0] = ser
-fr.loc[1] = ser2
-print(fr)
+class Widget(QtWidgets.QWidget):
+    def __init__(self):
+        super().__init__()
+        self.resize(500, 500)
+
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    # app.setStyleSheet(open('./etc/{0}.qss'.format('style'), "r").read())
+    main = Widget()
+    main.show()
+    sys.exit(app.exec_())
 
 
 
