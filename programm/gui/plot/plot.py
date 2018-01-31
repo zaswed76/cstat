@@ -25,13 +25,18 @@ import matplotlib
 log = lg.log(os.path.join(pth.LOG_DIR, "plot.log"))
 
 
+
 class Graphic:
+
     def __init__(self):
+
+
         self.plots = {}
         self.index_name = 0
 
     def set_legend(self, names):
         plt.legend(names)
+
 
 
     def show(self):
@@ -52,8 +57,18 @@ class Graphic:
                                             color=kwargs.get("color",
                                                              "green"),
                                             width=kwargs.get("width",
+
+
                                                              0.9))
-        self.plots[name].set_xticklabels(time)
+        font = {'family': 'helvetica',
+        'color':  '#022E38',
+        'weight': 'normal',
+        'size': 8,
+        }
+        ylabels=range(self.y_limit[0], self.y_limit[1]+1, 10)
+        self.plots[name].set_xticklabels(time, fontdict=font)
+        self.plots[name].set_yticklabels(ylabels , fontdict=font)
+
         title = kwargs.get("title")
         if title is not None:
             self.plots[name].set_title(title, loc='right')
@@ -67,9 +82,22 @@ class Graphic:
 
     def set_text(self, text):
         ymin, ymax = self.y_limit
-        plt.text(0, ymax+1, text, style='italic',
-                 bbox={'facecolor': 'lightgrey', 'alpha': 0.1,
-                       'pad': 5, 'boxstyle': 'round,pad=1'})
+        plt.text(0, ymax+1, text, style='italic', fontsize=8)
+
+                 # bbox={'facecolor': 'lightgrey', 'alpha': 0.1,
+                 #       'pad': 5, 'boxstyle': 'round,pad=1'}
+
+    def pos(self, pos_str):
+        xmin, xmax, ymin, ymax = plt.axis()
+        pos = {}
+        pos[("left-top-over")] = xmin, ymax+1
+        pos[("center-top-over")] = xmax/2, ymax+1
+        return pos[pos_str]
+
+    def text(self, text, pos_str):
+        pos = self.pos(pos_str)
+        plt.text(*pos, text, style='italic', fontsize=8,
+                 color="#5D5D5D")
 
     def add_horizontal_line(self, height, length, color="r", text=""):
 
@@ -102,7 +130,8 @@ class Graphic:
             p = path
         else:
             p = pth.PLOT_PATH
-        fig.savefig(p, dpi=96)
+        fig.savefig(p, dpi=108)
 
-        # def set_grid(self, *args):
-        #     plt.yaxis.grid()(True, which='both')
+    def clear(self):
+        plt.cla()
+

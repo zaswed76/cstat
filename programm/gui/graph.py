@@ -156,10 +156,12 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.form.time_start_edit.setTime(t_start)
 
         d_end = current_dt.date()
-        t_end = datetime.datetime.strptime("9:01", "%H:%M").time()
+        t_end = datetime.datetime.strptime("7:59", "%H:%M").time()
         self.form.dt_end_edit.setDate(d_end)
 
         self.form.time_end_edit.setTime(t_end)
+
+        # y_limit=(0, current_club_cfg["graphics_max"])
 
         self.plot_view = plot.Graphic()
 
@@ -234,15 +236,19 @@ class GraphicsWidget(QtWidgets.QWidget):
         view.close()
         self.bl_lb.setPixmap(QtGui.QPixmap(pth.PLOT_PATH))
 
+    def clear_plot(self, view):
+        view.close()
+        self.bl_lb.clear()
+
     def update_plot(self):
         controller_data = self.get_controller_data()
 
         bd_path = self.get_last_bd_path()
         club_name = controller_data['active_clubs'][0]
         self.current_club_show = club_name
-        current_club_cfg = self.clubs[club_name]
+        self.current_club_cfg = self.clubs[club_name]
         data_stat_arg = dict(table_name="club",
-                             club_name=current_club_cfg["name"],
+                             club_name=self.current_club_cfg["name"],
                              controller_data=controller_data,
                              db_path=bd_path)
         stat_data = dproc.get_data(**data_stat_arg)
@@ -251,9 +257,11 @@ class GraphicsWidget(QtWidgets.QWidget):
 
         if stat_data is None:
             log.warning("файл не является базой данных")
+            self.clear_plot(self.plot_view)
             return
         elif stat_data.empty:
             log.warning("нет данных")
+            self.clear_plot(self.plot_view)
             return
         else:
             every_hour_data = self._get_data_every_time(stat_data)
@@ -265,9 +273,11 @@ class GraphicsWidget(QtWidgets.QWidget):
                         every_hour_data["school"]]
 
             pro_comp_list = map(str,
-                                current_club_cfg["pro_comp_list"])
+                                self.current_club_cfg[
+                                    "pro_comp_list"])
             data_table_arg = dict(table_name="club_tab",
-                                  club_name=current_club_cfg["name"],
+                                  club_name=self.current_club_cfg[
+                                      "name"],
                                   controller_data=controller_data,
                                   db_path=bd_path)
             data_table = dproc.get_data(**data_table_arg)
@@ -276,7 +286,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             pro_data = data_table[
                 data_table["ncomp"].isin(pro_comp_list)]
 
-            include_active_classes = current_club_cfg[
+            include_active_classes = self.current_club_cfg[
                 "include_active_classes"]
 
             # пк класс которых значится как активные
@@ -285,33 +295,43 @@ class GraphicsWidget(QtWidgets.QWidget):
                 pro_data["class"].isin(include_active_classes)]
             # pd.DataFrame columns=["mhour","mean"] mean:float(0, ..)
             # средние показатели в посетителях покаждому часу
+
             pro_mean_data = dproc.mean_hourly_data(h_hours,
                                                    count_measurements_hour,
                                                    active_pro_data)
+            print(pro_mean_data)
 
             pro_mean = pro_mean_data["mean"].sum() / pro_mean_data[
                 "mean"].size
 
-
+            # print(pro_mean)
 
             percentage_ratio_pro = round(dproc.percentile(
-                len(current_club_cfg["pro_comp_list"]), pro_mean), 1)
+                len(self.current_club_cfg["pro_comp_list"]),
+                pro_mean), 1)
 
             occupied_pro_max = dproc.time_occupied(pro_mean_data,
-                                      "mean",
-                                      len(current_club_cfg["pro_comp_list"]),
-                                      h_hours.size)
+                                                   "mean",
+                                                   len(
+                                                       self.current_club_cfg[
+                                                           "pro_comp_list"]),
+                                                   h_hours.size)
+
+            occupied_pro_min = dproc.time_occupied(pro_mean_data,
+                                                   "mean", 0,
+                                                   h_hours.size)
 
             h_pro = [int(round(x)) for x in pro_mean_data["mean"]]
 
             mean_visitor = dproc.get_mean_people(stat_data["visitor"])
 
             mean_load = dproc.get_mean_load(mean_visitor,
-                                            current_club_cfg["max"])
+                                            self.current_club_cfg[
+                                                "max"])
 
             data_school_time = dproc.data_period_time(
                 controller_data["date_start"],
-                current_club_cfg["school_time"], stat_data,
+                self.current_club_cfg["school_time"], stat_data,
                 "data_time")
 
             percentage_ratio_school = dproc.get_percentage_ratio(
@@ -319,29 +339,30 @@ class GraphicsWidget(QtWidgets.QWidget):
 
             self.plot_view.plot(h_hours,
                                 h_visitor,
-                                color=current_club_cfg["color"],
-                                y_limit=(
-                                    0,
-                                    current_club_cfg["graphics_max"]),
-                                width=current_club_cfg["width"],
+                                color=self.current_club_cfg["color"],
+                                width=self.current_club_cfg["width"],
                                 name="visitors", title=club_name)
 
             self.plot_view.plot(h_hours,
                                 h_school,
-                                color=current_club_cfg[
+                                color=self.current_club_cfg[
                                     "school_color"],
                                 y_limit=(
                                     0,
-                                    current_club_cfg["graphics_max"]),
-                                width=current_club_cfg["width"] - 0.1,
+                                    self.current_club_cfg[
+                                        "graphics_max"]),
+                                width=self.current_club_cfg[
+                                          "width"] - 0.1,
                                 name="school")
 
             self.plot_view.plot(h_hours,
                                 h_pro,
-                                color=current_club_cfg["pro_color"],
+                                color=self.current_club_cfg[
+                                    "pro_color"],
                                 y_limit=(
                                     0,
-                                    current_club_cfg["graphics_max"]),
+                                    self.current_club_cfg[
+                                        "graphics_max"]),
                                 width=0.2,
                                 name="pro",
                                 grid=True
@@ -350,133 +371,34 @@ class GraphicsWidget(QtWidgets.QWidget):
             self.plot_view.set_legend(["visitors", "school", "pro"])
 
             self.plot_view.add_horizontal_line(
-                current_club_cfg["max"],
+                self.current_club_cfg["max"],
                 len(h_pro),
-                color=current_club_cfg["max_pc_color"],
+                color=self.current_club_cfg["max_pc_color"],
                 text="pc max")
 
             self.plot_view.add_horizontal_line(
-                len(current_club_cfg["pro_comp_list"]),
+                len(self.current_club_cfg["pro_comp_list"]),
                 len(h_hours),
-                color=current_club_cfg["pro_color"],
+                color=self.current_club_cfg["pro_color"],
                 text="pro max")
 
-            text = """
-человек в среднем - {}          заполненность клуба - {}%  
-процент школьников - {}%      использование про зоны - {}%  про зона занята на 100% - {}%""".format(
-                mean_visitor,
-                mean_load,
-                percentage_ratio_school, percentage_ratio_pro, occupied_pro_max)
-            self.plot_view.set_text(text)
+
+            text1 = """человек в среднем - {}
+заполненность клуба - {}%
+процент школьников - {}%""".format(mean_visitor, mean_load,
+                                   percentage_ratio_school)
+
+            text2 = """про зона используется на - {}%
+про зона занята на 100% - {}% времени
+про зона вообще не занята - {}% времени""".format(percentage_ratio_pro,
+           occupied_pro_max, occupied_pro_min
+           )
+
+            self.plot_view.text(text1, 'left-top-over')
+            self.plot_view.text(text2, 'center-top-over')
 
             self.show_plot(self.plot_view)
 
-
-
-            # visitor_every = self._get_visitor_every_time(every_hour_data, "visitor")
-            # school_every = self._get_visitor_every_time(every_hour_data, "school")
-            # print(visitor_every)
-            # print("-----------------")
-            # print(school_every)
-
-
-            # mhour = step_data["mhour"].tolist()
-            # visitor = step_data["visitor"].tolist()
-            # schools = step_data["school"].tolist()
-            # data_table = self.get_data_table_club(controller_data, bd_path)
-            # pro_zone = current_club_cfg["pro_comp_list"]
-            # pzl = [str(x) for x in pro_zone]
-            # pro_data = data_table[data_table["ncomp"].isin(pzl)]
-
-            # include_active_classes = current_club_cfg[
-            #     "include_active_classes"]
-            #
-            # active_pro_zone = pro_data[
-            #     pro_data["class"].isin(include_active_classes)]
-            # #
-            # pro_time, pro_vis = self.get_pro_data_step(active_pro_zone)
-            #
-            # # print(active_pro_zone)
-            # # записей
-            # count_notes = len(active_pro_zone["data_time"].unique())
-            # active = active_pro_zone.count()[0]
-            # all_pro = len(pro_zone)
-            # print(active , all_pro , count_notes)
-            # if active:
-            #     # print(active, all_pro, count_notes)
-            #     pro_proc = round((active / (all_pro * count_notes)) * 100,
-
-            #                      1)
-
-
-            # else:
-            #     pro_proc = 0
-
-            # if data_step:
-            #     print(data_step == True)
-            #     color = current_club_cfg["color"]
-            #     time, load, schools, all_data = data_step
-            #
-            #     school_time = current_club_cfg["school_time"]
-            #     # школьное время
-            #     st, end = self._get_date_school(
-            #         controller_data["date_start"], school_time)
-            #
-            #     data_school = self.get_data_school_time(st, end, all_data)
-            #     av_sc = self._get_average_school(data_school["visitor"],
-            #                                      data_school["school"])
-            #
-            #     if load:
-            #         self.plot_view.plot(time, load, color=color,
-            #                             y_limit=(0, 50), width=0.8,
-            #                             name="visitors", title=club_name)
-
-
-            #
-            #                 rsvis = [0] * len(time)
-            #
-            #                 for n, t in enumerate(time):
-            #                     if t in pro_time:
-            #                         i = pro_time.index(t)
-            #                         rsvis[n] = pro_vis[i]
-            #
-            #                 self.plot_view.plot(time, rsvis,
-            #                                     color=current_club_cfg["pro_color"],
-            #                                     y_limit=(0, 50), width=0.2,
-            #                                     name="pro")
-            #
-            #                 self.plot_view.set_bg("#DDDDDD")
-            #                 self.plot_view.set_legend([club_name, "school"])
-            #                 self.plot_view.add_horizontal_line(
-            #                     current_club_cfg["max"],
-            #                     len(time),
-            #                     color=current_club_cfg["max_pc_color"],
-            #                     text="pc max")
-            #
-            # self.plot_view.add_horizontal_line(
-            #     len(current_club_cfg["pro_comp_list"]),
-            #     len(time),
-            #     color=current_club_cfg["pro_color"],
-            #     text="pro max")
-            #                 # self.plot_view.set_grid()
-            #
-            #                 average_people = self._get_average_people(
-            #                     all_data["visitor"])
-            #
-
-            #                 text = """человек в среднем - {}
-            # заполненность клуба - {}%
-            # процент школьников - {}%
-            # процент использования про зоны - {}%""".format(average_people,
-            #                                                average_load,
-            #                                                av_sc, pro_proc)
-            #                 self.plot_view.set_text(text)
-
-            #
-            #         else:
-            #
-            #             self.current_club_show = None
-            #             log.debug("not data")
 
     def _counter_to_list(self, counter):
         times = list(counter.keys())

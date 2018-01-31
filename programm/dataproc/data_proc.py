@@ -52,11 +52,14 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
     """
 
     res = {}
+    print(h_hours)
     for h in h_hours:
+
         one_hour_data = data[data["mhour"].between(h, h)]
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
         mean = sum(counter.values()) / count_measurements_hour
+        print(h, "---")
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])
 
@@ -153,6 +156,10 @@ def time_occupied(data, column, max, measurements, ndigits=1):
     сколько процентов времени от measurements значения column == max
     :return: float
     """
-    number1 = data[data[column] == max][column].size
-    log.debug(number1)
+
+    if max > 0:
+        number1 = data[data[column] >= float(max)-0.5][column].size
+    else:
+        number1 = data[data[column] <= float(max)+0.5][column].size
+    measurements = data[column].size
     return round(percentile(measurements, number1), ndigits)
