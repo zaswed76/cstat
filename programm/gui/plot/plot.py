@@ -80,6 +80,10 @@ class Graphic:
                                         color='#BEBEBE',
                                         linestyle='dashdot',
                                         linewidth=0.5)
+        dey_colors = kwargs.get("dey_colors")
+        if dey_colors:
+            for xtick, color in zip(self.plots[name].get_xticklabels(), dey_colors):
+                xtick.set_color(color)
 
     def set_text(self, text):
         ymin, ymax = self.y_limit

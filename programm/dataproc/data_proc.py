@@ -26,6 +26,7 @@ def get_data(table_name=None, controller_data=None,
     start = datetime.datetime.combine(
         controller_data["date_start"],
         controller_data["time_start"])
+
     end = datetime.datetime.combine(controller_data["date_end"],
                                     controller_data["time_end"])
     try:
@@ -42,7 +43,7 @@ def get_data(table_name=None, controller_data=None,
     return res
 
 
-def get_data_every_time(data: pd.DataFrame) -> pd.DataFrame:
+def get_data_every_time(data: pd.DataFrame, time_category: str) -> pd.DataFrame:
     # todo переписать
 
     """
@@ -51,22 +52,52 @@ def get_data_every_time(data: pd.DataFrame) -> pd.DataFrame:
     и возвращает pd.DataFrame с той же структурой колонок
     и колличетсвом сттрок равным hour_lst
     :param data:
+    :param time_category: имя колонки data (часы или даты )
+    если часы то считает усреднённые данные за каждый час
+    если даты то усреднённые данные за день
     :return:
     """
     m_col = ['taken', 'free',
              'guest', 'resident', 'admin', 'workers', 'school',
              'visitor']
     list_res = []
-    hour_lst = data["mhour"].unique()
+    hour_lst = data[time_category].unique()
     club = data["club"][0]
     date = data["dt"][0]
     for h in hour_lst:
         lst = [date, pd.NaT, h, 0, club, pd.NaT]
-        ser = data[data["mhour"].between(h, h)]
+        ser = data[data[time_category].between(h, h)]
         lst.extend(ser[m_col].mean())
         list_res.append(lst)
     res = pd.DataFrame(list_res, columns=data.columns)
     return res
+
+
+def get_data_every_day(data: pd.DataFrame, time_category: str, controller_data) -> pd.DataFrame:
+    m_col = ['taken', 'free',
+             'guest', 'resident', 'admin', 'workers', 'school',
+             'visitor']
+    list_res = []
+    data["data_time"] = pd.to_datetime(data["data_time"])
+    time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
+    print(time_lst[0].date())
+    print(time_lst[-1].date())
+    start_d = pd.Timestamp.combine(time_lst[0].date(), controller_data["time_start"])
+    end_d = pd.Timestamp.combine(time_lst[-1].date(), controller_data["time_end"])
+    time_stamp = pd.date_range(start_d, end_d)
+    for s in time_stamp:
+        lst = [s]
+        start_date = s
+        end_d = s + datetime.timedelta(days=1)
+        end_date = datetime.datetime.combine(end_d.date(), controller_data["time_end"])
+        ser = data[data["data_time"].between(start_date, end_date)]
+        lst.extend(ser[m_col].mean())
+        list_res.append(lst)
+
+    res = pd.DataFrame(list_res, columns=["data_time"]+m_col)
+    return res
+
+
 
 def mean_hourly_data(h_hours, count_measurements_hour, data):
     """
@@ -186,3 +217,14 @@ def time_occupied(data, column, max, measurements, ndigits=1):
         number1 = data[data[column] <= float(max)+0.5][column].size
     measurements = data[column].size
     return round(percentile(measurements, number1), ndigits)
+
+
+def date_colors(dates, weekend_days, week_color, work_color):
+    colors  = []
+    for d in dates:
+        if d.dayofweek in weekend_days:
+           colors.append(week_color)
+        else:
+            colors.append(work_color)
+    return colors
+

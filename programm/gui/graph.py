@@ -106,7 +106,7 @@ class GraphicsWidget(QtWidgets.QWidget):
     def __init__(self, name, clubs, state_cfg, name_config=None,
                  *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.graphic_types = {"month": self.set_month_plot,
+        self.graphic_types = {"period": self.set_period_plot,
                               "one_shift": self.set_one_shift_plot}
 
         self.current_club_show = None
@@ -216,7 +216,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         if delta == datetime.timedelta(days=1):
             gtype = "one_shift"
         elif delta > datetime.timedelta(days=1):
-            gtype = "month"
+            gtype = "period"
         else:
             gtype = None
         return gtype
@@ -231,14 +231,53 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.bl_lb.clear()
 
     def update_plot(self):
-
-        """
-
-        :return:
-        """
-        # все данные нужные для построения графика
-        data_dict = {}
         controller_data = self.get_controller_data()
+        graphic_name_type = self.get_graphic_type(controller_data)
+        graphic_type_method = self.graphic_types[graphic_name_type]
+        graphic_type_method(controller_data)
+
+
+
+    def get_period_data(self, controller_data):
+        data_dict = {}
+        bd_path = self.get_last_bd_path()
+        club_name = controller_data['active_clubs'][0]
+        self.current_club_show = club_name
+        self.current_club_cfg = self.clubs[club_name]
+        data_stat_arg = dict(table_name="club",
+                             club_name=self.current_club_cfg["name"],
+                             controller_data=controller_data,
+                             db_path=bd_path)
+        stat_data = dproc.get_data(**data_stat_arg)
+
+        ed = dproc.get_data_every_day(stat_data, "data_time", controller_data)
+        every_days_data = ed[ed["visitor"].notna()]
+
+        data_dict["d_days"] = [x.day for x in every_days_data["data_time"]]
+        data_dict["d_days_colors"] = dproc.date_colors(every_days_data["data_time"],
+                                                       [5, 6], "r", "black")
+        print(data_dict["d_days_colors"], 555)
+        data_dict["d_visitor"] = [int(round(x)) for x in
+                         every_days_data["visitor"]]
+        return data_dict
+
+    def set_period_plot(self, controller_data):
+        data = self.get_period_data(controller_data)
+        if data:
+            print(data.get("d_days")[0])
+            print(data.get("d_visitor"))
+            self.plot_view.plot(data.get("d_days"),
+                                data.get("d_visitor"),
+                                color=self.current_club_cfg["color"],
+                                width=self.current_club_cfg["width"],
+                                name="visitors",
+                                title=self.current_club_cfg["tag_name"],
+                                dey_colors=data.get("d_days_colors"))
+
+            self.show_plot(self.plot_view)
+
+    def get_one_shift_data(self, controller_data):
+        data_dict = {}
         bd_path = self.get_last_bd_path()
         club_name = controller_data['active_clubs'][0]
         self.current_club_show = club_name
@@ -261,7 +300,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             return
         else:
             # усреднённые данные числовых колонок
-            every_hour_data = dproc.get_data_every_time(stat_data)
+            every_hour_data = dproc.get_data_every_time(stat_data, "mhour")
 
 
 
@@ -332,77 +371,74 @@ class GraphicsWidget(QtWidgets.QWidget):
 
             data_dict["percentage_ratio_school"] = dproc.get_percentage_ratio(
                 data_school_time, "visitor", "school")
+        return data_dict
 
 
-            graphic_name_type = self.get_graphic_type(controller_data)
-            graphic_type_method = self.graphic_types[graphic_name_type]
-            graphic_type_method(**data_dict)
 
-    def set_month_plot(self, **kwargs):
-        log.debug("set_month_plot")
-        self.clear_plot(self.plot_view)
-
-    def set_one_shift_plot(self, **kwargs):
+    def set_one_shift_plot(self, controller_data):
         log.debug("set_one_shift_plot")
-        self.plot_view.plot(kwargs.get("h_hours"),
-                            kwargs.get("h_visitor"),
-                            color=self.current_club_cfg["color"],
-                            width=self.current_club_cfg["width"],
-                            name="visitors",
-                            title=kwargs.get("club_name"))
+        data = self.get_one_shift_data(controller_data)
+        if data:
 
-        self.plot_view.plot(kwargs.get("h_hours"),
-                            kwargs.get("h_school"),
-                            color=self.current_club_cfg[
-                                "school_color"],
-                            y_limit=(
-                                0,
-                                self.current_club_cfg[
-                                    "graphics_max"]),
-                            width=self.current_club_cfg[
-                                      "width"] - 0.1,
-                            name="school")
-        self.plot_view.plot(kwargs.get("h_hours"),
-                            kwargs.get("h_pro"),
-                            color=self.current_club_cfg[
-                                "pro_color"],
-                            y_limit=(
-                                0,
-                                self.current_club_cfg[
-                                    "graphics_max"]),
-                            width=0.2,
-                            name="pro",
-                            grid=True
-                            )
-        self.plot_view.set_legend(["visitors", "school", "pro"])
-        self.plot_view.add_horizontal_line(
-            self.current_club_cfg["max"],
-            len(kwargs.get("h_pro")),
-            color=self.current_club_cfg["max_pc_color"],
-            text="pc max")
-        self.plot_view.add_horizontal_line(
-            len(self.current_club_cfg["pro_comp_list"]),
-            len(kwargs.get("h_hours")),
-            color=self.current_club_cfg["pro_color"],
-            text="pro max")
+            self.plot_view.plot(data.get("h_hours"),
+                                data.get("h_visitor"),
+                                color=self.current_club_cfg["color"],
+                                width=self.current_club_cfg["width"],
+                                name="visitors",
+                                title=self.current_club_cfg["tag_name"])
 
-        text1 = """человек в среднем - {}
+            self.plot_view.plot(data.get("h_hours"),
+                                data.get("h_school"),
+                                color=self.current_club_cfg[
+                                    "school_color"],
+                                y_limit=(
+                                    0,
+                                    self.current_club_cfg[
+                                        "graphics_max"]),
+                                width=self.current_club_cfg[
+                                          "width"] - 0.1,
+                                name="school")
+            self.plot_view.plot(data.get("h_hours"),
+                                data.get("h_pro"),
+                                color=self.current_club_cfg[
+                                    "pro_color"],
+                                y_limit=(
+                                    0,
+                                    self.current_club_cfg[
+                                        "graphics_max"]),
+                                width=0.2,
+                                name="pro",
+                                grid=True
+                                )
+            self.plot_view.set_legend(["visitors", "school", "pro"])
+            self.plot_view.add_horizontal_line(
+                self.current_club_cfg["max"],
+                len(data.get("h_pro")),
+                color=self.current_club_cfg["max_pc_color"],
+                text="pc max")
+            self.plot_view.add_horizontal_line(
+                len(self.current_club_cfg["pro_comp_list"]),
+                len(data.get("h_hours")),
+                color=self.current_club_cfg["pro_color"],
+                text="pro max")
+
+            text1 = """человек в среднем - {}
 заполненность клуба - {}%
-процент школьников - {}%""".format(kwargs.get("mean_visitor"),
-                                   kwargs.get("mean_load"),
-                                   kwargs.get(
+процент школьников - {}%""".format(data.get("mean_visitor"),
+                                   data.get("mean_load"),
+                                   data.get(
                                        "percentage_ratio_school"))
 
-        text2 = """про зона используется на - {}%
+            text2 = """про зона используется на - {}%
 про зона занята на 100% - {}% времени
 про зона вообще не занята - {}% времени""".format(
-            kwargs.get("percentage_ratio_pro"),
-            kwargs.get("occupied_pro_max"),
-            kwargs.get("occupied_pro_min"))
+                data.get("percentage_ratio_pro"),
+                data.get("occupied_pro_max"),
+                data.get("occupied_pro_min"))
 
-        self.plot_view.text(text1, 'left-top-over')
-        self.plot_view.text(text2, 'center-top-over')
-        self.show_plot(self.plot_view)
+            self.plot_view.text(text1, 'left-top-over')
+            self.plot_view.text(text2, 'center-top-over')
+            self.show_plot(self.plot_view)
 
     def get_date_start(self) -> datetime.datetime:
         return self.form.dt_start_edit.dateTime().toPyDateTime().date()
