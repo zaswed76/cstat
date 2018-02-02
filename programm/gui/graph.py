@@ -254,9 +254,36 @@ class GraphicsWidget(QtWidgets.QWidget):
         every_days_data = ed[ed["visitor"].notna()]
 
         data_dict["d_days"] = [x.day for x in every_days_data["data_time"]]
+
+        #-------------------------------------------------------------
+        data_table_arg = dict(table_name="club_tab",
+                              club_name=self.current_club_cfg[
+                                  "name"],
+                              controller_data=controller_data,
+                              db_path=bd_path)
+        data_table = dproc.get_data(**data_table_arg)
+
+        pro_comp_list = map(str,
+                                self.current_club_cfg[
+                                    "pro_comp_list"])
+        # пк указанные в списке pro_comp_list
+        pro_data = data_table[
+            data_table["ncomp"].isin(pro_comp_list)]
+        include_active_classes = self.current_club_cfg[
+            "include_active_classes"]
+        # пк класс которых значится как активные
+        # активные классы указны в списке include_active_classes
+        active_pro_data = pro_data[
+            pro_data["class"].isin(include_active_classes)]
+
+
+        count_measurements_hour = dproc.measurements_hour(pro_data)
+        pro_mean_data = dproc.mean_days_data(active_pro_data, controller_data, count_measurements_hour)
+        data_dict["d_pro"] = [int(round(x)) for x in pro_mean_data["mean"]]
+
         data_dict["d_days_colors"] = dproc.date_colors(every_days_data["data_time"],
                                                        [5, 6], "r", "black")
-        print(data_dict["d_days_colors"], 555)
+
         data_dict["d_visitor"] = [int(round(x)) for x in
                          every_days_data["visitor"]]
         return data_dict
@@ -264,15 +291,40 @@ class GraphicsWidget(QtWidgets.QWidget):
     def set_period_plot(self, controller_data):
         data = self.get_period_data(controller_data)
         if data:
-            print(data.get("d_days")[0])
-            print(data.get("d_visitor"))
             self.plot_view.plot(data.get("d_days"),
                                 data.get("d_visitor"),
                                 color=self.current_club_cfg["color"],
                                 width=self.current_club_cfg["width"],
                                 name="visitors",
-                                title=self.current_club_cfg["tag_name"],
-                                dey_colors=data.get("d_days_colors"))
+                                title=self.current_club_cfg["tag_name"])
+
+            self.plot_view.plot(data.get("d_days"),
+                                data.get("d_pro"),
+                                color=self.current_club_cfg[
+                                    "pro_color"],
+                                y_limit=(
+                                    0,
+                                    self.current_club_cfg[
+                                        "graphics_max"]),
+                                width=0.2,
+                                name="pro",
+                                grid=True,
+                                dey_colors=data.get("d_days_colors")
+                                )
+
+            self.plot_view.add_horizontal_line(
+                self.current_club_cfg["max"],
+                len(data.get("d_days")),
+                color=self.current_club_cfg["max_pc_color"],
+                text="pc max")
+
+            self.plot_view.add_horizontal_line(
+                len(self.current_club_cfg["pro_comp_list"]),
+                len(data.get("d_days")),
+                color=self.current_club_cfg["pro_color"],
+                text="pro max")
+
+
 
             self.show_plot(self.plot_view)
 

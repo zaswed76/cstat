@@ -29,6 +29,7 @@ def get_data(table_name=None, controller_data=None,
 
     end = datetime.datetime.combine(controller_data["date_end"],
                                     controller_data["time_end"])
+
     try:
         data = kp.sample_range_date_time(table_name, club_name, start,
                                          end)
@@ -80,8 +81,6 @@ def get_data_every_day(data: pd.DataFrame, time_category: str, controller_data) 
     list_res = []
     data["data_time"] = pd.to_datetime(data["data_time"])
     time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
-    print(time_lst[0].date())
-    print(time_lst[-1].date())
     start_d = pd.Timestamp.combine(time_lst[0].date(), controller_data["time_start"])
     end_d = pd.Timestamp.combine(time_lst[-1].date(), controller_data["time_end"])
     time_stamp = pd.date_range(start_d, end_d)
@@ -93,7 +92,6 @@ def get_data_every_day(data: pd.DataFrame, time_category: str, controller_data) 
         ser = data[data["data_time"].between(start_date, end_date)]
         lst.extend(ser[m_col].mean())
         list_res.append(lst)
-
     res = pd.DataFrame(list_res, columns=["data_time"]+m_col)
     return res
 
@@ -113,9 +111,32 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
         one_hour_data = data[data["mhour"].between(h, h)]
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
+        print(len(counter.values()), count_measurements_hour)
+        print("-----------------")
         mean = sum(counter.values()) / count_measurements_hour
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])
+
+def mean_days_data(data, controller_data, count_measurements_hour):
+
+    data["data_time"] = pd.to_datetime(data["data_time"])
+    time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
+    start_d = pd.Timestamp.combine(time_lst[0].date(), controller_data["time_start"])
+    end_d = pd.Timestamp.combine(time_lst[-1].date(), controller_data["time_end"])
+    time_stamp = pd.date_range(start_d, end_d)
+    res = {}
+    for s in time_stamp:
+        start_date = s
+        end_d = s + datetime.timedelta(days=1)
+        end_date = datetime.datetime.combine(end_d.date(), controller_data["time_end"])
+        one_day_data = data[data["data_time"].between(start_date, end_date)]
+        print(one_day_data["mhour"].unique())
+        counter = one_day_data["mminute"].value_counts()
+
+        mean = (sum(counter.tolist()) / count_measurements_hour)/23
+        res[s] = round(mean, 2)
+    df = pd.DataFrame(list(res.items()), columns=["data_time", "mean"])
+    return df[df["mean"]>0]
 
 
 def measurements_hour(data):
