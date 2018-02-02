@@ -1,0 +1,17 @@
+
+inh:
+    club: &basic
+        school_color: "#FCF355"
+        graphics_max: 60
+
+clubs:
+    les:
+        <<: *basic
+        name: Les
+
+
+    troya:
+        <<: *basic
+        name: Troya
+
+
