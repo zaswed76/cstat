@@ -325,7 +325,6 @@ class GraphicsWidget(QtWidgets.QWidget):
                 text="pro max")
 
 
-
             self.show_plot(self.plot_view)
 
     def get_one_shift_data(self, controller_data):
