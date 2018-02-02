@@ -324,7 +324,6 @@ class GraphicsWidget(QtWidgets.QWidget):
                 color=self.current_club_cfg["pro_color"],
                 text="pro max")
 
-
             self.show_plot(self.plot_view)
 
     def get_one_shift_data(self, controller_data):
