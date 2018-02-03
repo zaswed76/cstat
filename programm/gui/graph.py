@@ -236,8 +236,6 @@ class GraphicsWidget(QtWidgets.QWidget):
         graphic_type_method = self.graphic_types[graphic_name_type]
         graphic_type_method(controller_data)
 
-
-
     def get_period_data(self, controller_data):
         data_dict = {}
         bd_path = self.get_last_bd_path()
@@ -253,23 +251,19 @@ class GraphicsWidget(QtWidgets.QWidget):
         stat_data["data_time"] = pd.to_datetime(stat_data["data_time"])
 
         # список уникльных отсортированых дат - (начало, конец) < pd.Timestamp
-        start_end_dates = dproc.get_start_end_dates(stat_data,
-                                                        controller_data["time_start"],
-                                                        controller_data["time_end"])
-        for s, e in start_end_dates:
-            print(s.date(), e.date(), sep=" - ")
-        return
-        # ed = dproc.get_data_every_day(stat_data, "data_time", controller_data, time_stamp)
+        start_end_dates = dproc.get_start_end_dates(
+            stat_data,
+            self.current_club_cfg["work time"]["start"],
+            self.current_club_cfg["work time"]["end"])
 
-        #
-        #
-        # every_days_data = ed[ed["visitor"].notna()]
-        #
-        #
-        # data_dict["d_days"] = [x.day for x in every_days_data["data_time"]]
+        every_days_data = dproc.get_data_every_day(stat_data, "data_time",
+                                                   start_end_dates,
+                                                   mean_columns=["visitor"])
 
+        data_dict["d_days"] = [x.day for x in every_days_data["data_time"]]
+        data_dict["d_visitor"] = every_days_data["visitor"].tolist()
 
-        #-------------------------------------------------------------
+        # -------------------------------------------------------------
         data_table_arg = dict(table_name="club_tab",
                               club_name=self.current_club_cfg[
                                   "name"],
@@ -278,8 +272,8 @@ class GraphicsWidget(QtWidgets.QWidget):
         data_table = dproc.get_data(**data_table_arg)
 
         pro_comp_list = map(str,
-                                self.current_club_cfg[
-                                    "pro_comp_list"])
+                            self.current_club_cfg[
+                                "pro_comp_list"])
         # пк указанные в списке pro_comp_list
         pro_data = data_table[
             data_table["ncomp"].isin(pro_comp_list)]
@@ -290,33 +284,30 @@ class GraphicsWidget(QtWidgets.QWidget):
         active_pro_data = pro_data[
             pro_data["class"].isin(include_active_classes)]
 
+        active_pro_data["data_time"] = pd.to_datetime(active_pro_data["data_time"])
+        pro_mean_data = dproc.get_data_table_every_day(active_pro_data, "data_time",
+                                                       start_end_dates,
+                                                       mean_columns=["visitor"])
 
-        count_measurements_hour = dproc.measurements_hour(pro_data)
-        pro_mean_data = dproc.mean_days_data(active_pro_data, controller_data, count_measurements_hour)
-        return
+        data_dict["d_pro"] = [int(round(x)) for x in pro_mean_data["visitor"]]
 
-
-
-        data_dict["d_pro"] = [int(round(x)) for x in pro_mean_data["mean"]]
-        # print(pro_mean_data)
 
         data_dict["d_days_colors"] = dproc.date_colors(every_days_data["data_time"],
                                                        [5, 6], "r", "black")
 
-        data_dict["d_visitor"] = [int(round(x)) for x in
-                         every_days_data["visitor"]]
+
         return data_dict
 
     def set_period_plot(self, controller_data):
         data = self.get_period_data(controller_data)
-        # if data:
-        if 0:
-            # self.plot_view.plot(data.get("d_days"),
-            #                     data.get("d_visitor"),
-            #                     color=self.current_club_cfg["color"],
-            #                     width=self.current_club_cfg["width"],
-            #                     name="visitors",
-            #                     title=self.current_club_cfg["tag_name"])
+        if data:
+            self.plot_view.plot(data.get("d_days"),
+                                data.get("d_visitor"),
+                                color=self.current_club_cfg["color"],
+                                width=self.current_club_cfg["width"],
+                                name="visitors",
+                                title=self.current_club_cfg["tag_name"],
+                                grid=True)
 
             self.plot_view.plot(data.get("d_days"),
                                 data.get("d_pro"),
@@ -372,13 +363,11 @@ class GraphicsWidget(QtWidgets.QWidget):
             # усреднённые данные числовых колонок
             every_hour_data = dproc.get_data_every_time(stat_data, "mhour")
 
-
-
             data_dict["h_hours"] = every_hour_data["mhour"]
             data_dict["h_visitor"] = [int(round(x)) for x in
-                         every_hour_data["visitor"]]
+                                      every_hour_data["visitor"]]
             data_dict["h_school"] = [int(round(x)) for x in
-                        every_hour_data["school"]]
+                                     every_hour_data["school"]]
 
             pro_comp_list = map(str,
                                 self.current_club_cfg[
@@ -407,7 +396,6 @@ class GraphicsWidget(QtWidgets.QWidget):
             pro_mean_data = dproc.mean_hourly_data(data_dict["h_hours"],
                                                    count_measurements_hour,
                                                    active_pro_data)
-            return
 
             pro_mean = pro_mean_data["mean"].sum() / pro_mean_data[
                 "mean"].size
@@ -417,23 +405,25 @@ class GraphicsWidget(QtWidgets.QWidget):
                 pro_mean), 1)
 
             data_dict["occupied_pro_max"] = dproc.time_occupied(pro_mean_data,
-                                                   "mean",
-                                                   len(
-                                                       self.current_club_cfg[
-                                                           "pro_comp_list"]),
-                                                   data_dict["h_hours"].size)
+                                                                "mean",
+                                                                len(
+                                                                    self.current_club_cfg[
+                                                                        "pro_comp_list"]),
+                                                                data_dict[
+                                                                    "h_hours"].size)
 
             data_dict["occupied_pro_min"] = dproc.time_occupied(pro_mean_data,
-                                                   "mean", 0,
-                                                   data_dict["h_hours"].size)
+                                                                "mean", 0,
+                                                                data_dict[
+                                                                    "h_hours"].size)
 
             data_dict["h_pro"] = [int(round(x)) for x in pro_mean_data["mean"]]
 
             data_dict["mean_visitor"] = dproc.get_mean_people(stat_data["visitor"])
 
             data_dict["mean_load"] = dproc.get_mean_load(data_dict["mean_visitor"],
-                                            self.current_club_cfg[
-                                                "max"])
+                                                         self.current_club_cfg[
+                                                             "max"])
 
             data_school_time = dproc.data_period_time(
                 controller_data["date_start"],
@@ -444,13 +434,10 @@ class GraphicsWidget(QtWidgets.QWidget):
                 data_school_time, "visitor", "school")
         return data_dict
 
-
-
     def set_one_shift_plot(self, controller_data):
         log.debug("set_one_shift_plot")
         data = self.get_one_shift_data(controller_data)
         if data:
-
             self.plot_view.plot(data.get("h_hours"),
                                 data.get("h_visitor"),
                                 color=self.current_club_cfg["color"],

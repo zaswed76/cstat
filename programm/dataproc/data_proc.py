@@ -75,55 +75,58 @@ def get_data_every_time(data: pd.DataFrame,
     return res
 
 
-def get_data_every_day(data, controller_data, time_stamp):
-    res = {}
-    for n, start_date in enumerate(time_stamp):
-        end_date = _get_end_date_combine(start_date, controller_data["time_start"],
-                                         controller_data["time_end"])
-        one_day_data = data[data["data_time"].between(start_date, end_date)]
-        print(start_date.date())
-        print(one_day_data["mhour"].unique())
-    print("---------------------------------")
+def get_data_every_day(data, time_category, start_end_dates, mean_columns=None):
+    res = []
+    columns = ["data_time"]+mean_columns
+    for start, end, in start_end_dates:
+        one_day_data = data[data["data_time"].between(start, end)]
+        count_measurements_hour = one_day_data["mhour"].unique().size
+        loc = [start]
+        if count_measurements_hour > 12:
+            mean = one_day_data[mean_columns].mean().tolist()
+        else:
+            mean = [0]
+        loc.extend(mean)
+        res.append(loc)
+    df = pd.DataFrame(res, columns=columns)
+    return df
 
-        # if one_day_data["mhour"].unique().size > 18:
-    #         lst.extend(one_day_data[m_col].mean())
-    #         list_res.append(lst)
-    # res = pd.DataFrame(list_res, columns=["data_time"] + m_col)
-    # return res
+def get_data_table_every_day(data, time_category, start_end_dates, mean_columns=None):
+    res = []
+    columns = ["data_time"]+mean_columns
+    for start, end, in start_end_dates:
+        one_day_data = data[data["data_time"].between(start, end)]
+        count_measurements_hour = one_day_data["mhour"].unique().size
+        loc = [start]
+        if count_measurements_hour > 12:
+            counter = one_day_data["mminute"].value_counts()
+            mean = [sum(counter.tolist()) / (count_measurements_hour * 12)]
+        else:
+            mean = [0]
+        loc.extend(mean)
+        res.append(loc)
+    df = pd.DataFrame(res, columns=columns)
+    return df
 
-def mean_days_data(data, controller_data, time_stamp):
-    res = {}
-    for n, start_date in enumerate(time_stamp):
-        end_date = _get_end_date_combine(start_date, controller_data["time_start"],
-                                         controller_data["time_end"])
-        one_day_data = data[data["data_time"].between(start_date, end_date)]
-        print(start_date.date())
-        print(one_day_data["mhour"].unique())
-    print("-----------------")
-    #     print(start_date, end_date, sep=" - ")
-    #     print(one_day_data["mhour"].unique())
-    #     print("---------------")
-    #     if one_day_data["mhour"].unique().size > 18:
-    #         counter = one_day_data["mminute"].value_counts()
-    #         mean = (sum(counter.tolist()) / count_measurements_hour) / 23
-    #         res[s] = round(mean, 2)
-    # df = pd.DataFrame(list(res.items()), columns=["data_time", "mean"])
-    # return df
 
 def get_start_end_dates(data, start_time, end_time, period=1):
+    st = datetime.datetime.strptime(start_time, "%H:%M").time()
+    endt = datetime.datetime.strptime(end_time, "%H:%M").time()
     res = []
-    stamp = get_time_stamp(data, start_time, end_time)
+    stamp = get_time_stamp(data, st, endt)
     for start_date in stamp:
         next_date = start_date + datetime.timedelta(days=period)
-        end_date = datetime.datetime.combine(next_date.date(), end_time)
+        end_date = datetime.datetime.combine(next_date.date(), endt)
         res.append((start_date, end_date))
     return res
 
 
 def get_time_stamp(data, start_time, end_time):
+
     time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
     start_d = pd.Timestamp.combine(time_lst[0].date(), start_time)
-    end_d = pd.Timestamp.combine(time_lst[-1].date(), end_time)
+    end_d = pd.Timestamp.combine(
+        time_lst[-1].date(), end_time)
     return pd.date_range(start_d, end_d)
 
 def mean_hourly_data(h_hours, count_measurements_hour, data):

@@ -11,6 +11,7 @@ Akadem:
     pro_comp_list: [6,7,8,9,10]
     school_time: ['13:30','22:00']
     alt_school_time: ['09:00','22:00']
+    work time: {start: '09:00', end: '07:59'}
     include_active_classes: [bg_school, bg_resid, bg_guest]
     width: 0.8
 
@@ -27,6 +28,7 @@ Dream:
     pro_comp_list: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
     school_time: ['13:30','22:00']
     alt_school_time: ['09:00','22:00']
+    work time: {start: '10:00', end: '06:00'}
     include_active_classes: [bg_school, bg_resid, bg_guest]
     width: 0.8
 
@@ -43,6 +45,7 @@ Les:
     pro_comp_list: [15, 16, 17, 18, 19, 20]
     school_time: ['13:30','22:00']
     alt_school_time: ['09:00','22:00']
+    work time: {start: '09:00', end: '07:59'}
     include_active_classes: [bg_school, bg_resid, bg_guest]
     width: 0.8
 
@@ -60,6 +63,7 @@ Troya:
     91, 92, 93, 94, 95, 96]
     school_time: ['13:30','22:00']
     alt_school_time: ['09:00','22:00']
+    work time: {start: '09:00', end: '07:59'}
     include_active_classes: [bg_school, bg_resid, bg_guest]
     width: 0.8
 
