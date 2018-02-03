@@ -44,7 +44,8 @@ def get_data(table_name=None, controller_data=None,
     return res
 
 
-def get_data_every_time(data: pd.DataFrame, time_category: str) -> pd.DataFrame:
+def get_data_every_time(data: pd.DataFrame,
+                        time_category: str) -> pd.DataFrame:
     # todo переписать
 
     """
@@ -74,28 +75,56 @@ def get_data_every_time(data: pd.DataFrame, time_category: str) -> pd.DataFrame:
     return res
 
 
-def get_data_every_day(data: pd.DataFrame, time_category: str, controller_data) -> pd.DataFrame:
-    m_col = ['taken', 'free',
-             'guest', 'resident', 'admin', 'workers', 'school',
-             'visitor']
-    list_res = []
-    data["data_time"] = pd.to_datetime(data["data_time"])
-    time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
-    start_d = pd.Timestamp.combine(time_lst[0].date(), controller_data["time_start"])
-    end_d = pd.Timestamp.combine(time_lst[-1].date(), controller_data["time_end"])
-    time_stamp = pd.date_range(start_d, end_d)
-    for s in time_stamp:
-        lst = [s]
-        start_date = s
-        end_d = s + datetime.timedelta(days=1)
-        end_date = datetime.datetime.combine(end_d.date(), controller_data["time_end"])
-        ser = data[data["data_time"].between(start_date, end_date)]
-        lst.extend(ser[m_col].mean())
-        list_res.append(lst)
-    res = pd.DataFrame(list_res, columns=["data_time"]+m_col)
+def get_data_every_day(data, controller_data, time_stamp):
+    res = {}
+    for n, start_date in enumerate(time_stamp):
+        end_date = _get_end_date_combine(start_date, controller_data["time_start"],
+                                         controller_data["time_end"])
+        one_day_data = data[data["data_time"].between(start_date, end_date)]
+        print(start_date.date())
+        print(one_day_data["mhour"].unique())
+    print("---------------------------------")
+
+        # if one_day_data["mhour"].unique().size > 18:
+    #         lst.extend(one_day_data[m_col].mean())
+    #         list_res.append(lst)
+    # res = pd.DataFrame(list_res, columns=["data_time"] + m_col)
+    # return res
+
+def mean_days_data(data, controller_data, time_stamp):
+    res = {}
+    for n, start_date in enumerate(time_stamp):
+        end_date = _get_end_date_combine(start_date, controller_data["time_start"],
+                                         controller_data["time_end"])
+        one_day_data = data[data["data_time"].between(start_date, end_date)]
+        print(start_date.date())
+        print(one_day_data["mhour"].unique())
+    print("-----------------")
+    #     print(start_date, end_date, sep=" - ")
+    #     print(one_day_data["mhour"].unique())
+    #     print("---------------")
+    #     if one_day_data["mhour"].unique().size > 18:
+    #         counter = one_day_data["mminute"].value_counts()
+    #         mean = (sum(counter.tolist()) / count_measurements_hour) / 23
+    #         res[s] = round(mean, 2)
+    # df = pd.DataFrame(list(res.items()), columns=["data_time", "mean"])
+    # return df
+
+def get_start_end_dates(data, start_time, end_time, period=1):
+    res = []
+    stamp = get_time_stamp(data, start_time, end_time)
+    for start_date in stamp:
+        next_date = start_date + datetime.timedelta(days=period)
+        end_date = datetime.datetime.combine(next_date.date(), end_time)
+        res.append((start_date, end_date))
     return res
 
 
+def get_time_stamp(data, start_time, end_time):
+    time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
+    start_d = pd.Timestamp.combine(time_lst[0].date(), start_time)
+    end_d = pd.Timestamp.combine(time_lst[-1].date(), end_time)
+    return pd.date_range(start_d, end_d)
 
 def mean_hourly_data(h_hours, count_measurements_hour, data):
     """
@@ -116,27 +145,6 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
         mean = sum(counter.values()) / count_measurements_hour
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])
-
-def mean_days_data(data, controller_data, count_measurements_hour):
-
-    data["data_time"] = pd.to_datetime(data["data_time"])
-    time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
-    start_d = pd.Timestamp.combine(time_lst[0].date(), controller_data["time_start"])
-    end_d = pd.Timestamp.combine(time_lst[-1].date(), controller_data["time_end"])
-    time_stamp = pd.date_range(start_d, end_d)
-    res = {}
-    for s in time_stamp:
-        start_date = s
-        end_d = s + datetime.timedelta(days=1)
-        end_date = datetime.datetime.combine(end_d.date(), controller_data["time_end"])
-        one_day_data = data[data["data_time"].between(start_date, end_date)]
-        print(one_day_data["mhour"].unique())
-        counter = one_day_data["mminute"].value_counts()
-
-        mean = (sum(counter.tolist()) / count_measurements_hour)/23
-        res[s] = round(mean, 2)
-    df = pd.DataFrame(list(res.items()), columns=["data_time", "mean"])
-    return df[df["mean"]>0]
 
 
 def measurements_hour(data):
@@ -218,7 +226,8 @@ def get_percentage_ratio(data, column_1, column_2,
 
 
 def percentile(number1, number2):
-    return (number2/number1) * 100
+    return (number2 / number1) * 100
+
 
 def time_occupied(data, column, max, measurements, ndigits=1):
     """
@@ -233,19 +242,18 @@ def time_occupied(data, column, max, measurements, ndigits=1):
     """
 
     if max > 0:
-        number1 = data[data[column] >= float(max)-0.5][column].size
+        number1 = data[data[column] >= float(max) - 0.5][column].size
     else:
-        number1 = data[data[column] <= float(max)+0.5][column].size
+        number1 = data[data[column] <= float(max) + 0.5][column].size
     measurements = data[column].size
     return round(percentile(measurements, number1), ndigits)
 
 
 def date_colors(dates, weekend_days, week_color, work_color):
-    colors  = []
+    colors = []
     for d in dates:
         if d.dayofweek in weekend_days:
-           colors.append(week_color)
+            colors.append(week_color)
         else:
             colors.append(work_color)
     return colors
-
