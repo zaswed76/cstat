@@ -84,6 +84,9 @@ def get_data_every_day(data, time_category, start_end_dates, mean_columns=None):
         loc = [start]
         if count_measurements_hour > 12:
             mean = one_day_data[mean_columns].mean().tolist()
+            print(start)
+            print(count_measurements_hour)
+            print("----------------------------")
         else:
             mean = [0]
         loc.extend(mean)
@@ -101,6 +104,7 @@ def get_data_table_every_day(data, time_category, start_end_dates, mean_columns=
         if count_measurements_hour > 12:
             counter = one_day_data["mminute"].value_counts()
             mean = [sum(counter.tolist()) / (count_measurements_hour * 12)]
+            print("{} - {}".format(start, mean))
         else:
             mean = [0]
         loc.extend(mean)
@@ -143,8 +147,6 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
         one_hour_data = data[data["mhour"].between(h, h)]
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
-        print(len(counter.values()), count_measurements_hour)
-        print("-----------------")
         mean = sum(counter.values()) / count_measurements_hour
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])

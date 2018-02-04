@@ -34,7 +34,7 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     app.setStyleSheet(open(pth.CSS_STYLE, "r").read())
 
-    clubs = config.get_cfg(os.path.join(pth.CONFIG_DIR, "clubs.yaml"))
+    clubs = config.get_cfg(os.path.join(pth.CONFIG_DIR, "clubs.yaml"))["clubs"]
 
     state_cfg = config.get_cfg(
         os.path.join(pth.CONFIG_DIR, "gui_graph.yaml"))

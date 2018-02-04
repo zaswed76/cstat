@@ -1,69 +1,74 @@
-Akadem:
-    color: "#2D518B"
-    pro_color: "#F30793"
-    school_color: "#FCF355"
-    max_pc_color: "#02BFFE"
-    graphics_max: 60
-    id: 3
-    max: 45
-    name: IT Land Akadem
-    tag_name: Akadem
-    pro_comp_list: [6,7,8,9,10]
-    school_time: ['13:30','22:00']
-    alt_school_time: ['09:00','22:00']
-    work time: {start: '09:00', end: '07:59'}
-    include_active_classes: [bg_school, bg_resid, bg_guest]
-    width: 0.8
 
-Dream:
-    color: "#C89C0C"
-    pro_color: "#F30793"
-    school_color: "#FCF355"
-    max_pc_color: "#02BFFE"
-    graphics_max: 60
-    id: 2
-    max: 60
-    name: IT Land DreamTown
-    tag_name: Dream
-    pro_comp_list: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
-    school_time: ['13:30','22:00']
-    alt_school_time: ['09:00','22:00']
-    work time: {start: '10:00', end: '06:00'}
-    include_active_classes: [bg_school, bg_resid, bg_guest]
-    width: 0.8
+defoult:
+    club: &basic
+        graphics_max: 70
+        school_time: ['13:30','22:00']
+        alt_school_time: ['09:00','22:00']
 
-Les:
-    color: "#238822"
-    pro_color: "#F30793"
-    school_color: "#FCF355"
-    max_pc_color: "#02BFFE"
-    graphics_max: 60
-    id: 4
-    max: 34
-    name: IT Land Les
-    tag_name: Les
-    pro_comp_list: [15, 16, 17, 18, 19, 20]
-    school_time: ['13:30','22:00']
-    alt_school_time: ['09:00','22:00']
-    work time: {start: '09:00', end: '07:59'}
-    include_active_classes: [bg_school, bg_resid, bg_guest]
-    width: 0.8
 
-Troya:
-    color: "#04AF89"
-    pro_color: "#F30793"
-    school_color: "#FCF355"
-    max_pc_color: "#02BFFE"
-    graphics_max: 60
-    id: 1
-    max: 54
-    name: IT Land Troya
-    tag_name: Troya
-    pro_comp_list: [72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
-    91, 92, 93, 94, 95, 96]
-    school_time: ['13:30','22:00']
-    alt_school_time: ['09:00','22:00']
-    work time: {start: '09:00', end: '07:59'}
-    include_active_classes: [bg_school, bg_resid, bg_guest]
-    width: 0.8
+clubs:
+    Akadem:
+        <<: *basic
+        color: "#2D518B"
+        pro_color: "#F30793"
+        school_color: "#FCF355"
+        max_pc_color: "#02BFFE"
+        id: 3
+        max: 45
+        name: IT Land Akadem
+        tag_name: Akadem
+        pro_comp_list: [6,7,8,9,10]
+        work_time: {start: '09:00', end: '07:59'}
+        working_hours: 23
+        include_active_classes: [bg_school, bg_resid, bg_guest]
+        width: 0.8
+
+    Dream:
+        <<: *basic
+        color: "#C89C0C"
+        pro_color: "#F30793"
+        school_color: "#FCF355"
+        max_pc_color: "#02BFFE"
+        id: 2
+        max: 60
+        name: IT Land DreamTown
+        tag_name: Dream
+        pro_comp_list: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
+        work_time: {start: '10:00', end: '06:00'}
+        working_hours: 19
+        include_active_classes: [bg_school, bg_resid, bg_guest]
+        width: 0.8
+
+    Les:
+        <<: *basic
+        color: "#238822"
+        pro_color: "#F30793"
+        school_color: "#FCF355"
+        max_pc_color: "#02BFFE"
+        id: 4
+        max: 34
+        name: IT Land Les
+        tag_name: Les
+        pro_comp_list: [15, 16, 17, 18, 19, 20]
+        work_time: {start: '09:00', end: '07:59'}
+        working_hours: 23
+        include_active_classes: [bg_school, bg_resid, bg_guest]
+        width: 0.8
+
+    Troya:
+        <<: *basic
+        color: "#04AF89"
+        pro_color: "#F30793"
+        school_color: "#FCF355"
+        max_pc_color: "#02BFFE"
+        id: 1
+        max: 54
+        name: IT Land Troya
+        tag_name: Troya
+        pro_comp_list: [72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83,
+        91, 92, 93, 94, 95, 96]
+        work_time: {start: '09:00', end: '07:59'}
+        working_hours: 23
+        include_active_classes: [bg_school, bg_resid, bg_guest]
+        width: 0.8
 
