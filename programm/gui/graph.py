@@ -1,11 +1,8 @@
 import datetime
 import os
-import sqlite3
 import sys
-from collections import Counter
 from pathlib import PurePath
 
-import pandas as pd
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from jinja2 import Template
 
@@ -14,7 +11,6 @@ from programm.dataproc import data_proc as dproc
 from programm.gui import slider as sl
 from programm.gui.lib import tools, service
 from programm.gui.plot import plot
-from programm.sql import sql_keeper as keeper
 
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
@@ -240,6 +236,7 @@ class GraphicsWidget(QtWidgets.QWidget):
             log.warning("нельзя построить такой график")
 
     def get_period_data(self, controller_data):
+        # todo колличество замеров в день
         data_dict = {}
         bd_path = self.get_last_bd_path()
         club_name = controller_data['active_clubs'][0]
@@ -250,10 +247,14 @@ class GraphicsWidget(QtWidgets.QWidget):
                              controller_data=controller_data,
                              db_path=bd_path)
         stat_data = dproc.get_data(**data_stat_arg)
+        count_measurements_in_day = dproc.measurements_in_day(stat_data)
+        print(count_measurements_in_day)
+        print("-----------------------")
         if stat_data is not None:
 
             # stat_data["data_time"] = pd.to_datetime(stat_data["data_time"])
-            stat_data.loc[:, "data_time"] = stat_data.data_time.astype('datetime64[ns]')
+            stat_data.loc[:, "data_time"] = stat_data.data_time.astype(
+                'datetime64[ns]')
 
             # список уникльных отсортированых дат - (начало, конец) < pd.Timestamp
             start_end_dates = dproc.get_start_end_dates(
@@ -261,9 +262,12 @@ class GraphicsWidget(QtWidgets.QWidget):
                 self.current_club_cfg["work_time"]["start"],
                 self.current_club_cfg["work_time"]["end"])
 
+
+
             every_days_data = dproc.get_data_every_day(stat_data, "data_time",
                                                        start_end_dates,
                                                        mean_columns=["visitor"])
+
 
             data_dict["d_days"] = [x.day for x in every_days_data["data_time"]]
             data_dict["d_visitor"] = every_days_data["visitor"].tolist()
@@ -290,17 +294,26 @@ class GraphicsWidget(QtWidgets.QWidget):
                 pro_data["class"].isin(include_active_classes)]
 
             # active_pro_data["data_time"] = pd.to_datetime(active_pro_data["data_time"])
-            active_pro_data.loc[:, "data_time"] = active_pro_data.data_time.astype('datetime64[ns]')
-            pro_mean_data = dproc.get_data_table_every_day(active_pro_data, "data_time",
+            active_pro_data.loc[:, "data_time"] = active_pro_data.data_time.astype(
+                'datetime64[ns]')
+
+            # cколько часов клуб работает по умолчанию
+            working_club_hours = self.current_club_cfg["working_hours"]
+
+
+            pro_mean_data = dproc.get_data_table_every_day(active_pro_data,
+                                                           "data_time",
                                                            start_end_dates,
+                                                           working_club_hours,
                                                            mean_columns=["visitor"])
 
             data_dict["d_pro"] = [int(round(x)) for x in pro_mean_data["visitor"]]
 
+            data_dict["d_days_colors"] = dproc.date_colors(
+                every_days_data["data_time"],
 
-            data_dict["d_days_colors"] = dproc.date_colors(every_days_data["data_time"],
-                                                           [5, 6], "r", "black")
-
+                self.current_club_cfg["week_day_num"],
+                "r", "black")
 
             return data_dict
         else:
@@ -385,6 +398,8 @@ class GraphicsWidget(QtWidgets.QWidget):
                                       "name"],
                                   controller_data=controller_data,
                                   db_path=bd_path)
+
+            # таблица за день
             data_table = dproc.get_data(**data_table_arg)
 
             # пк указанные в списке pro_comp_list
@@ -398,30 +413,30 @@ class GraphicsWidget(QtWidgets.QWidget):
             # активные классы указны в списке include_active_classes
             active_pro_data = pro_data[
                 pro_data["class"].isin(include_active_classes)]
-            # pd.DataFrame columns=["mhour","mean"] mean:float(0, ..)
-            # средние показатели в посетителях покаждому часу
 
+            # средние показатели в посетителях покаждому часу
             pro_mean_data = dproc.mean_hourly_data(data_dict["h_hours"],
                                                    count_measurements_hour,
                                                    active_pro_data)
-
-
+            # cколько часов клуб работает по умолчанию
             working_club_hours = self.current_club_cfg["working_hours"]
+            # реально сколько часов было замеряно
             real_hours = pro_mean_data["mean"].size
+
             if real_hours < working_club_hours:
                 size_hours = real_hours
             else:
                 size_hours = working_club_hours
 
-            pro_mean = pro_mean_data["mean"].sum() / size_hours
-
-
-            print("{data}\nпосетителей на про зоне среднее  за день {mean}".format(mean=pro_mean,
-                                                                       data=controller_data["date_start"]))
+            pro_mean_day = pro_mean_data["mean"].sum() / size_hours
+            print("{}/{}".format(pro_mean_data["mean"].sum(), size_hours))
+            print("{data}\nпосетителей на про зоне среднее  за день {mean}".format(
+                mean=pro_mean_day,
+                data=controller_data["date_start"]))
             print("------------------------")
             data_dict["percentage_ratio_pro"] = round(dproc.percentile(
                 len(self.current_club_cfg["pro_comp_list"]),
-                pro_mean), 1)
+                pro_mean_day), 1)
 
             data_dict["occupied_pro_max"] = dproc.time_occupied(pro_mean_data,
                                                                 "mean",

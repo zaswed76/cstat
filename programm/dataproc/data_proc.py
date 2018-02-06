@@ -94,16 +94,23 @@ def get_data_every_day(data, time_category, start_end_dates, mean_columns=None):
     df = pd.DataFrame(res, columns=columns)
     return df
 
-def get_data_table_every_day(data, time_category, start_end_dates, mean_columns=None):
+def get_data_table_every_day(data, time_category, start_end_dates, working_club_hours, mean_columns=None):
     res = []
     columns = ["data_time"]+mean_columns
     for start, end, in start_end_dates:
         one_day_data = data[data["data_time"].between(start, end)]
-        count_measurements_hour = one_day_data["mhour"].unique().size
+        real_hours = one_day_data["mhour"].unique().size
+
+        if real_hours < working_club_hours:
+            size_hours = real_hours
+        else:
+            size_hours = working_club_hours
+
         loc = [start]
-        if count_measurements_hour > 12:
+        if size_hours > 12:
             counter = one_day_data["mminute"].value_counts()
-            mean = [sum(counter.tolist()) / (count_measurements_hour * 12)]
+            mean = [sum(counter.tolist()) / (size_hours * 12)]
+            print("{}/({} - {})".format(sum(counter.tolist()), size_hours, 12))
             print("{} - {}".format(start, mean))
         else:
             mean = [0]
@@ -262,3 +269,7 @@ def date_colors(dates, weekend_days, week_color, work_color):
         else:
             colors.append(work_color)
     return colors
+
+
+def measurements_in_day(stat_data):
+    return stat_data["mhour"].unique().size

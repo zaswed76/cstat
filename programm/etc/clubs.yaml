@@ -4,6 +4,7 @@ defoult:
         graphics_max: 70
         school_time: ['13:30','22:00']
         alt_school_time: ['09:00','22:00']
+        week_day_num: [5, 6]
 
 
 clubs:
@@ -35,7 +36,7 @@ clubs:
         tag_name: Dream
         pro_comp_list: [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]
         work_time: {start: '10:00', end: '06:00'}
-        working_hours: 19
+        working_hours: 20
         include_active_classes: [bg_school, bg_resid, bg_guest]
         width: 0.8
 
