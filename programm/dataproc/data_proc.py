@@ -271,5 +271,6 @@ def date_colors(dates, weekend_days, week_color, work_color):
     return colors
 
 
-def measurements_in_day(stat_data):
-    return stat_data["mhour"].unique().size
+def measurements_in_day(data, start, end):
+    one_day_data = data[data["data_time"].between(start, end)]
+    return one_day_data["mhour"].unique().size

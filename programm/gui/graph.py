@@ -247,9 +247,7 @@ class GraphicsWidget(QtWidgets.QWidget):
                              controller_data=controller_data,
                              db_path=bd_path)
         stat_data = dproc.get_data(**data_stat_arg)
-        count_measurements_in_day = dproc.measurements_in_day(stat_data)
-        print(count_measurements_in_day)
-        print("-----------------------")
+
         if stat_data is not None:
 
             # stat_data["data_time"] = pd.to_datetime(stat_data["data_time"])
@@ -262,7 +260,10 @@ class GraphicsWidget(QtWidgets.QWidget):
                 self.current_club_cfg["work_time"]["start"],
                 self.current_club_cfg["work_time"]["end"])
 
-
+            current_data = start_end_dates
+            count_measurements_in_day = dproc.measurements_in_day(stat_data, current_data)
+            print(count_measurements_in_day)
+            print("-----------------------")
 
             every_days_data = dproc.get_data_every_day(stat_data, "data_time",
                                                        start_end_dates,
