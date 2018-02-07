@@ -45,7 +45,8 @@ def get_data(table_name=None, controller_data=None,
 
 
 def get_data_every_time(data: pd.DataFrame,
-                        time_category: str) -> pd.DataFrame:
+                        time_category: str,
+                        list_work_hours) -> pd.DataFrame:
     # todo переписать
 
     """
@@ -63,40 +64,55 @@ def get_data_every_time(data: pd.DataFrame,
              'guest', 'resident', 'admin', 'workers', 'school',
              'visitor']
     list_res = []
-    hour_lst = data[time_category].unique()
+
+
+
+
     club = data["club"][0]
     date = data["dt"][0]
-    for h in hour_lst:
+    for h in list_work_hours:
         lst = [date, pd.NaT, h, 0, club, pd.NaT]
         ser = data[data[time_category].between(h, h)]
+        measur = ser["mminute"].size
+
         lst.extend(ser[m_col].mean())
+        lst.append(measur)
         list_res.append(lst)
-    res = pd.DataFrame(list_res, columns=data.columns)
+    col =  data.columns.tolist()
+    col.append("measur")
+    res = pd.DataFrame(list_res, columns=col)
     return res
 
 
 def get_data_every_day(data, time_category, start_end_dates, mean_columns=None):
     res = []
-    columns = ["data_time"]+mean_columns
+    columns = ["data_time"] + mean_columns
+    columns.append("measur")
+    columns.append("measur_hours")
     for start, end, in start_end_dates:
         one_day_data = data[data["data_time"].between(start, end)]
         count_measurements_hour = one_day_data["mhour"].unique().size
+        print(start)
+        print(count_measurements_hour, one_day_data["mhour"].unique(),  "88888888888")
         loc = [start]
         if count_measurements_hour > 12:
             mean = one_day_data[mean_columns].mean().tolist()
-            print(start)
-            print(count_measurements_hour)
-            print("----------------------------")
         else:
             mean = [0]
         loc.extend(mean)
+        loc.append(one_day_data["data_time"].size)
+        loc.append(count_measurements_hour)
         res.append(loc)
     df = pd.DataFrame(res, columns=columns)
     return df
 
-def get_data_table_every_day(data, time_category, start_end_dates, working_club_hours, mean_columns=None):
+
+def get_data_table_every_day(data, time_category, start_end_dates, working_club_hours,
+                             measur_every_day,
+                             measur_hours,
+                             mean_columns=None):
     res = []
-    columns = ["data_time"]+mean_columns
+    columns = ["data_time"] + mean_columns
     for start, end, in start_end_dates:
         one_day_data = data[data["data_time"].between(start, end)]
         real_hours = one_day_data["mhour"].unique().size
@@ -108,10 +124,15 @@ def get_data_table_every_day(data, time_category, start_end_dates, working_club_
 
         loc = [start]
         if size_hours > 12:
+            measur = measur_every_day[measur_every_day["data_time"] == start]["measur"]
             counter = one_day_data["mminute"].value_counts()
-            mean = [sum(counter.tolist()) / (size_hours * 12)]
-            print("{}/({} - {})".format(sum(counter.tolist()), size_hours, 12))
-            print("{} - {}".format(start, mean))
+            mean = [sum(counter.tolist()) / measur]
+            print("""{}
+- mean: {}
+- measur: {}
+- real_hours: {}
+""".format(start, mean[0].values, measur.values, real_hours))
+            print("---------------------------")
         else:
             mean = [0]
         loc.extend(mean)
@@ -133,14 +154,14 @@ def get_start_end_dates(data, start_time, end_time, period=1):
 
 
 def get_time_stamp(data, start_time, end_time):
-
     time_lst = list(map(pd.Timestamp, data["data_time"].unique()))
     start_d = pd.Timestamp.combine(time_lst[0].date(), start_time)
     end_d = pd.Timestamp.combine(
         time_lst[-1].date(), end_time)
     return pd.date_range(start_d, end_d)
 
-def mean_hourly_data(h_hours, count_measurements_hour, data):
+
+def mean_hourly_data(h_hours, mhour_measur, data):
     """
 
     :param data: pd.DataFrame
@@ -154,7 +175,10 @@ def mean_hourly_data(h_hours, count_measurements_hour, data):
         one_hour_data = data[data["mhour"].between(h, h)]
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
-        mean = sum(counter.values()) / count_measurements_hour
+        measur = mhour_measur[mhour_measur["mhour"] == h]["measur"].tolist()[0]
+
+        mean = sum(counter.values()) / measur
+
         res[h] = round(mean, 2)
     return pd.DataFrame(list(res.items()), columns=["mhour", "mean"])
 
@@ -170,6 +194,15 @@ def measurements_hour(data):
     # TODO SDFG
     return 12
 
+def list_work_hours(data: pd.DataFrame, work_time: dict):
+    sdate = data["data_time"].min().date()
+    edate = data["data_time"].max().date()
+    stime = datetime.datetime.strptime(work_time["start"], "%H:%M").time()
+    etime = datetime.datetime.strptime(work_time["end"], "%H:%M").time()
+    start_date = datetime.datetime.combine(sdate, stime)
+    end_date = datetime.datetime.combine(edate, etime)
+    hour_list = data[data["data_time"].between(start_date, end_date)]["mhour"].unique()
+    return hour_list
 
 def get_mean_people(visitor, r=0):
     lenght = len(visitor)

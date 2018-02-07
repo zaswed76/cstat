@@ -260,16 +260,11 @@ class GraphicsWidget(QtWidgets.QWidget):
                 self.current_club_cfg["work_time"]["start"],
                 self.current_club_cfg["work_time"]["end"])
 
-            current_data = start_end_dates
-            count_measurements_in_day = dproc.measurements_in_day(stat_data, current_data)
-            print(count_measurements_in_day)
-            print("-----------------------")
-
             every_days_data = dproc.get_data_every_day(stat_data, "data_time",
                                                        start_end_dates,
                                                        mean_columns=["visitor"])
 
-
+            measur_every_day = every_days_data[["data_time", "measur"]]
             data_dict["d_days"] = [x.day for x in every_days_data["data_time"]]
             data_dict["d_visitor"] = every_days_data["visitor"].tolist()
 
@@ -284,11 +279,13 @@ class GraphicsWidget(QtWidgets.QWidget):
             pro_comp_list = map(str,
                                 self.current_club_cfg[
                                     "pro_comp_list"])
+
             # пк указанные в списке pro_comp_list
             pro_data = data_table[
                 data_table["ncomp"].isin(pro_comp_list)]
             include_active_classes = self.current_club_cfg[
                 "include_active_classes"]
+
             # пк класс которых значится как активные
             # активные классы указны в списке include_active_classes
             active_pro_data = pro_data[
@@ -301,11 +298,13 @@ class GraphicsWidget(QtWidgets.QWidget):
             # cколько часов клуб работает по умолчанию
             working_club_hours = self.current_club_cfg["working_hours"]
 
-
+            measur_hours = every_days_data[["data_time", "measur_hours"]]
             pro_mean_data = dproc.get_data_table_every_day(active_pro_data,
                                                            "data_time",
                                                            start_end_dates,
                                                            working_club_hours,
+                                                           measur_every_day,
+                                                           measur_hours,
                                                            mean_columns=["visitor"])
 
             data_dict["d_pro"] = [int(round(x)) for x in pro_mean_data["visitor"]]
@@ -383,7 +382,18 @@ class GraphicsWidget(QtWidgets.QWidget):
             return
         else:
             # усреднённые данные числовых колонок
-            every_hour_data = dproc.get_data_every_time(stat_data, "mhour")
+            # todo cюда надо передать список чаов
+            stat_data.loc[:, "data_time"] = stat_data.data_time.astype(
+                'datetime64[ns]')
+            list_work_hours = dproc.list_work_hours(stat_data,
+                                                    self.current_club_cfg["work_time"])
+
+            every_hour_data = dproc.get_data_every_time(
+                stat_data,
+                "mhour",
+                list_work_hours)
+
+            mhour_measur = every_hour_data[["mhour", "measur"]]
 
             data_dict["h_hours"] = every_hour_data["mhour"]
             data_dict["h_visitor"] = [int(round(x)) for x in
@@ -417,8 +427,9 @@ class GraphicsWidget(QtWidgets.QWidget):
 
             # средние показатели в посетителях покаждому часу
             pro_mean_data = dproc.mean_hourly_data(data_dict["h_hours"],
-                                                   count_measurements_hour,
+                                                   mhour_measur,
                                                    active_pro_data)
+            # print(pro_mean_data)
             # cколько часов клуб работает по умолчанию
             working_club_hours = self.current_club_cfg["working_hours"]
             # реально сколько часов было замеряно
