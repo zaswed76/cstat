@@ -169,10 +169,12 @@ def mean_hourly_data(h_hours, mhour_measur, data):
     :param count_measurements_hour: int
     :return: pd.DataFrame columns=["mhour", "mean"]
     """
-
+    print(h_hours, "77777")
     res = {}
     for h in h_hours:
         one_hour_data = data[data["mhour"].between(h, h)]
+        print(one_hour_data)
+        print("---------------")
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
         measur = mhour_measur[mhour_measur["mhour"] == h]["measur"].tolist()[0]

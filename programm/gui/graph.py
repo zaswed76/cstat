@@ -400,7 +400,7 @@ class GraphicsWidget(QtWidgets.QWidget):
                                       every_hour_data["visitor"]]
             data_dict["h_school"] = [int(round(x)) for x in
                                      every_hour_data["school"]]
-
+            print(data_dict["h_visitor"])
             pro_comp_list = map(str,
                                 self.current_club_cfg[
                                     "pro_comp_list"])
@@ -413,9 +413,11 @@ class GraphicsWidget(QtWidgets.QWidget):
             # таблица за день
             data_table = dproc.get_data(**data_table_arg)
 
+
             # пк указанные в списке pro_comp_list
             pro_data = data_table[
                 data_table["ncomp"].isin(pro_comp_list)]
+
 
             include_active_classes = self.current_club_cfg[
                 "include_active_classes"]
@@ -425,10 +427,16 @@ class GraphicsWidget(QtWidgets.QWidget):
             active_pro_data = pro_data[
                 pro_data["class"].isin(include_active_classes)]
 
+
+            print(mhour_measur)
+            print("----------------------")
+
             # средние показатели в посетителях покаждому часу
             pro_mean_data = dproc.mean_hourly_data(data_dict["h_hours"],
                                                    mhour_measur,
                                                    active_pro_data)
+            print(pro_mean_data)
+
             # print(pro_mean_data)
             # cколько часов клуб работает по умолчанию
             working_club_hours = self.current_club_cfg["working_hours"]
