@@ -1,5 +1,6 @@
 import datetime
 import os
+import sys
 import sqlite3
 from collections import Counter
 
@@ -60,6 +61,7 @@ def get_data_every_time(data: pd.DataFrame,
     если даты то усреднённые данные за день
     :return:
     """
+
     m_col = ['taken', 'free',
              'guest', 'resident', 'admin', 'workers', 'school',
              'visitor']
@@ -169,7 +171,7 @@ def mean_hourly_data(h_hours, mhour_measur, data):
     :param count_measurements_hour: int
     :return: pd.DataFrame columns=["mhour", "mean"]
     """
-    print(h_hours, "77777")
+
     res = {}
     for h in h_hours:
         one_hour_data = data[data["mhour"].between(h, h)]
@@ -197,12 +199,26 @@ def measurements_hour(data):
     return 12
 
 def list_work_hours(data: pd.DataFrame, work_time: dict):
-    sdate = data["data_time"].min().date()
-    edate = data["data_time"].max().date()
+
+    sdate_time = data["data_time"].min()
+
+    edate_time = data["data_time"].max()
+    sdate = sdate_time.date()
+    edate = edate_time.date()
+
+    if edate - sdate > datetime.timedelta(days=0):
+        etime = datetime.datetime.strptime(work_time["end"], "%H:%M").time()
+    else:
+        etime = edate_time.time()
+
     stime = datetime.datetime.strptime(work_time["start"], "%H:%M").time()
-    etime = datetime.datetime.strptime(work_time["end"], "%H:%M").time()
+
+
     start_date = datetime.datetime.combine(sdate, stime)
     end_date = datetime.datetime.combine(edate, etime)
+
+
+
     hour_list = data[data["data_time"].between(start_date, end_date)]["mhour"].unique()
     return hour_list
 
