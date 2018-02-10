@@ -51,8 +51,8 @@ clubs:
         name: IT Land Les
         tag_name: Les
         pro_comp_list: [15, 16, 17, 18, 19, 20]
-        work_time: {start: '09:00', end: '07:59'}
-        working_hours: 23
+        work_time: {start: '09:00', end: '06:59'}
+        working_hours: 22
         include_active_classes: [bg_school, bg_resid, bg_guest]
         width: 0.8
 
