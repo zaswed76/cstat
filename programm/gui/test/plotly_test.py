@@ -1,35 +1,25 @@
 
+from PyQt5 import QtGui, QtWidgets  # (the example applies equally well to PySide)
 import pyqtgraph as pg
-import numpy as np
-from PyQt5 import QtWidgets as QtGui  # (the example applies equally well to PySide)
 
-
-## Always start by initializing Qt (only once per application)
 app = QtGui.QApplication([])
 
 ## Define a top-level widget to hold everything
-w = QtGui.QWidget()
+w = QtWidgets.QWidget()
 
 ## Create some widgets to be placed inside
-btn = QtGui.QPushButton('press me')
-text = QtGui.QLineEdit('enter text')
-listw = QtGui.QListWidget()
+btn = QtWidgets.QPushButton('press me')
+text = QtWidgets.QLineEdit('enter text')
+listw = QtWidgets.QListWidget()
 plot = pg.PlotWidget()
 
+import numpy as np
 x = np.random.normal(size=1000)
 y = np.random.normal(size=1000)
-# plot.plot(x, y, pen=None, symbol='o')  ## setting pen=None disables line drawing
-
-b = pg.BarGraphItem(x=[1, 2, 3], height=[3, 4, 5], width=0.9, brush='g')
-plot.setBackground("#555555")
-
-
-plot.addItem(b)
-
-
+pg.plot(x, y, pen=None, symbol='o')  ## setting pen=None disables line drawing
 
 ## Create a grid layout to manage the widgets size and position
-layout = QtGui.QGridLayout()
+layout = QtWidgets.QGridLayout()
 w.setLayout(layout)
 
 ## Add widgets to the layout in their proper positions

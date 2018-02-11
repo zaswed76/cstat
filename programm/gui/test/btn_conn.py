@@ -1,6 +1,17 @@
-mid = [3, 4]
-
-b1 = [1, 2, *mid, 5, 6]
 
 
-print(b1)
+from kivy.app import App
+from kivy.uix.widget import Widget
+
+
+class PongGame(Widget):
+    pass
+
+
+class PongApp(App):
+    def build(self):
+        return PongGame()
+
+
+if __name__ == '__main__':
+    PongApp().run()
