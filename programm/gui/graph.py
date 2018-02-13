@@ -450,11 +450,7 @@ class GraphicsWidget(QtWidgets.QWidget):
                 size_hours = working_club_hours
 
             pro_mean_day = pro_mean_data["mean"].sum() / size_hours
-            print("{}/{}".format(pro_mean_data["mean"].sum(), size_hours))
-            print("{data}\nпосетителей на про зоне среднее  за день {mean}".format(
-                mean=pro_mean_day,
-                data=controller_data["date_start"]))
-            print("------------------------")
+
             data_dict["percentage_ratio_pro"] = round(dproc.percentile(
                 len(self.current_club_cfg["pro_comp_list"]),
                 pro_mean_day), 1)

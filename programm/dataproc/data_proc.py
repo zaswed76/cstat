@@ -94,8 +94,6 @@ def get_data_every_day(data, time_category, start_end_dates, mean_columns=None):
     for start, end, in start_end_dates:
         one_day_data = data[data["data_time"].between(start, end)]
         count_measurements_hour = one_day_data["mhour"].unique().size
-        print(start)
-        print(count_measurements_hour, one_day_data["mhour"].unique(),  "88888888888")
         loc = [start]
         if count_measurements_hour > 12:
             mean = one_day_data[mean_columns].mean().tolist()
@@ -129,12 +127,6 @@ def get_data_table_every_day(data, time_category, start_end_dates, working_club_
             measur = measur_every_day[measur_every_day["data_time"] == start]["measur"]
             counter = one_day_data["mminute"].value_counts()
             mean = [sum(counter.tolist()) / measur]
-            print("""{}
-- mean: {}
-- measur: {}
-- real_hours: {}
-""".format(start, mean[0].values, measur.values, real_hours))
-            print("---------------------------")
         else:
             mean = [0]
         loc.extend(mean)
@@ -175,8 +167,6 @@ def mean_hourly_data(h_hours, mhour_measur, data):
     res = {}
     for h in h_hours:
         one_hour_data = data[data["mhour"].between(h, h)]
-        print(one_hour_data)
-        print("---------------")
         # dict(minute=count comp) колличество пк каждые n минут
         counter = Counter(one_hour_data["mminute"].tolist())
         measur = mhour_measur[mhour_measur["mhour"] == h]["measur"].tolist()[0]

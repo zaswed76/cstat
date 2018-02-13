@@ -1,12 +1,12 @@
 from os.path import join, dirname
 
-import club_stat
+import programm
 from setuptools import setup, find_packages
 
 setup(
-        name="clube_stat",
+        name="cstat",
         # в __init__ пакета
-        version=club_stat.__version__,
+        version=programm.__version__,
         packages=find_packages(
                 exclude=["*.exemple", "*.exemple.*", "exemple.*",
                          "exemple"]),
@@ -14,11 +14,10 @@ setup(
         long_description=open(
                 join(dirname(__file__), 'README.rst')).read(),
 
-        install_requires=["PyQt5", "selenium", "pandas",
-                          "matplotlib"],
+        install_requires=["PyQt5", "pandas", "matplotlib"],
         entry_points={
             'console_scripts':
-                ['itstat = club_stat.main:Main']
+                ['cstat = programm.main:main']
         }
 
 )

@@ -1,9 +1,7 @@
-
-recursive-include club_stat/etc *.json
-recursive-include club_stat/gui/ui *.ui
-recursive-include club_stat/style *.css
-recursive-include club_stat/data *
-recursive-include club_stat/drivers *.exe
-recursive-include club_stat/resource/icons *
-recursive-include club_stat/log *.log
+recursive-include programm/etc *
+recursive-include programm/gui/ui *.ui
+recursive-include programm/style *.css
+recursive-include programm/data *
+recursive-include programm/resource/icons *
+recursive-include programm/log *.log
 
