@@ -1,7 +1,7 @@
-recursive-include programm/etc *
-recursive-include programm/gui/ui *.ui
-recursive-include programm/style *.css
-recursive-include programm/data *
-recursive-include programm/resource/icons *
-recursive-include programm/log *.log
+recursive-include cstatn/etc *
+recursive-include cstatn/gui/ui *.ui
+recursive-include cstatn/style *.css
+recursive-include cstatn/data *
+recursive-include cstatn/resource/icons *
+recursive-include cstatn/log *.log
 
