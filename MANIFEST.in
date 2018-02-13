@@ -1,6 +1,6 @@
 recursive-include cstatn/etc *
 recursive-include cstatn/gui/ui *.ui
-recursive-include cstatn/style *.css
+recursive-include cstatn/style *
 recursive-include cstatn/data *
 recursive-include cstatn/resource/icons *
 recursive-include cstatn/log *.log
