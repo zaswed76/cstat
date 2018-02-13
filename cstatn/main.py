@@ -4,11 +4,11 @@ import os
 
 from PyQt5 import QtWidgets, QtCore
 
-from cstat.gui import graph, base
-from cstat.libs import config
-from cstat import pth
+from cstatn.gui import graph, base
+from cstatn.libs import config
+from cstatn import pth
 
-from  cstat import images_rc
+from  cstatn import images_rc
 
 def qt_message_handler(mode, context, message):
     if mode == QtCore.QtInfoMsg:

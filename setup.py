@@ -1,12 +1,12 @@
 from os.path import join, dirname
 
-import cstat
+import cstatn
 from setuptools import setup, find_packages
 
 setup(
         name="cstat5",
         # в __init__ пакета
-        version=cstat.__version__,
+        version=cstatn.__version__,
         packages=find_packages(
                 exclude=["*.exemple", "*.exemple.*", "exemple.*",
                          "exemple"]),

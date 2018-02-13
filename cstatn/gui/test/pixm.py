@@ -2,7 +2,7 @@
 
 import sys
 from PyQt5 import QtWidgets, QtGui
-from cstat import pth
+from cstatn import pth
 
 class Widget(QtWidgets.QLabel):
     def __init__(self):

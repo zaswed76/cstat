@@ -6,9 +6,9 @@ from collections import Counter
 
 import pandas as pd
 
-from cstat import pth
-from cstat.log import log as lg
-from cstat.sql import sql_keeper as keeper
+from cstatn import pth
+from cstatn.log import log as lg
+from cstatn.sql import sql_keeper as keeper
 
 log = lg.log(os.path.join(pth.LOG_DIR, "data_proc.log"))
 
