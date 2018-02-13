@@ -4,7 +4,7 @@ import programm
 from setuptools import setup, find_packages
 
 setup(
-        name="cstat",
+        name="cstat5",
         # в __init__ пакета
         version=programm.__version__,
         packages=find_packages(
@@ -17,7 +17,7 @@ setup(
         install_requires=["PyQt5", "pandas", "matplotlib"],
         entry_points={
             'console_scripts':
-                ['cstat = programm.main:main']
+                ['cstat5 = programm.main:main']
         }
 
 )
