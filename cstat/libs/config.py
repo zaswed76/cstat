@@ -11,7 +11,7 @@ def save_cfg(path, data):
 
 if __name__ == '__main__':
     import os
-    from programm import pth
+    from cstat import pth
     cfg_path = os.path.join(pth.CONFIG_DIR, "clubs.yaml")
     clubs = get_cfg(cfg_path)
     for cl in clubs.values():

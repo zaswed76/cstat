@@ -5,9 +5,9 @@ import os
 from PyQt5 import QtWidgets
 
 
-from programm.gui import graph
-from programm.libs import config
-from programm import pth
+from cstat.gui import graph
+from cstat.libs import config
+from cstat import pth
 cfg_path = os.path.join(pth.CONFIG_DIR, "clubs.yaml")
 clubs = config.get_cfg(cfg_path)
 

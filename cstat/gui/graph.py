@@ -6,15 +6,15 @@ from pathlib import PurePath
 from PyQt5 import QtWidgets, uic, QtCore, QtGui
 from jinja2 import Template
 
-from programm import pth
-from programm.dataproc import data_proc as dproc
-from programm.gui import slider as sl
-from programm.gui.lib import tools, service
-from programm.gui.plot import plot
+from cstat import pth
+from cstat.dataproc import data_proc as dproc
+from cstat.gui import slider as sl
+from cstat.gui.lib import tools, service
+from cstat.gui.plot import plot
 
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/graph_form.ui")
-from programm.log import log as lg
+from cstat.log import log as lg
 
 log = lg.log(os.path.join(pth.LOG_DIR, "graph.log"))
 
@@ -613,8 +613,8 @@ class InfoLabel(QtWidgets.QLabel):
 
 
 if __name__ == '__main__':
-    from programm.libs import config
-    from programm import pth
+    from cstat.libs import config
+    from cstat import pth
 
     app = QtWidgets.QApplication(sys.argv)
 

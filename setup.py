@@ -1,12 +1,12 @@
 from os.path import join, dirname
 
-import programm
+import cstat
 from setuptools import setup, find_packages
 
 setup(
         name="cstat5",
         # в __init__ пакета
-        version=programm.__version__,
+        version=cstat.__version__,
         packages=find_packages(
                 exclude=["*.exemple", "*.exemple.*", "exemple.*",
                          "exemple"]),
@@ -17,7 +17,7 @@ setup(
         install_requires=["PyQt5", "pandas", "matplotlib"],
         entry_points={
             'console_scripts':
-                ['cstat5 = programm.main:main']
+                ['cstat5 = cstat.main:main']
         }
 
 )

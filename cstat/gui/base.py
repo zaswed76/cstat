@@ -4,9 +4,9 @@ import sys
 import shutil
 import os
 from PyQt5 import QtWidgets, uic
-from programm.libs import config
-from programm import pth
-from programm.gui.lib import service
+from cstat.libs import config
+from cstat import pth
+from cstat.gui.lib import service
 root = os.path.join(os.path.dirname(__file__))
 ui_pth = os.path.join(root, "ui/main_form.ui")
 

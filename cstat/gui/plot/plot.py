@@ -11,8 +11,8 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 import os
-from programm.log import log as lg
-from programm import pth
+from cstat.log import log as lg
+from cstat import pth
 
 import matplotlib
 
