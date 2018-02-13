@@ -4,7 +4,7 @@ import os
 
 from PyQt5 import QtWidgets, QtCore
 
-from cstatn.gui import graph, base
+import graph, base
 from cstatn.libs import config
 from cstatn import pth
 
