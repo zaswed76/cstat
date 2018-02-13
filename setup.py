@@ -17,7 +17,7 @@ setup(
         install_requires=["PyQt5", "pandas", "matplotlib"],
         entry_points={
             'console_scripts':
-                ['cstat5 = cstat.main:main']
+                ['cstat5 = cstatn.main:main']
         }
 
 )
