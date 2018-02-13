@@ -30,7 +30,6 @@ def qt_message_handler(mode, context, message):
 QtCore.qInstallMessageHandler(qt_message_handler)
 
 
-
 def main():
     print("!!!!!!")
     # app = QtWidgets.QApplication(sys.argv)
