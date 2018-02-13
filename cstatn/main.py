@@ -6,7 +6,7 @@ from PyQt5 import QtWidgets, QtCore
 
 from cstatn import pth
 # from cstatn.gui import graph, base
-# from cstatn.libs import config
+from cstatn.libs import config
 # from cstatn import pth
 #
 # from  cstatn import images_rc
