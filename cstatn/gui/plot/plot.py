@@ -135,7 +135,7 @@ class Graphic:
             p = path
         else:
             p = pth.PLOT_PATH
-        fig.savefig(p, dpi=108)
+        fig.savefig(p, dpi=96)
 
     def clear(self):
         plt.cla()
