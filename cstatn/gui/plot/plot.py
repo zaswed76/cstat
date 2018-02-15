@@ -123,7 +123,7 @@ class Graphic:
 
     def save_from_file(self, path=""):
         fig = matplotlib.pyplot.gcf()
-        fig.set_size_inches(8, 5)
+        fig.set_size_inches(7, 4)
         margins = {
             "left": 0.07,
             "bottom": 0.09,

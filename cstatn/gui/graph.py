@@ -123,7 +123,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         self.form.shoose_db.setText(
             self._get_label_path_text(self.__db_path))
         self.__init_date_widgets()
-        self.__init_diapason_slider()
+        # self.__init_diapason_slider()
         self._init_control()
 
     def choose_db_dialog(self):

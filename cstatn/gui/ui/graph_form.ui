@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>737</width>
-    <height>408</height>
+    <height>330</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -61,6 +61,15 @@
            <bool>false</bool>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_4">
+           <property name="spacing">
+            <number>2</number>
+           </property>
+           <property name="topMargin">
+            <number>2</number>
+           </property>
+           <property name="bottomMargin">
+            <number>2</number>
+           </property>
            <item>
             <widget class="QDateEdit" name="dt_start_edit">
              <property name="minimumSize">
@@ -250,41 +259,13 @@
            <property name="bottomMargin">
             <number>0</number>
            </property>
-           <item>
-            <layout class="QVBoxLayout" name="graphic_type_layout">
-             <property name="spacing">
-              <number>0</number>
-             </property>
-            </layout>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="groupBox_8">
-          <property name="maximumSize">
-           <size>
-            <width>220</width>
-            <height>16777215</height>
-           </size>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
-          </property>
-          <property name="title">
-           <string>интервал</string>
-          </property>
-          <layout class="QHBoxLayout" name="horizontalLayout_3">
-           <item>
-            <layout class="QVBoxLayout" name="diapason_box"/>
-           </item>
           </layout>
          </widget>
         </item>
         <item>
          <widget class="QGroupBox" name="groupBox_2">
           <property name="styleSheet">
-           <string notr="true">font: 12pt &quot;MS Shell Dlg 2&quot;;</string>
+           <string notr="true">font: 8pt &quot;MS Shell Dlg 2&quot;;</string>
           </property>
           <property name="title">
            <string>выбрать базу данных</string>
