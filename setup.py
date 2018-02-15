@@ -14,7 +14,7 @@ setup(
         long_description=open(
                 join(dirname(__file__), 'README.rst')).read(),
 
-        install_requires=["PyQt5", "pandas", "matplotlib"],
+        install_requires=["PyQt5", "pandas", "matplotlib", "jinja2"],
         entry_points={
             'console_scripts':
                 ['cstat5 = cstatn.main:main']
