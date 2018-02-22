@@ -487,13 +487,18 @@ class GraphicsWidget(QtWidgets.QWidget):
 
     def set_one_shift_plot(self, controller_data):
         data = self.get_one_shift_data(controller_data)
+        title=self.current_club_cfg["tag_name"]
+
+        sd = controller_data['date_start'].strftime("%d-%m-%Y")
+        ed = controller_data['date_end'].strftime("%d-%m-%Y")
+        date_title = "{}\n{}\n{}".format(title, sd, ed)
         if data:
             self.plot_view.plot(data.get("h_hours"),
                                 data.get("h_visitor"),
                                 color=self.current_club_cfg["color"],
                                 width=self.current_club_cfg["width"],
                                 name="visitors",
-                                title=self.current_club_cfg["tag_name"])
+                                title=date_title)
 
             self.plot_view.plot(data.get("h_hours"),
                                 data.get("h_school"),

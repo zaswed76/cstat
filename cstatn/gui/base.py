@@ -5,6 +5,7 @@ import shutil
 import os
 from PyQt5 import QtWidgets, uic
 from cstatn.libs import config
+import cstatn
 from cstatn import pth
 from cstatn.gui.lib import service
 root = os.path.join(os.path.dirname(__file__))
@@ -19,10 +20,19 @@ class CStatMain(QtWidgets.QMainWindow):
         else: self.cfg = {}
 
 
+
+
+
+
         self.stack_widgets = {}
 
         self.form = uic.loadUi(ui_pth, self)
         self.setWindowTitle("Cstat")
+
+        self.status = QtWidgets.QStatusBar(self)
+        self.setStatusBar(self.status)
+        self.status.showMessage(cstatn.__version__)
+
         self.tool = self.form.toolBar
         self.stack = QtWidgets.QStackedLayout(self.form.central_Frame)
         self.tool.actionTriggered.connect(self.tool_actions)

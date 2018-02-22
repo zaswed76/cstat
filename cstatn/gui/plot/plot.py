@@ -66,13 +66,19 @@ class Graphic:
         'size': 8,
         }
 
+        font_title = {'family': 'DejaVu Sans',
+        'color':  '#2D518B',
+        'weight': 'bold',
+        'size': 10,
+        }
+
         ylabels=range(self.y_limit[0], self.y_limit[1]+1, 10)
         self.plots[name].set_xticklabels(time, fontdict=font)
         self.plots[name].set_yticklabels(ylabels , fontdict=font)
 
         title = kwargs.get("title")
         if title is not None:
-            self.plots[name].set_title(title, loc='right')
+            self.plots[name].set_title(title, loc='right', fontdict=font_title)
         self.plots[name].set_ylim(*self.y_limit)
         if kwargs.get("grid"):
 
@@ -96,7 +102,7 @@ class Graphic:
         xmin, xmax, ymin, ymax = plt.axis()
         pos = {}
         pos[("left-top-over")] = xmin, ymax+1
-        pos[("center-top-over")] = xmax/2, ymax+1
+        pos[("center-top-over")] = xmax/2-3, ymax+1
         return pos[pos_str]
 
     def text(self, text, pos_str):
@@ -128,7 +134,7 @@ class Graphic:
             "left": 0.07,
             "bottom": 0.09,
             "right": 0.98,
-            "top": 0.90
+            "top": 0.85
         }
         fig.subplots_adjust(**margins)
         if path:
