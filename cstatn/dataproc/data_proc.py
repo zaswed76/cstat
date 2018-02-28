@@ -67,9 +67,6 @@ def get_data_every_time(data: pd.DataFrame,
              'visitor']
     list_res = []
 
-
-
-
     club = data["club"][0]
     date = data["dt"][0]
     for h in list_work_hours:
@@ -80,7 +77,7 @@ def get_data_every_time(data: pd.DataFrame,
         lst.extend(ser[m_col].mean())
         lst.append(measur)
         list_res.append(lst)
-    col =  data.columns.tolist()
+    col = data.columns.tolist()
     col.append("measur")
     res = pd.DataFrame(list_res, columns=col)
     return res
@@ -188,8 +185,8 @@ def measurements_hour(data):
     # TODO SDFG
     return 12
 
-def list_work_hours(data: pd.DataFrame, work_time: dict):
 
+def list_work_hours(data: pd.DataFrame, work_time: dict):
     sdate_time = data["data_time"].min()
 
     edate_time = data["data_time"].max()
@@ -203,14 +200,12 @@ def list_work_hours(data: pd.DataFrame, work_time: dict):
 
     stime = datetime.datetime.strptime(work_time["start"], "%H:%M").time()
 
-
     start_date = datetime.datetime.combine(sdate, stime)
     end_date = datetime.datetime.combine(edate, etime)
 
-
-
     hour_list = data[data["data_time"].between(start_date, end_date)]["mhour"].unique()
     return hour_list
+
 
 def get_mean_people(visitor, r=0):
     lenght = len(visitor)
@@ -315,3 +310,8 @@ def date_colors(dates, weekend_days, week_color, work_color):
 def measurements_in_day(data, start, end):
     one_day_data = data[data["data_time"].between(start, end)]
     return one_day_data["mhour"].unique().size
+
+
+def measurements(data, ndigits=1):
+    all_lst = [x for x in data if x > 0]
+    return round(sum(all_lst) / len(all_lst), 2)

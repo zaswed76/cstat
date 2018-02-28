@@ -140,7 +140,7 @@ class GraphicsWidget(QtWidgets.QWidget):
         pp = PurePath(path).parts
         a = os.path.join(*pp[:2])
         b = pp[-1]
-        return "{} ... {}".format(a, b)
+        return "{}".format(b)
 
     def __init_date_widgets(self):
         yesterday_dt = datetime.datetime.now() - datetime.timedelta(
@@ -314,7 +314,9 @@ class GraphicsWidget(QtWidgets.QWidget):
 
                 self.current_club_cfg["week_day_num"],
                 "r", "black")
-
+            data_dict["meas_visitor"] = dproc.measurements(data_dict["d_visitor"],
+                                                           ndigits=2)
+            print(data_dict)
             return data_dict
         else:
             return None
@@ -356,6 +358,9 @@ class GraphicsWidget(QtWidgets.QWidget):
                 color=self.current_club_cfg["pro_color"],
                 text="pro max")
 
+            text1 = "человек в среднем - {}".format(data.get("meas_visitor"))
+            self.plot_view.text(text1, 'left-top-over')
+            self.plot_view.text("text2", "center-top-over")
             self.show_plot(self.plot_view)
 
     def get_one_shift_data(self, controller_data):

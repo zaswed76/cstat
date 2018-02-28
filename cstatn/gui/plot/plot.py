@@ -99,10 +99,13 @@ class Graphic:
                  #       'pad': 5, 'boxstyle': 'round,pad=1'}
 
     def pos(self, pos_str):
+
         xmin, xmax, ymin, ymax = plt.axis()
+
         pos = {}
         pos[("left-top-over")] = xmin, ymax+1
-        pos[("center-top-over")] = xmax/2-3, ymax+1
+        pos[("center-top-over")] = xmax/2-xmax/6, ymax+1
+        print(xmax, "------------")
         return pos[pos_str]
 
     def text(self, text, pos_str):
