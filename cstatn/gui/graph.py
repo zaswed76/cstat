@@ -316,7 +316,20 @@ class GraphicsWidget(QtWidgets.QWidget):
                 "r", "black")
             data_dict["meas_visitor"] = dproc.measurements(data_dict["d_visitor"],
                                                            ndigits=2)
-            print(data_dict)
+            # todo occupied_pro_max
+
+            print(active_pro_data)
+            print("-----------")
+
+            # data_dict["occupied_pro_max"] = dproc.time_occupied(pro_mean_data,
+            #                                                     "visitor",
+            #                                                     len(
+            #                                                         self.current_club_cfg[
+            #                                                             "pro_comp_list"]),
+            #                                                     len(data_dict["d_days"]))
+            #
+            # print(data_dict["occupied_pro_max"], "------")
+
             return data_dict
         else:
             return None
@@ -358,7 +371,9 @@ class GraphicsWidget(QtWidgets.QWidget):
                 color=self.current_club_cfg["pro_color"],
                 text="pro max")
 
-            text1 = "человек в среднем - {}".format(data.get("meas_visitor"))
+            text1 = """человек в среднем - {}
+
+""".format(data.get("meas_visitor"))
             self.plot_view.text(text1, 'left-top-over')
             self.plot_view.text("text2", "center-top-over")
             self.show_plot(self.plot_view)
@@ -399,6 +414,9 @@ class GraphicsWidget(QtWidgets.QWidget):
                 "mhour",
                 list_work_hours)
 
+            print(every_hour_data)
+            print("---------")
+
             mhour_measur = every_hour_data[["mhour", "measur"]]
 
             data_dict["h_hours"] = every_hour_data["mhour"]
@@ -434,8 +452,14 @@ class GraphicsWidget(QtWidgets.QWidget):
             active_pro_data = pro_data[
                 pro_data["class"].isin(include_active_classes)]
 
-
-
+            # часы к которые производились замеры series
+            # print(data_dict["h_hours"])
+            # print("-------------")
+            #  колличество замеров в каждый час series
+            print(mhour_measur)
+            print("-------------")
+            # DataFrame
+            # print(active_pro_data)
 
             # средние показатели в посетителях покаждому часу
             pro_mean_data = dproc.mean_hourly_data(data_dict["h_hours"],

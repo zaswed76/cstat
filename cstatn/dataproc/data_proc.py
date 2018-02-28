@@ -112,7 +112,11 @@ def get_data_table_every_day(data, time_category, start_end_dates, working_club_
     columns = ["data_time"] + mean_columns
     for start, end, in start_end_dates:
         one_day_data = data[data["data_time"].between(start, end)]
+        # print(one_day_data)
+        # print("--------------")
         real_hours = one_day_data["mhour"].unique().size
+        # print(real_hours)
+        # print("--------------")
 
         if real_hours < working_club_hours:
             size_hours = real_hours
@@ -129,6 +133,8 @@ def get_data_table_every_day(data, time_category, start_end_dates, working_club_
         loc.extend(mean)
         res.append(loc)
     df = pd.DataFrame(res, columns=columns)
+    print(df)
+    print("#############################################")
     return df
 
 
@@ -288,6 +294,7 @@ def time_occupied(data, column, max, measurements, ndigits=1):
     сколько процентов времени от measurements значения column == max
     :return: float
     """
+    # print(data)
 
     if max > 0:
         number1 = data[data[column] >= float(max) - 0.5][column].size
@@ -313,5 +320,11 @@ def measurements_in_day(data, start, end):
 
 
 def measurements(data, ndigits=1):
+    """
+
+    :param data: list < int
+    :param ndigits: int округлить до
+    :return: среднее арифметическое списка чисел если число не равно 0
+    """
     all_lst = [x for x in data if x > 0]
     return round(sum(all_lst) / len(all_lst), 2)
